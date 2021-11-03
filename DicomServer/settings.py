@@ -37,9 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'corsheaders',
+    'DicomServiceApp.apps.DicomserviceappConfig'
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True # when production, it must be revised
+
 MIDDLEWARE = [
+    'corsheaders.middlware.CorsMiddleware'
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
