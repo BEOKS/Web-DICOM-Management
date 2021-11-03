@@ -81,8 +81,10 @@ WSGI_APPLICATION = 'DicomServer.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+        'CLIENT':{
+            "host":"mongodb://admin:knuipalab@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false"
+        }
     }
 }
 

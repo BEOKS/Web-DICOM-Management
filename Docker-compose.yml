@@ -13,8 +13,8 @@ services:
     image : mongo
     restart : always
     environment :
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: knuipalab
+      MONGO_INITDB_ROOT_USERNAME: knuipalab
+      MONGO_INITDB_ROOT_PASSWORD: knuipalab418
     volumes:
       - .dbdata:/data/db
     ports:
