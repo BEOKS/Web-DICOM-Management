@@ -82,6 +82,7 @@ WSGI_APPLICATION = 'DicomServer.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
+        'NAME': 'DICOM_META',
         'CLIENT':{
             "host":"mongodb://admin:knuipalab@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false"
         }
