@@ -1,0 +1,24 @@
+anonymized_id,age,modality,manufacturer,manufacturerModelName,"class
+non-pCR: 0 pCR: 1","left: 0
+right: 1",ER,PR,HER2,"non-IDC: 0
+IDC: 1"
+1342708,39,MR,"HOLOGIC, Inc.",Lorad Selenia,0,1,1,0,1,1
+1514675,44,MR,"HOLOGIC, Inc.",Lorad Selenia,1,0,0,0,0,1
+1913581,63,MR,"HOLOGIC, Inc.",Lorad Selenia,1,1,0,0,0,1
+1986956,36,MR,"HOLOGIC, Inc.",Lorad Selenia,0,1,0,0,1,1
+1997648,41,MR,"HOLOGIC, Inc.",Lorad Selenia,0,0,1,1,0,1
+2130669,58,MR,"HOLOGIC, Inc.",Lorad Selenia,1,0,0,1,0,1
+4117925,45,MR,"HOLOGIC, Inc.",Lorad Selenia,1,0,0,0,0,1
+4317361,44,MR,"HOLOGIC, Inc.",Lorad Selenia,1,1,1,1,0,1
+4714992,56,MR,"HOLOGIC, Inc.",Lorad Selenia,1,1,0,0,1,1
+5409504,52,MR,"HOLOGIC, Inc.",Lorad Selenia,0,0,0,0,0,1
+5583600,52,MR,"HOLOGIC, Inc.",Lorad Selenia,1,1,1,0,0,1
+5733192,58,MR,"HOLOGIC, Inc.",Lorad Selenia,1,1,0,0,0,1
+6054000,34,MR,"HOLOGIC, Inc.",Lorad Selenia,0,1,1,1,0,1
+6081099,55,MR,"HOLOGIC, Inc.",Lorad Selenia,0,0,1,1,0,1
+6185007,47,MR,"HOLOGIC, Inc.",Lorad Selenia,0,1,1,1,1,1
+6531983,45,MR,"HOLOGIC, Inc.",Lorad Selenia,1,0,1,1,1,1
+6900201,59,MR,"HOLOGIC, Inc.",Lorad Selenia,0,1,1,1,0,1
+6907512,56,MR,"HOLOGIC, Inc.",Lorad Selenia,1,0,0,0,1,1
+9524160,67,MR,"HOLOGIC, Inc.",Lorad Selenia,0,0,0,0,0,1
+9599023,50,MR,"HOLOGIC, Inc.",Lorad Selenia,0,1,0,0,0,1

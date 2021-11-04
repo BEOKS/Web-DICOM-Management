@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 CORS_ORIGIN_ALLOW_ALL = True # when production, it must be revised
 
 MIDDLEWARE = [
-    'corsheaders.middlware.CorsMiddleware'
+    'corsheaders.middleware.CorsMiddleware'
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -84,7 +84,7 @@ DATABASES = {
         'ENGINE': 'djongo',
         'NAME': 'DICOM_META',
         'CLIENT':{
-            "host":"mongodb://admin:knuipalab@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false"
+            "host":"mongodb://knuipalab:knuipalab418@dicomserver-mongodb-1:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false"
         }
     }
 }

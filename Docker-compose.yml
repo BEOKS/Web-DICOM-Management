@@ -7,6 +7,8 @@ services:
       - 8000:8000
     volumes:
       - .:/app
+    networks:
+      - innerNetwork
     depends_on:
       - mongodb
   mongodb: 
@@ -15,9 +17,12 @@ services:
     environment :
       MONGO_INITDB_ROOT_USERNAME: knuipalab
       MONGO_INITDB_ROOT_PASSWORD: knuipalab418
-    volumes:
-      - .dbdata:/data/db
+    networks:
+      - innerNetwork
     ports:
      - 27017:27017 
 
+networks:
+  innerNetwork:
+    driver: bridge
       
