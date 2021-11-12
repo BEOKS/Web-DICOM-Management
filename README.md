@@ -1,5 +1,5 @@
-# DicomServer
-## Usage
+# 1.DicomServer
+## 1.1 Usage
 1. 프로젝트 폴더명은 반드시 *DicomServer*로 지정되어 있어야 합니다.
 2. 프로젝트 폴더에서 ```docker-compose up```커맨드를 입력하면 컨테이너가 빌드, 실행되고 메타데이터가 mongoDB에 자동으로 업로드 됩니다.(Docker Compose version v2.0.0)
 ![image](https://user-images.githubusercontent.com/30094719/140272159-8a1808a3-8b9c-4312-b5bc-e8385f34688a.png)
@@ -21,7 +21,7 @@ mongodb://knuipalab:knuipalab418@localhost:27017/?authSource=admin&readPreferenc
   <img src=https://user-images.githubusercontent.com/30094719/140272591-76846f8a-b6c5-4898-a7e2-2a6c20cb20ce.png width="80%"/>
 </p>
 
-## TODO
+## 1.2 TODO
 - [x] 1. set Docker-compose
   - [x] 1-1. init Django - init complete
   - [x] 1-2. init MongoDB - init complete
