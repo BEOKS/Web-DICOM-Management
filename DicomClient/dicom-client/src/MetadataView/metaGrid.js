@@ -34,7 +34,6 @@ export default function DataGridDemo() {
           }
           setLoading(false);
         };
-    
         fetchUsers();
       }, []);
     
@@ -46,8 +45,7 @@ export default function DataGridDemo() {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            marginTop:200,
-            height:1000
+            height:900
         }}>
             <div style={{
                 width:'60%',
