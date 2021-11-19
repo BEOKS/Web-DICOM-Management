@@ -14,7 +14,7 @@ def mongoimport(csv_path, db_name, coll_name, db_url,type):
     return coll.count()
 
 if __name__=='__main__':
-    mongodb_URI="mongodb://knuipalab:knuipalab418@server_mongodb_1:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false"
+    mongodb_URI="mongodb://knuipalab:knuipalab418@mongodb:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false"
     for csv_path in glob('/app/DicomMetadata/*.csv'):
         type=csv_path.split('_')[1]
         print(f'Start upload {csv_path}')

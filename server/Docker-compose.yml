@@ -1,3 +1,4 @@
+version: '3.8'
 services:
   middleware:
     build:
@@ -9,7 +10,9 @@ services:
     volumes:
       - ./:/app
     networks:
-      - innerNetwork
+      innerNetwork:
+        aliases:
+          - middleware
     depends_on:
       - mongodb
   mongodb: 
@@ -19,7 +22,9 @@ services:
       MONGO_INITDB_ROOT_USERNAME: knuipalab
       MONGO_INITDB_ROOT_PASSWORD: knuipalab418
     networks:
-      - innerNetwork
+      innerNetwork:
+        aliases:
+          - mongodb
     ports:
      - 27017:27017 
   orthanc:
@@ -33,11 +38,13 @@ services:
       - '4242:4242' # DICOM
       - '8042:8042' # Web
     networks:
-      - innerNetwork
+      innerNetwork:
+        aliases:
+          - orthanc
     restart: unless-stopped
   
 
 networks:
   innerNetwork:
-    driver: bridge
+    
       
