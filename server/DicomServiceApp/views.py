@@ -5,7 +5,7 @@ from django.http import JsonResponse
 class DicomServiceApp(viewsets.ViewSet):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.mongodb=MongoClient('mongodb://knuipalab:knuipalab418@dicomserver_mongodb_1:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false')
+        self.mongodb=MongoClient('mongodb://knuipalab:knuipalab418@server_mongodb_1:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false')
         try:
             print('connecting to mongodb ...')
             self.mongodb.server_info()
