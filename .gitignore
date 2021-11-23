@@ -2,3 +2,5 @@
 .idea
 venv
 server/volumes
+server/DicomServer/__pycache__
+server/DicomServerApp/__pycache__
