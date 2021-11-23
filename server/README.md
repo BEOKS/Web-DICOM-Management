@@ -4,7 +4,7 @@
 ![image](https://user-images.githubusercontent.com/30094719/140272159-8a1808a3-8b9c-4312-b5bc-e8385f34688a.png)
 로그가 위와 같이 출력된다면 DB와 서버가 정상적으로 실행된 상태입니다.
 
-**(주의. ```docker-compose up```을 통해서 빌드할때마다 mongoDB에 중첩된 데이터가 추가될 수 있습니다. 빌드된 이미지가 있다면 이를 재활용하는 것 을 권장합니다.**)
+**(주의. ```docker-compose up```을 통해서 빌드할때마다 mongoDB에 중첩된 데이터가 추가될 수 있습니다. 빌드후 실행된 컨테이너가 있다면 ```docker-compose start```를 사용할 것을 권장합니다.**)
 
 2. MongoDB Compass를 실행시킵니다.
 3. connection string으로 아래 URI를 입력합니다(서버에 MongoDB 컨테이너를 실행했을 경우 localhost대신 서버의 IP를 입력합니다.)
