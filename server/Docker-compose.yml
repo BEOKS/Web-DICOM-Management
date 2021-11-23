@@ -28,7 +28,7 @@ services:
     ports:
      - 27017:27017 
   orthanc:
-    image: jodogne/orthanc-plugins:1.5.6
+    image: jodogne/orthanc-plugins:1.9.7
     volumes:
       # Config
       - ./config/orthanc.json:/etc/orthanc/orthanc.json:ro
