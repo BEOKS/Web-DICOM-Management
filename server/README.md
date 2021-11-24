@@ -1,10 +1,14 @@
 # DicomServer
 ##  Usage
-프로젝트 폴더에서 ```docker-compose up```커맨드를 입력하면 컨테이너가 빌드, 실행되고 메타데이터가 mongoDB에 자동으로 업로드 됩니다.(Docker Compose version v2.0.0)
-![image](https://user-images.githubusercontent.com/30094719/140272159-8a1808a3-8b9c-4312-b5bc-e8385f34688a.png)
-로그가 위와 같이 출력된다면 DB와 서버가 정상적으로 실행된 상태입니다.
-
-**(주의. ```docker-compose up```을 통해서 빌드할때마다 mongoDB에 중첩된 데이터가 추가될 수 있습니다. 빌드후 실행된 컨테이너가 있다면 ```docker-compose start```를 사용할 것을 권장합니다.**)
+### MAC
+```
+sh server.sh up
+```
+### Window
+```
+./server.sh up
+```
+### 실행결과
 
 ## MongoDB 시각화
 

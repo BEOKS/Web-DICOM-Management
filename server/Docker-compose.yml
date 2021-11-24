@@ -2,12 +2,10 @@ version: '3.8'
 services:
   middleware:
     build:
-      context: ./Django/
-      dockerfile: ./Dockerfile
+      context: ./DSMP/
+      dockerfile: ./DSMP/Dockerfile
     ports:
-      - 8000:8000
-    volumes:
-      - ./Django/:/app
+      - 8080:8080
     networks:
       innerNetwork:
         aliases:
@@ -24,6 +22,7 @@ services:
       innerNetwork:
         aliases:
           - mongodb
+          - orthanc
     ports:
      - 27017:27017 
   orthanc:
