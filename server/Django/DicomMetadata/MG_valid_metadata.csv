@@ -1,0 +1,24 @@
+anonymized_id,age,modality,manufacturer,manufacturerModelName,"class
+non-pCR: 0 pCR: 1","left: 0
+right: 1",ER,PR,HER2,"non-IDC: 0
+IDC: 1",compressionForce
+1342708,39,MG,"HOLOGIC, Inc.",Lorad Selenia,0,1,1,0,1,1,89.00019
+1514675,44,MG,"HOLOGIC, Inc.",Lorad Selenia,1,0,0,0,0,1,84.55019
+1913581,63,MG,"HOLOGIC, Inc.",Lorad Selenia,1,1,0,0,0,1,155.7019
+1986956,36,MG,"HOLOGIC, Inc.",Lorad Selenia,0,1,0,0,1,1,137.9019
+1997648,41,MG,"HOLOGIC, Inc.",Lorad Selenia,0,0,1,1,0,1,129.0019
+2130669,58,MG,"HOLOGIC, Inc.",Lorad Selenia,1,0,0,1,0,1,124.5019
+4117925,45,MG,"HOLOGIC, Inc.",Lorad Selenia,1,0,0,0,0,1,111.2019
+4317361,44,MG,"HOLOGIC, Inc.",Lorad Selenia,1,1,1,1,0,1,111.2019
+4714992,56,MG,"HOLOGIC, Inc.",Lorad Selenia,1,1,0,0,1,1,129.0019
+5409504,52,MG,"HOLOGIC, Inc.",Lorad Selenia,0,0,0,0,0,1,133.5019
+5583600,52,MG,"HOLOGIC, Inc.",Lorad Selenia,1,1,1,0,0,1,137.9019
+5733192,58,MG,"HOLOGIC, Inc.",Lorad Selenia,1,1,0,0,0,1,155.7019
+6054000,34,MG,"HOLOGIC, Inc.",Lorad Selenia,0,1,1,1,0,1,111.2019
+6081099,55,MG,"HOLOGIC, Inc.",Lorad Selenia,0,0,1,1,0,1,155.7019
+6185007,47,MG,"HOLOGIC, Inc.",Lorad Selenia,0,1,1,1,1,1,137.9019
+6531983,45,MG,"HOLOGIC, Inc.",Lorad Selenia,1,0,1,1,1,1,155.7019
+6900201,59,MG,"HOLOGIC, Inc.",Lorad Selenia,0,1,1,1,0,1,48.95001
+6907512,56,MG,"HOLOGIC, Inc.",Lorad Selenia,1,0,0,0,1,1,142.3019
+9524160,67,MG,"HOLOGIC, Inc.",Lorad Selenia,0,0,0,0,0,1,142.3019
+9599023,50,MG,"HOLOGIC, Inc.",Lorad Selenia,0,1,0,0,0,1,191.3019
