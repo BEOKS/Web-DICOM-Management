@@ -7,4 +7,4 @@ COPY ${DEPENDENCY}/META-INF /app/META-INF
 COPY ${DEPENDENCY}/BOOT-INF/classes /app
 ENTRYPOINT ["java","-cp","app:app/lib/*","com.knuipalab.dsmp.DsmpApplication"]
 
-# docker build --build-arg JAR_FILE=build/libs/\*.jar -t springio/dsmp-docker .
+# Before build Docker image, you have to update DEPENDENCY info with ```java xf build/libs/DSMP-0.0.1-SNAPSHOT.jar```
