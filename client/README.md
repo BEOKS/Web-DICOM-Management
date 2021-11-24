@@ -10,7 +10,7 @@ git submodule update
 3. Viewer 디렉토리로 이동한 후 이미지 Viewer 클라이언트를 우선 실행합니다.
 ```
 cd Viewer
-yarn config set workspaces-experimental true
+yarn config set workspaces-experimental true #초기에 한번 실행
 yarn install #초기에 한번 실행
 yarn run dev:orthanc
 ```
