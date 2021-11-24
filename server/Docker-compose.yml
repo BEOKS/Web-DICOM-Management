@@ -3,7 +3,7 @@ services:
   middleware:
     build:
       context: ./DSMP/
-      dockerfile: ./DSMP/Dockerfile
+      dockerfile: ./Dockerfile
     ports:
       - 8080:8080
     networks:
