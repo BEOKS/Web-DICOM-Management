@@ -19,11 +19,16 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//    base
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.5.6'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.6'
+//    plugin
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools:2.5.6'
+    annotationProcessor 'org.projectlombok:lombok:2.5.6'
+//    data
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.6.0'
+    testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
 }
 
 test {
