@@ -1,5 +1,7 @@
 # DicomServer
 ##  Usage
+### Before
+최신 버전의 [도커](https://docs.docker.com/get-docker/)를 설치해주세요.
 ### MAC
 ```
 sh server.sh up
