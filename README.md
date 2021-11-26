@@ -20,7 +20,15 @@ Dicom 파일 선택 기능 | 사용자는 웹 UI에 있는 Dicom 리스트 뷰�
 Segmentation 뷰어 기능 구현 | 사용자는 웹 UI를 통해서 Dicom에 Segmentation이 적용된 이미지를 확인 할 수 있다. | Dicom SEG 파일을 orthan서버에 업로드 함으로써 구현이 가능하다. | 3
 Annotation(ROI) 작성 기능 구현 | 사용자는 웹 UI를 통해서 이미지 위에 Annotation을 작성할 수 있으며 서버에 저장이 가능하다. | OHIF에는 기능이 구현되어 있지 않아 추후 기능 구현이 필요하다. 작업 난이도 또한 상당히 높다. | 4(>v1.0)
 ## 🏗️Architecture
-![image](https://user-images.githubusercontent.com/30094719/142571856-107b52ac-df5a-47c1-9242-1a5d5d50d9f0.png)
+![image](https://user-images.githubusercontent.com/30094719/143526030-73eac6ec-b4b5-41ed-8805-9d1b4ab9393c.png)
+1. Base Client : 계정관리, Dicom데이터 업로드, 다운로드 그리고 머신러닝 지원 등 전체적인 사용자 기능을 지원한다.
+2. DicomViewer : Base Client에 의해 호출되며 Dicom 파일 시각화를 지원하는  클라이언트이다.
+3. MiddleWare : 클라이언트와 데이터베이스, 서버 사이의 요청을 처리한다.
+4. Dicom Server :  Dicom 데이터를 저장하며 Dicom Web 표준 프로토콜을 통해 Dicom 데이터를 송수신한다.
+5. Database : Dicom 메타데이터 및 계정정보 등 사용자 기능을 지원하기 위한 데이터를 저장한다.
+6. TorchServer : Dicom 이미지를 통한 머신러닝 모델을 학습, 추론 기능을 지원한다.
+7. docker compose : 각 서버는 도커로 실행되며 docker compose는 이를 통합 관리한다.
+8. Jenknins : 지속 개발을 위한 CI/CD를 지원한다. 경우에 따라 다른 프레임워크로 대체될 수 있다.(ex. github actions, teamcity 등)
 
 
 ## Usage
