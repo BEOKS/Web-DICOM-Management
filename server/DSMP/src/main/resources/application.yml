@@ -7,4 +7,6 @@ spring:
       port: 27017
       database: tutorial
       authentication-database: admin
+  jpa:
+    show-sql: true
 

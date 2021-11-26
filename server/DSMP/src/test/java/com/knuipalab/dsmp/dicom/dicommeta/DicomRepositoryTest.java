@@ -1,7 +1,6 @@
 package com.knuipalab.dsmp.dicom.dicommeta;
 
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,9 +13,9 @@ import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class DicomMetaRepositoryTest {
+public class DicomRepositoryTest {
     @Autowired
-    DicomMetaRepository dicomMetaRepository;
+    DicomRepository dicomMetaRepository;
 
     @AfterEach
     public void cleanup(){
@@ -26,12 +25,12 @@ public class DicomMetaRepositoryTest {
     @Test
     public void getDicomMeta(){
         String patientUIDExample="1.2.840.xxxxx.3.152.235.2.12.187636473";
-        dicomMetaRepository.save(DicomMeta.builder()
+        dicomMetaRepository.save(Dicom.builder()
                 .patientUID(patientUIDExample)
                 .build());
-        List<DicomMeta> dicomMetaList=dicomMetaRepository.findAll();
+        List<Dicom> dicomMetaList=dicomMetaRepository.findAll();
 
-        DicomMeta dicomMeta=dicomMetaList.get(0);
+        Dicom dicomMeta=dicomMetaList.get(0);
         assertThat(dicomMeta.getPatientUID()).isEqualTo(patientUIDExample);
     }
 

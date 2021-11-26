@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Document("MetaData")
-public class DicomMeta {
+public class Dicom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
@@ -18,7 +18,7 @@ public class DicomMeta {
     private String patientUID;
 
     @Builder
-    public DicomMeta(String patientUID){
+    public Dicom(String patientUID){
         this.patientUID=patientUID;
     }
 }
