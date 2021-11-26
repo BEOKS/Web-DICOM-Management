@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class DicomAPIControllerTest {
+
     @LocalServerPort
     private int port;
 
@@ -31,11 +32,11 @@ public class DicomAPIControllerTest {
     private DicomRepository dicomRepository;
 
     @AfterEach
-    public void tearDown() throws Exception{
+    public void tearDown(){
         dicomRepository.deleteAll();
     }
     @Test
-    public void save_dicom() throws Exception{
+    public void save_dicom(){
         String patientUIDExample="1.2.840.xxxxx.3.152.235.2.12.187636473";
         DicomSaveRequestDto dicomSaveRequestDto=DicomSaveRequestDto.builder()
                 .patientUID(patientUIDExample).build();
