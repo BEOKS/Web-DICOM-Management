@@ -1,7 +1,7 @@
 package com.knuipalab.dsmp.dicom.dicommeta;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface DicomMetaRepository extends JpaRepository<DicomMeta,Long> {
+public interface DicomMetaRepository extends MongoRepository<DicomMeta,String> {
 
 }
