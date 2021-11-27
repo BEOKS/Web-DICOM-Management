@@ -22,7 +22,6 @@ services:
       innerNetwork:
         aliases:
           - mongodb
-          - orthanc
     ports:
      - 27017:27017 
   orthanc:
