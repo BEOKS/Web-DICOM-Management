@@ -14,6 +14,7 @@ public class DicomSaveRequestDto {
         this.patientUID=patientUID;
     }
     public Dicom toEntity(){
+
         return Dicom.builder().
                 patientUID(patientUID)
                 .build();
