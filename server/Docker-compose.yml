@@ -30,8 +30,6 @@ services:
     volumes:
       # Config
       - ./orthanc/config/orthanc.json:/etc/orthanc/orthanc.json:ro
-      # Persist data
-      - ./orthanc/volumes/orthanc-db/:/var/lib/orthanc/db/
     ports:
       - '4242:4242' # DICOM
       - '8042:8042' # Web
