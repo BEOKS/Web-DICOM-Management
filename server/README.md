@@ -1,7 +1,8 @@
 # DicomServer
 ##  Usage
 ### Before
-최신 버전의 [도커](https://docs.docker.com/get-docker/)를 설치해주세요.
+1. 최신 버전의 [도커](https://docs.docker.com/get-docker/)를 설치해주세요.
+2. JDK 11 이상의 버전을 설치해주세요
 ### MAC
 ```
 sh server.sh up
@@ -11,9 +12,11 @@ sh server.sh up
 ./server.sh up
 ```
 ### 실행결과
+![image](https://user-images.githubusercontent.com/30094719/143684942-ab57c412-0f0c-47ef-9860-7425b580a02a.png)
+
 ![image](https://user-images.githubusercontent.com/30094719/143244120-658e2e3a-feb3-4728-8c43-90ef564a7f56.png)
 
-위와 같은 출력이 나오며 http://localhost:8080/ 에 정상적으로 접속 가능하다면 성공입니다. 에러가 발생한다면 이슈를 발행해주세요!
+3가지 컨테이너가 실행되고 위와 같은 출력이 나오며 http://localhost:8080/ 에 정상적으로 접속 가능하다면 성공입니다. 에러가 발생한다면 이슈를 발행해주세요!
 ## MongoDB 시각화
 
 1. MongoDB Compass를 실행시킵니다.
