@@ -1,7 +1,6 @@
 #!/bin/sh
 cd DSMP
 ./gradlew build -x test
-java -jar build/libs/gs-spring-boot-docker-0.1.0.jar
 mkdir -p build/dependency
 cd build/dependency 
 echo 'Start update SpringBoot project jar file...'
