@@ -1,3 +1,6 @@
 [submodule "Viewers"]
 	path = Viewers
 	url = https://github.com/BEOKS/Viewers.git
+[submodule "server/orthanc/orthanc-mongodb"]
+	path = server/orthanc/orthanc-mongodb
+	url = https://github.com/Doc-Cirrus/orthanc-mongodb.git
