@@ -1,7 +1,7 @@
 # DicomServer
 ##  Usage
 ### Before
-1. 최신 버전의 [도커](https://docs.docker.com/get-docker/)를 설치해주세요. (docker-compose는 v2 버전으로 설치되어야 합니다, 리눅스의 경우 v1으로 설치되므로 업데이트가 필요합니다.)
+1. 최신 버전의 [도커](https://docs.docker.com/get-docker/)를 설치해주세요. (docker-compose는 v2 버전으로 설치되어야 합니다, 리눅스의 경우 간혹 v1으로 설치되므로 업데이트가 필요합니다.)
 2. 서버 파일에서 docker-compose를 실행 해주세요. (초기 이후에 도커 이미지를 업데이트 하려면 ```docker-compose build```를 실행해야 합니다.)
 ```
 #/DSNP/server
