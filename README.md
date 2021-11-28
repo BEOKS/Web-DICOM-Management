@@ -31,5 +31,5 @@ Annotation(ROI) 작성 기능 구현 | 사용자는 웹 UI를 통해서 이미�
 
 
 ## Usage
-1. DicomServer의 README.md를 참조하여 서버 실행
-2. DicomClient/dicom-clinet의 README.md 를 참조하여 클라이언트 서버 실행
+1. DicomServer의 README.md를 참조하여 서버를 실행한다.
+2. DicomClient/dicom-clinet의 README.md 를 참조하여 클라이언트 서버를 실행한다.
