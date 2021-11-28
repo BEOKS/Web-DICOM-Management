@@ -12,6 +12,7 @@ services:
           - middleware
     depends_on:
       - mongodb
+      - orthanc
   mongodb: 
     image : mongo
     restart : always
