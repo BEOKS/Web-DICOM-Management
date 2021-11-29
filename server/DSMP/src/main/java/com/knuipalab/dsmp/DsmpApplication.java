@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DsmpApplication {
     @RequestMapping("/")
     public String home() {
-        return "Hello Docker World";
+        return "Hello Spring World!!";
     }
     public static void main(String[] args) {
         SpringApplication.run(DsmpApplication.class, args);
