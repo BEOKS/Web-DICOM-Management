@@ -31,7 +31,8 @@ dependencies {
 //    data
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: '2.6.0'
     testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
-//    dicom
+//    Security
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client',version: '2.6.0'
 
 
 }

@@ -11,4 +11,6 @@ spring:
     show-sql: true
   profiles:
     include: oauth
+#  main:
+#    allow-bean-definition-overriding: true
 
