@@ -9,4 +9,6 @@ spring:
       authentication-database: admin
   jpa:
     show-sql: true
+  profiles:
+    include: oauth
 
