@@ -9,4 +9,8 @@ spring:
       authentication-database: admin
   jpa:
     show-sql: true
+  profiles:
+    include: oauth
+#  main:
+#    allow-bean-definition-overriding: true
 
