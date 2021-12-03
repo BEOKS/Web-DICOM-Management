@@ -29,7 +29,10 @@ Annotation(ROI) 작성 기능 구현 | 사용자는 웹 UI를 통해서 이미�
 7. docker compose : 각 서버는 도커로 실행되며 docker compose는 이를 통합 관리한다.
 8. Jenknins : 지속 개발을 위한 CI/CD를 지원한다. 경우에 따라 다른 프레임워크로 대체될 수 있다.(ex. github actions, teamcity 등)
 
-
+## 📖 Paper
+1. [개발 명세서](https://beamworks.atlassian.net/l/c/2Du2vjLt)
+2. [시스템 아키텍쳐](https://beamworks.atlassian.net/l/c/S4tgbofo)
+3. [Jira Project](https://beamworks.atlassian.net/jira/software/projects/ABB/boards/1)
 ## Usage
 1. DicomServer의 README.md를 참조하여 서버를 실행한다.
 2. DicomClient/dicom-clinet의 README.md 를 참조하여 클라이언트 서버를 실행한다.
