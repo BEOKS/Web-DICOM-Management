@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DsmpApplication {
     @RequestMapping("/")
     public String home() {
-        return "DSM-21 First Commit";
+        return "DSM-23 First Commit";
     }
     public static void main(String[] args) {
         SpringApplication.run(DsmpApplication.class, args);
