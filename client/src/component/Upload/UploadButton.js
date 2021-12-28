@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Button } from '@mui/material';
-import DownloadDialog from './DownloadDialog/DownlaodDialog';
-export default DownloadButton=()=>{
+import UploadDialog from './UploadDialog/UploadDialog';
+
+export default function  UploadButton(){
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -14,7 +15,7 @@ export default DownloadButton=()=>{
     return(
         <div>
             <Button  onClick={handleClickOpen}>Upload</Button>
-            <DownloadDialog open={open}/>
+            <UploadDialog open={open} setOpen={setOpen}/>
         </div>
     )
 }
