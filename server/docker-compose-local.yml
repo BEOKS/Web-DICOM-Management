@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+  middleware:
+    build:
+      context: ./DSMP/
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:8080
+    networks:
+      innerNetwork:
+        aliases:
+          - middleware
+    depends_on:
+      - mongodb
+      - orthanc
+  mongodb: 
+    image : mongo
+    restart : always
+    environment :
+      MONGO_INITDB_ROOT_USERNAME: knuipalab
+      MONGO_INITDB_ROOT_PASSWORD: knuipalab418
+    networks:
+      innerNetwork:
+        aliases:
+          - mongodb
+    ports:
+     - 27017:27017 
+  orthanc:
+    image: jodogne/orthanc-plugins:1.9.7
+    volumes:
+      # Config
+      - ./orthanc/config/orthanc.json:/etc/orthanc/orthanc.json:ro
+    ports:
+      - '4242:4242' # DICOM
+      - '8042:8042' # Web
+    networks:
+      innerNetwork:
+        aliases:
+          - orthanc
+    restart: unless-stopped
+  
+
+networks:
+  innerNetwork:
+    
+      
