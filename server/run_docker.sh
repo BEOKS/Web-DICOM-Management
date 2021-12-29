@@ -13,6 +13,6 @@ cd build/dependency
 jar_path=`ls ../libs/*-SNAPSHOT.jar 2> /dev/null`
 jar xf ${jar_path} 
 # 4. Run docker
-cd ..
-docker-compose build --no-cache
-docker-compose up
+cd ../../..
+docker-compose -f ./docker-compose-$1.yml build --no-cache
+docker-compose -f ./docker-compose-$1.yml up
