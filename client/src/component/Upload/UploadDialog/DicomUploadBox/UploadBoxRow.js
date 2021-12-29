@@ -9,7 +9,6 @@ const UploadBoxRow=({fileName,dicomFilePathList,setdicomFilePathList,severity})=
                 {fileName}
                 <IconButton 
                     size="small"
-                    // style={{height : '50%',float : 'right'}}
                     onClick={()=>setdicomFilePathList(dicomFilePathList.filter(i => i!==fileName))}>
                     <ClearIcon/>
                 </IconButton>

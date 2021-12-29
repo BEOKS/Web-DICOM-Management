@@ -11,7 +11,7 @@ const DicomUploadBox=({dicomFilePathList,setdicomFilePathList})=>{
         setdicomFilePathList(Array.from(event.target.files).map(i => i.name))
     }
     return(
-        <Stack borderRadius="3%" style={{alignItems: "center", backgroundColor:'#f5f5f5'}}>
+        <Stack borderRadius="5px" style={{alignItems: "center", backgroundColor:'#f5f5f5'}}>
             {dicomFilePathList.map((path)=> (<UploadBoxRow 
                 fileName={path} 
                 severity={"success"}
