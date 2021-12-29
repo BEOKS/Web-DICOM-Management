@@ -14,6 +14,12 @@ sudo sh run_docker.sh prod #서버에서 실행할 때
 run_docker.sh local #local에서 실행할 때
 run_docker.sh prod #서버에서 실행할 때
 ```
+
+> ``` run_docker.sh local ```로 커맨드 입력시, orthanc와 MongoDB
+> 컨테이너에 포트접속이 활성화 되어 개발자가 로컬에서 접속할 수 있다.
+> ``` run_docker.sh prod```로 커맨드 입력시, orthanc와 MongoDB 컨테이너는
+> Spring 컨테이너에서만 접속이 가능하다. (즉, API를 통해서만 접근 가능)
+
 ### 실행결과
 ![image](https://user-images.githubusercontent.com/30094719/143684942-ab57c412-0f0c-47ef-9860-7425b580a02a.png)
 
