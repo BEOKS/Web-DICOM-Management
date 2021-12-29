@@ -14,7 +14,7 @@ export default function  UploadButton(){
     };
     return(
         <div>
-            <Button  onClick={handleClickOpen}>Upload</Button>
+            <Button  onClick={handleClickOpen} variant="outlined">Upload</Button>
             <UploadDialog open={open} setOpen={setOpen}/>
         </div>
     )

@@ -17,6 +17,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import MoreIcon from '@mui/icons-material/More';
+import UploadButton from '../Upload/UploadButton';
 
 const drawerWidth = 240;
 
@@ -150,6 +151,7 @@ export default function Page() {
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
+                <UploadButton/>
                 {/*<Typography paragraph>*/}
                 {/*    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod*/}
                 {/*    tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non*/}

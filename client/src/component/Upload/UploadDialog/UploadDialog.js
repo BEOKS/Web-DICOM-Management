@@ -2,12 +2,12 @@ import * as React from 'react'
 import { Button, Dialog, DialogTitle, DialogContent,
     DialogActions, DialogContentText } from "@mui/material";
 import { useState } from 'react';
-import DicomUploadBox from './DicomUploadBox';
+import DicomUploadBox from './DicomUploadBox/DicomUploadBox';
 import MetaUploadBox from './MetaUploadBox';
 import FileHandler from '../Utils/FileHandler';
 import ErrorDescriptionBox from './ErrorDescriptionBox';
 
-const dialogContentDescrptionText="Dicom 파일과 메타데이터를 업로드 할 수 있습니다. 메타데이터는 csv파일형태로 업로드 하며 csv에는 'Filename' 속성에 파일 이름을 명시해야합니다. "
+const dialogContentDescrptionText="메타데이터는 csv의 'PatientID' 속성에는 업로드하려는 Dicom 파일의 ID가 존재해야 합니다. "
 
 let fileHandler=null
 export default function UploadDialog(props){
@@ -35,12 +35,15 @@ export default function UploadDialog(props){
                 <DialogContentText> 
                     {dialogContentDescrptionText}
                 </DialogContentText>
-                <DicomUploadBox setdicomFilePathList={setdicomFilePathList}/>
-                <MetaUploadBox setCsvFilePath={setCsvFilePath}/>
+                <MetaUploadBox 
+                    csvFilePath={csvFilePath}
+                    setCsvFilePath={setCsvFilePath}/>
+                <DicomUploadBox 
+                    dicomFilePathList={dicomFilePathList}
+                    setdicomFilePathList={setdicomFilePathList}/>
                 <ErrorDescriptionBox 
                     nonSyncDicomFilePatientIDs={nonSyncDicomFilePatientIDs}
-                    nonSyncCSVFilePatientIDs={nonSyncCSVFilePatientIDs}
-                />
+                    nonSyncCSVFilePatientIDs={nonSyncCSVFilePatientIDs}/>
             </DialogContent>
             <DialogActions>
                 <Button onClick={()=>handleDicomAndCsvSync(dicomFilePathList,csvFilePath)}>확인</Button>
