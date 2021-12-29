@@ -22,30 +22,37 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
-function createData(name, calories, fat, carbs, protein) {
+function createData(id, age, modality, manufacturer, manufacturerModelName, pCR, leftRight, ER, PR, HER2, IDC, compressionForce) {
     return {
-        name,
-        calories,
-        fat,
-        carbs,
-        protein,
+        id,
+        age,
+        modality,
+        manufacturer,
+        manufacturerModelName,
+        pCR,
+        leftRight,
+        ER,
+        PR,
+        HER2,
+        IDC,
+        compressionForce,
     };
 }
 
 const rows = [
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Donut', 452, 25.0, 51, 4.9),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-    createData('Honeycomb', 408, 3.2, 87, 6.5),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Jelly Bean', 375, 0.0, 94, 0.0),
-    createData('KitKat', 518, 26.0, 65, 7.0),
-    createData('Lollipop', 392, 0.2, 98, 0.0),
-    createData('Marshmallow', 318, 0, 81, 2.0),
-    createData('Nougat', 360, 19.0, 9, 37.0),
-    createData('Oreo', 437, 18.0, 63, 4.0),
+    createData(1028011,53,'MG','HOLOGIC, Inc.','Lorad Selenia',0,1,1,1,1,1,173.5019),
+    createData(1106526,56,'MG','HOLOGIC, Inc.','Lorad Selenia',1,0,0,0,0,1,115.6019),
+    createData(1120986,42,'MG','HOLOGIC, Inc.','Lorad Selenia',0,0,1,1,0,1,146.8019),
+    createData(1168072,33,'MG','HOLOGIC, Inc.','Lorad Selenia',1,1,1,1,1,1,102.3019),
+    createData(1179113,49,'MG','HOLOGIC, Inc.','Lorad Selenia',1,0,1,1,1,0,115.6019),
+    createData(1227240,50,'MG','HOLOGIC, Inc.','Lorad Selenia',0,1,1,0,0,1,151.3019),
+    createData(1327487,71,'MG','HOLOGIC, Inc.','Lorad Selenia',1,0,1,1,1,1,195.802),
+    createData(1341153,54,'MG','HOLOGIC, Inc.','Lorad Selenia',0,0,1,1,0,0,111.2019),
+    createData(1385542,53,'MG','HOLOGIC, Inc.','Lorad Selenia',1,1,0,1,1,1,142.3019),
+    createData(1484216,42,'MG','HOLOGIC, Inc.','Lorad Selenia',0,0,1,0,0,1,133.5019),
+    createData(1734073,46,'MG','HOLOGIC, Inc.','Lorad Selenia',1,0,1,1,1,0,124.5019),
+    createData(1822110,48,'MG','HOLOGIC, Inc.','Lorad Selenia',1,1,1,0,0,1,133.5019),
+    createData(1855788,48,'MG','HOLOGIC, Inc.','Lorad Selenia',0,1,0,1,0,1,120.1019),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -80,34 +87,76 @@ function stableSort(array, comparator) {
 
 const headCells = [
     {
-        id: 'name',
+        id: 'id',
+        numeric: true,
+        disablePadding: false,
+        label: 'ID',
+    },
+    {
+        id: 'age',
+        numeric: true,
+        disablePadding: false,
+        label: 'Age',
+    },
+    {
+        id: 'modality',
         numeric: false,
-        disablePadding: true,
-        label: 'Dessert (100g serving)',
+        disablePadding: false,
+        label: 'Modality',
     },
     {
-        id: 'calories',
-        numeric: true,
+        id: 'manufacturer',
+        numeric: false,
         disablePadding: false,
-        label: 'Calories',
+        label: 'Manufacturer',
     },
     {
-        id: 'fat',
-        numeric: true,
+        id: 'manufacturerModelName',
+        numeric: false,
         disablePadding: false,
-        label: 'Fat (g)',
+        label: 'Manufacturer Model',
     },
     {
-        id: 'carbs',
+        id: 'pCR',
         numeric: true,
         disablePadding: false,
-        label: 'Carbs (g)',
+        label: 'pCR',
     },
     {
-        id: 'protein',
+        id: 'leftRight',
         numeric: true,
         disablePadding: false,
-        label: 'Protein (g)',
+        label: 'Left/Right',
+    },
+    {
+        id: 'ER',
+        numeric: true,
+        disablePadding: false,
+        label: 'ER',
+    },
+    {
+        id: 'PR',
+        numeric: true,
+        disablePadding: false,
+        label: 'PR',
+    },
+    {
+        id: 'HER2',
+        numeric: true,
+        disablePadding: false,
+        label: 'HER2',
+    },
+    {
+        id: 'IDC',
+        numeric: true,
+        disablePadding: false,
+        label: 'IDC',
+    },
+    {
+        id: 'compressionForce',
+        numeric: true,
+        disablePadding: false,
+        label: 'Compression Force',
     },
 ];
 
@@ -135,7 +184,8 @@ function EnhancedTableHead(props) {
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align={headCell.numeric ? 'right' : 'left'}
+                        // align={headCell.numeric ? 'right' : 'left'}
+                        align={'right'}
                         padding={headCell.disablePadding ? 'none' : 'normal'}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
@@ -224,7 +274,7 @@ EnhancedTableToolbar.propTypes = {
 
 export default function DicomTable() {
     const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('calories');
+    const [orderBy, setOrderBy] = React.useState('id');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
@@ -238,7 +288,7 @@ export default function DicomTable() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = rows.map((n) => n.name);
+            const newSelecteds = rows.map((n) => n.id);
             setSelected(newSelecteds);
             return;
         }
@@ -308,17 +358,17 @@ export default function DicomTable() {
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
-                                    const isItemSelected = isSelected(row.name);
+                                    const isItemSelected = isSelected(row.id);
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={(event) => handleClick(event, row.name)}
+                                            onClick={(event) => handleClick(event, row.id)}
                                             role="checkbox"
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
-                                            key={row.name}
+                                            key={row.id}
                                             selected={isItemSelected}
                                         >
                                             <TableCell padding="checkbox">
@@ -336,12 +386,19 @@ export default function DicomTable() {
                                                 scope="row"
                                                 padding="none"
                                             >
-                                                {row.name}
+                                                {row.id}
                                             </TableCell>
-                                            <TableCell align="right">{row.calories}</TableCell>
-                                            <TableCell align="right">{row.fat}</TableCell>
-                                            <TableCell align="right">{row.carbs}</TableCell>
-                                            <TableCell align="right">{row.protein}</TableCell>
+                                            <TableCell align="right">{row.age}</TableCell>
+                                            <TableCell align="right">{row.modality}</TableCell>
+                                            <TableCell align="right">{row.manufacturer}</TableCell>
+                                            <TableCell align="right">{row.manufacturerModelName}</TableCell>
+                                            <TableCell align="right">{row.pCR}</TableCell>
+                                            <TableCell align="right">{row.leftRight}</TableCell>
+                                            <TableCell align="right">{row.ER}</TableCell>
+                                            <TableCell align="right">{row.PR}</TableCell>
+                                            <TableCell align="right">{row.HER2}</TableCell>
+                                            <TableCell align="right">{row.IDC}</TableCell>
+                                            <TableCell align="right">{row.compressionForce}</TableCell>
                                         </TableRow>
                                     );
                                 })}
@@ -351,7 +408,7 @@ export default function DicomTable() {
                                         height: (dense ? 33 : 53) * emptyRows,
                                     }}
                                 >
-                                    <TableCell colSpan={6} />
+                                    <TableCell colSpan={13} />
                                 </TableRow>
                             )}
                         </TableBody>
