@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Button, Dialog, DialogTitle, DialogContent,
-    DialogActions, DialogContentText } from "@mui/material";
+    DialogActions,Alert  } from "@mui/material";
 import { useState } from 'react';
 import DicomUploadBox from './DicomUploadBox/DicomUploadBox';
 import MetaUploadBox from './MetaUploadBox';
@@ -27,18 +27,24 @@ export default function UploadDialog(props){
         setNonSyncDicomFilePatientIDs(nonSyncDicomFilePatientIDs);
         setNonSyncCSVFilePatientIDs(nonSyncCSVFilePatientIDs);
     }
-    
+    const handleClearEvent=()=>{
+        props.setOpen(false)
+        setCsvFilePath(undefined)
+        setdicomFilePathList([])
+    }
     return(
         <Dialog open={props.open}>
             <DialogTitle>Dicom 파일 업로드</DialogTitle>
             <DialogContent>
-                <DialogContentText> 
+                <Alert severity="info" > 
                     {dialogContentDescrptionText}
-                </DialogContentText>
+                </Alert >
                 <MetaUploadBox 
                     csvFilePath={csvFilePath}
-                    setCsvFilePath={setCsvFilePath}/>
-                <DicomUploadBox 
+                    setCsvFilePath={setCsvFilePath}
+                    setdicomFilePathList={setdicomFilePathList}/>
+                <DicomUploadBox
+                    csvFilePath={csvFilePath}
                     dicomFilePathList={dicomFilePathList}
                     setdicomFilePathList={setdicomFilePathList}/>
                 <ErrorDescriptionBox 
@@ -47,7 +53,7 @@ export default function UploadDialog(props){
             </DialogContent>
             <DialogActions>
                 <Button onClick={()=>handleDicomAndCsvSync(dicomFilePathList,csvFilePath)}>확인</Button>
-                <Button onClick={()=>props.setOpen(false)}>취소</Button>
+                <Button onClick={handleClearEvent}>취소</Button>
             </DialogActions>
         </Dialog>
     )

@@ -8,10 +8,6 @@ export default function  UploadButton(){
     const handleClickOpen = () => {
         setOpen(true);
     };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
     return(
         <div>
             <Button  onClick={handleClickOpen} variant="outlined">Upload</Button>

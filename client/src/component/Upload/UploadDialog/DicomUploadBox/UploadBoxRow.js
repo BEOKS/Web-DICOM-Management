@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Stack, Alert , IconButton,Box  } from '@mui/material'
+import { Alert , IconButton,Box  } from '@mui/material'
 import ClearIcon from '@mui/icons-material/Clear';
 
 const UploadBoxRow=({fileName,dicomFilePathList,setdicomFilePathList,severity})=>{
