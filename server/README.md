@@ -2,7 +2,7 @@
 ##  Usage
 ### Before
 1. 최신 버전의 [도커](https://docs.docker.com/get-docker/)를 설치해주세요. (docker-compose는 v2 버전으로 설치되어야 합니다, 리눅스의 경우 간혹 v1으로 설치되므로 업데이트가 필요합니다.)
-2. java SDK (version. 17.0.1)을 설치합니다. (설치하지 않을 경우 spring 프로젝트 파일이 정상적으로 실행되지 않습니다.
+2. java SDK (version. 17.0.1)을 설치합니다. (설치하지 않을 경우 spring 프로젝트 파일이 정상적으로 실행되지 않습니다.)
 ### MAC, LINUX
 ```
 #/DSNP/server
