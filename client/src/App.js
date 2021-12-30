@@ -19,6 +19,10 @@ import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import MoreIcon from '@mui/icons-material/More';
 import DicomTable from "./component/Table/Table";
 
+// 지금은 우선 로컬에서 메타데이터 불러오기
+// import 후에 자동으로 JSON.parse 함수가 적용된 것처럼 동작함 (JavaScript Object type)
+import metadata from './metadata.json'
+
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -151,8 +155,7 @@ export default function Page() {
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
-
-                <DicomTable />
+                <DicomTable data={metadata}/>
             </Box>
         </Box>
     );

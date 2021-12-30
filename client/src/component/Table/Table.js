@@ -22,42 +22,22 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
-// 지금은 우선 로컬에서 메타데이터 불러오기
-// import 후에 자동으로 JSON.parse 함수가 적용된 것처럼 동작함 (JS Object type)
-import metadata from '../../metadata.json'
-
-function createData(id, age, modality, manufacturer, manufacturerModelName, pCR, leftRight, ER, PR, HER2, IDC, compressionForce) {
-    return {
-        id,
-        age,
-        modality,
-        manufacturer,
-        manufacturerModelName,
-        pCR,
-        leftRight,
-        ER,
-        PR,
-        HER2,
-        IDC,
-        compressionForce,
-    };
-}
-
-const rows = metadata.map((row) => {
-    return createData(
-        row["anonymized_id"],
-        row["age"],
-        row["modality"],
-        row["manufacturer"],
-        row["manufacturerModelName"],
-        row["class\nnon-pCR: 0 pCR: 1"],
-        row["left: 0\nright: 1"],
-        row["ER"],
-        row["PR"],
-        row["HER2"],
-        row["non-IDC: 0\nIDC: 1"],
-        row["compressionForce"]);
-});
+// function createData(id, age, modality, manufacturer, manufacturerModelName, pCR, leftRight, ER, PR, HER2, IDC, compressionForce) {
+//     return {
+//         id,
+//         age,
+//         modality,
+//         manufacturer,
+//         manufacturerModelName,
+//         pCR,
+//         leftRight,
+//         ER,
+//         PR,
+//         HER2,
+//         IDC,
+//         compressionForce,
+//     };
+// }
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -91,7 +71,7 @@ function stableSort(array, comparator) {
 
 const headCells = [
     {
-        id: 'id',
+        id: 'anonymized_id',
         numeric: true,
         disablePadding: false,
         label: 'ID',
@@ -121,13 +101,13 @@ const headCells = [
         label: 'Manufacturer Model',
     },
     {
-        id: 'pCR',
+        id: 'class\\nnon-pCR: 0 pCR: 1',
         numeric: true,
         disablePadding: false,
         label: 'pCR',
     },
     {
-        id: 'leftRight',
+        id: 'left: 0\\nright: 1',
         numeric: true,
         disablePadding: false,
         label: 'Left/Right',
@@ -151,7 +131,7 @@ const headCells = [
         label: 'HER2',
     },
     {
-        id: 'IDC',
+        id: 'non-IDC: 0\\nIDC: 1',
         numeric: true,
         disablePadding: false,
         label: 'IDC',
@@ -276,13 +256,31 @@ EnhancedTableToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
 };
 
-export default function DicomTable() {
+export default function DicomTable(props) {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('id');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+    // const [rows, setRows] = React.useState(
+    //     props.data.map((row) => {
+    //         return createData(
+    //             row["anonymized_id"],
+    //             row["age"],
+    //             row["modality"],
+    //             row["manufacturer"],
+    //             row["manufacturerModelName"],
+    //             row["class\nnon-pCR: 0 pCR: 1"],
+    //             row["left: 0\nright: 1"],
+    //             row["ER"],
+    //             row["PR"],
+    //             row["HER2"],
+    //             row["non-IDC: 0\nIDC: 1"],
+    //             row["compressionForce"]);
+    // }));
+    const rows = [...props.data];
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -292,11 +290,13 @@ export default function DicomTable() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = rows.map((n) => n.id);
+            const newSelecteds = rows.map((n) => n["anonymized_id"]);
             setSelected(newSelecteds);
+            getSelectedRow(rows);
             return;
         }
         setSelected([]);
+        getSelectedRow([]);
     };
 
     const handleClick = (event, name) => {
@@ -317,6 +317,14 @@ export default function DicomTable() {
         }
 
         setSelected(newSelected);
+        const selectedRows = rows.filter((row) => newSelected.includes(row["anonymized_id"]));
+        getSelectedRow(selectedRows);
+    };
+
+    const getSelectedRow = (selectedRows) => {
+        // console.log(selectedRows);
+        // console.log(JSON.stringify(selectedRows));
+        return JSON.stringify(selectedRows);
     };
 
     const handleChangePage = (event, newPage) => {
@@ -362,17 +370,17 @@ export default function DicomTable() {
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
-                                    const isItemSelected = isSelected(row.id);
+                                    const isItemSelected = isSelected(row["anonymized_id"]);
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={(event) => handleClick(event, row.id)}
+                                            onClick={(event) => handleClick(event, row["anonymized_id"])}
                                             role="checkbox"
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
-                                            key={row.id}
+                                            key={row["anonymized_id"]}
                                             selected={isItemSelected}
                                         >
                                             <TableCell padding="checkbox">
@@ -390,19 +398,19 @@ export default function DicomTable() {
                                                 scope="row"
                                                 padding="none"
                                             >
-                                                {row.id}
+                                                {row["anonymized_id"]}
                                             </TableCell>
-                                            <TableCell align="right">{row.age}</TableCell>
-                                            <TableCell align="right">{row.modality}</TableCell>
-                                            <TableCell align="right">{row.manufacturer}</TableCell>
-                                            <TableCell align="right">{row.manufacturerModelName}</TableCell>
-                                            <TableCell align="right">{row.pCR}</TableCell>
-                                            <TableCell align="right">{row.leftRight}</TableCell>
-                                            <TableCell align="right">{row.ER}</TableCell>
-                                            <TableCell align="right">{row.PR}</TableCell>
-                                            <TableCell align="right">{row.HER2}</TableCell>
-                                            <TableCell align="right">{row.IDC}</TableCell>
-                                            <TableCell align="right">{row.compressionForce}</TableCell>
+                                            <TableCell align="right">{row["age"]}</TableCell>
+                                            <TableCell align="right">{row["modality"]}</TableCell>
+                                            <TableCell align="right">{row["manufacturer"]}</TableCell>
+                                            <TableCell align="right">{row["manufacturerModelName"]}</TableCell>
+                                            <TableCell align="right">{row["class\nnon-pCR: 0 pCR: 1"]}</TableCell>
+                                            <TableCell align="right">{row["left: 0\nright: 1"]}</TableCell>
+                                            <TableCell align="right">{row["ER"]}</TableCell>
+                                            <TableCell align="right">{row["PR"]}</TableCell>
+                                            <TableCell align="right">{row["HER2"]}</TableCell>
+                                            <TableCell align="right">{row["non-IDC: 0\nIDC: 1"]}</TableCell>
+                                            <TableCell align="right">{row["compressionForce"]}</TableCell>
                                         </TableRow>
                                     );
                                 })}
