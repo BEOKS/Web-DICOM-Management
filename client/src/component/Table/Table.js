@@ -22,6 +22,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
+// 지금은 우선 로컬에서 메타데이터 불러오기
+// import 후에 자동으로 JSON.parse 함수가 적용된 것처럼 동작함 (JS Object type)
+import metadata from '../../metadata.json'
+
 function createData(id, age, modality, manufacturer, manufacturerModelName, pCR, leftRight, ER, PR, HER2, IDC, compressionForce) {
     return {
         id,
@@ -39,21 +43,21 @@ function createData(id, age, modality, manufacturer, manufacturerModelName, pCR,
     };
 }
 
-const rows = [
-    createData(1028011,53,'MG','HOLOGIC, Inc.','Lorad Selenia',0,1,1,1,1,1,173.5019),
-    createData(1106526,56,'MG','HOLOGIC, Inc.','Lorad Selenia',1,0,0,0,0,1,115.6019),
-    createData(1120986,42,'MG','HOLOGIC, Inc.','Lorad Selenia',0,0,1,1,0,1,146.8019),
-    createData(1168072,33,'MG','HOLOGIC, Inc.','Lorad Selenia',1,1,1,1,1,1,102.3019),
-    createData(1179113,49,'MG','HOLOGIC, Inc.','Lorad Selenia',1,0,1,1,1,0,115.6019),
-    createData(1227240,50,'MG','HOLOGIC, Inc.','Lorad Selenia',0,1,1,0,0,1,151.3019),
-    createData(1327487,71,'MG','HOLOGIC, Inc.','Lorad Selenia',1,0,1,1,1,1,195.802),
-    createData(1341153,54,'MG','HOLOGIC, Inc.','Lorad Selenia',0,0,1,1,0,0,111.2019),
-    createData(1385542,53,'MG','HOLOGIC, Inc.','Lorad Selenia',1,1,0,1,1,1,142.3019),
-    createData(1484216,42,'MG','HOLOGIC, Inc.','Lorad Selenia',0,0,1,0,0,1,133.5019),
-    createData(1734073,46,'MG','HOLOGIC, Inc.','Lorad Selenia',1,0,1,1,1,0,124.5019),
-    createData(1822110,48,'MG','HOLOGIC, Inc.','Lorad Selenia',1,1,1,0,0,1,133.5019),
-    createData(1855788,48,'MG','HOLOGIC, Inc.','Lorad Selenia',0,1,0,1,0,1,120.1019),
-];
+const rows = metadata.map((row) => {
+    return createData(
+        row["anonymized_id"],
+        row["age"],
+        row["modality"],
+        row["manufacturer"],
+        row["manufacturerModelName"],
+        row["class\nnon-pCR: 0 pCR: 1"],
+        row["left: 0\nright: 1"],
+        row["ER"],
+        row["PR"],
+        row["HER2"],
+        row["non-IDC: 0\nIDC: 1"],
+        row["compressionForce"]);
+});
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
