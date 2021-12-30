@@ -1,16 +1,16 @@
-#spring:
-#  data:
-#    mongodb:
-#      host: mongodb
-#      username: knuipalab
-#      password: knuipalab418
-#      port: 27017
-#      database: tutorial
-#      authentication-database: admin
-#  jpa:
-#    show-sql: true
-#  profiles:
-#    include: oauth
-#  main:
-#    allow-bean-definition-overriding: true
+spring:
+  data:
+    mongodb:
+      host: localhost  #local에서는 'localhost', docker server에서는 'mongodb'로 설정
+      username: knuipalab
+      password: knuipalab418
+      port: 27017
+      database: metadata
+      authentication-database: admin
+  jpa:
+    show-sql: true
+  profiles:
+    include: oauth
+  main:
+    allow-bean-definition-overriding: true
 

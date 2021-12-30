@@ -23,8 +23,8 @@ services:
       innerNetwork:
         aliases:
           - mongodb
-    # ports:
-    #  - 27017:27017 
+    ports:
+     - '27017:27017'
   orthanc:
     image: jodogne/orthanc-plugins:1.9.7
     volumes:
