@@ -5,32 +5,29 @@ import { useState } from 'react';
 import DicomUploadBox from './DicomUploadBox/DicomUploadBox';
 import MetaUploadBox from './MetaUploadBox';
 import FileHandler from '../Utils/FileHandler';
-import ErrorDescriptionBox from './ErrorDescriptionBox';
 
 const dialogContentDescrptionText="메타데이터는 csv의 'PatientID' 속성에는 업로드하려는 Dicom 파일의 ID가 존재해야 합니다. "
 
-let fileHandler=null
+let fileHandler;
 export default function UploadDialog(props){
-    const [dicomFilePathList, setdicomFilePathList]=useState([]);
-    const [csvFilePath, setCsvFilePath]=useState();
-    const [nonSyncDicomFilePatientIDs,setNonSyncDicomFilePatientIDs]=useState();
-    const [nonSyncCSVFilePatientIDs,setNonSyncCSVFilePatientIDs]=useState();
+    const [dicomFiles, setdicomFiles]=useState([]);
+    const [csvFile, setCsvFile]=useState();
+    const [updatePossibility,setUpdatePossibility]=useState({'state':'info', 'errorDicomPathList':''});
 
-    function handleDicomAndCsvSync(dicomFilePathList,csvFilePath){
-        if(fileHandler===null){
-            fileHandler=new FileHandler(dicomFilePathList,csvFilePath);
-        }
-        else{
-            fileHandler.update(dicomFilePathList,csvFilePath);
-        }
-        const [nonSyncDicomFilePatientIDs,nonSyncCSVFilePatientIDs]=fileHandler.checkDicomAndCsvPatientIDEqual();
-        setNonSyncDicomFilePatientIDs(nonSyncDicomFilePatientIDs);
-        setNonSyncCSVFilePatientIDs(nonSyncCSVFilePatientIDs);
+    if(fileHandler===undefined){
+        fileHandler=new FileHandler(dicomFiles,csvFile)
+    }
+    else{
+        fileHandler.updateFilePath(dicomFiles,csvFile);
+    }
+
+    const haldleOKEvent=()=>{
+        setUpdatePossibility(fileHandler.checkUpdatePossibility());
     }
     const handleClearEvent=()=>{
         props.setOpen(false)
-        setCsvFilePath(undefined)
-        setdicomFilePathList([])
+        setCsvFile(undefined)
+        setdicomFiles(new Set([]))
     }
     return(
         <Dialog open={props.open}>
@@ -38,21 +35,19 @@ export default function UploadDialog(props){
             <DialogContent>
                 <Alert severity="info" > 
                     {dialogContentDescrptionText}
-                </Alert >
+                </Alert>
                 <MetaUploadBox 
-                    csvFilePath={csvFilePath}
-                    setCsvFilePath={setCsvFilePath}
-                    setdicomFilePathList={setdicomFilePathList}/>
+                    csvFile={csvFile}
+                    setCsvFile={setCsvFile}
+                    setdicomFiles={setdicomFiles}/>
                 <DicomUploadBox
-                    csvFilePath={csvFilePath}
-                    dicomFilePathList={dicomFilePathList}
-                    setdicomFilePathList={setdicomFilePathList}/>
-                <ErrorDescriptionBox 
-                    nonSyncDicomFilePatientIDs={nonSyncDicomFilePatientIDs}
-                    nonSyncCSVFilePatientIDs={nonSyncCSVFilePatientIDs}/>
+                    csvFile={csvFile}
+                    dicomFiles={dicomFiles}
+                    setdicomFiles={setdicomFiles}
+                    errorDicomPathList={updatePossibility["errorDicomPathList"]}/>
             </DialogContent>
             <DialogActions>
-                <Button onClick={()=>handleDicomAndCsvSync(dicomFilePathList,csvFilePath)}>확인</Button>
+                <Button onClick={haldleOKEvent}>확인</Button>
                 <Button onClick={handleClearEvent}>취소</Button>
             </DialogActions>
         </Dialog>

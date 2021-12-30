@@ -1,30 +1,35 @@
 import { CsvFileHandler } from "./CsvFileHandler"
 import { DicomFileListHandler } from "./DicomFileListHandler"
-
+/**
+ * FileHandler는 Dicom과 메타데이터를 다루기 위한 싱글톤 클래스입니다.
+ */
 class FileHandler{
-    constructor(dicomFilePathList,csvFilePath){
-        this.dicomFileListHandler=new DicomFileListHandler(dicomFilePathList)
-        this.csvFileHandler=new CsvFileHandler(csvFilePath)
+    constructor(dicomFiles,csvFile){
+        this.updateFilePath(dicomFiles,csvFile)
+    }
+    updateFilePath(dicomFiles,csvFile){
+        this.dicomFiles=dicomFiles;
+        this.csvFile=csvFile;
+        this.dicomFileListHandler=new DicomFileListHandler(dicomFiles)
+        this.csvFileHandler=new CsvFileHandler(csvFile)
     }
     /**
-     * @Description : Dicom 파일들의 Patient ID가 csv파일의 'Patient_ID'와 일치하는지 확인
-     * @return : 일치하지 않는 Patient ID List를 전달 (Dicom - CSV, CSV - Dicom)
+     * @returns : {
+     *  state : "success" or "error" string, 
+     *  errorDicomPathList : 메타 데이터의 PatientID 속성에 포함되어 있지 않은 dicom 파일의 리스트입니다.
+     * }
      */
-    checkDicomAndCsvPatientIDEqual(){
-        const dicomFilePatientIDList=this.dicomFileListHandler
-                                .dicomFileList()
-                                .map(dicom => this.dicomFileListHandler.getPatientID(dicom))
-        const csvPatientIDList=this.csvFileHandler.getContentOfColumn()
-        return this.arrayEquals(dicomFilePatientIDList,csvPatientIDList)
+    checkUpdatePossibility(){
+        const dicomFilePatientIdsList=this.dicomFileListHandler.dicomFileList.map( file =>{
+            const ret={[file.name] : this.dicomFileListHandler.getPatientIDof(file)};
+            return ret;
+        })
+        console.log('checkUpdatePossibility',dicomFilePatientIdsList)
+        const csvFilePatientIdsList=this.csvFileHandler.getPatientIDList()
+        console.log('checkUpdatePossibility',csvFilePatientIdsList)
+        console.log('checkUpdatePossibility',dicomFilePatientIdsList.map((key,value)=>[key,value]))
+        return {'state':'info', 'errorDicomPathList':''};
     }
-    arrayEquals(a, b) {
-        return Array.isArray(a) &&
-            Array.isArray(b) &&
-            a.length === b.length &&
-            a.every((val, index) => val === b[index]);
-    }
-    update(dicomFilePathList,csvFilePath){
-
-    }
+    
 }
 export default FileHandler;

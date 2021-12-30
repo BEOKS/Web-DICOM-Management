@@ -2,15 +2,15 @@ import * as React from 'react';
 import { Button, Typography } from '@mui/material';
 import UploadBoxRow from './UploadBoxRow';
 import { Stack } from '@mui/material';
-const DicomUploadBox=({csvFilePath,dicomFilePathList,setdicomFilePathList})=>{
+const DicomUploadBox=({csvFile,dicomFiles,setdicomFiles})=>{
 
     const handleChangeFile=(event)=>{
         console.log(event.target.files)
-        const newFileArray=Array.from(event.target.files).map(i => i.name)
-        console.log([...dicomFilePathList, ...newFileArray])
-        setdicomFilePathList([...dicomFilePathList, ...newFileArray])
+        const newFileArray=event.target.files
+        console.log([...dicomFiles, ...newFileArray])
+        setdicomFiles([...dicomFiles, ...newFileArray])
     }
-    if(csvFilePath===undefined){
+    if(csvFile===undefined){
         return(
             <div>
                 <Stack margin borderRadius="5px" style={{alignItems: "center", backgroundColor:'#f5f5f5'}}>
@@ -24,12 +24,13 @@ const DicomUploadBox=({csvFilePath,dicomFilePathList,setdicomFilePathList})=>{
     return(
         <Stack margin >
             <Stack borderRadius="5px" style={{alignItems: "center", backgroundColor:'#f5f5f5'}}>
-                {dicomFilePathList.map((path)=> (<UploadBoxRow 
-                    key={path}
-                    fileName={path} 
-                    severity={"success"}
-                    dicomFilePathList={dicomFilePathList}
-                    setdicomFilePathList={setdicomFilePathList}
+                {dicomFiles.map((path)=> (
+                    <UploadBoxRow 
+                        key={path.name}
+                        fileName={path.name} 
+                        severity={"success"}
+                        dicomFiles={dicomFiles}
+                        setdicomFiles={setdicomFiles}
                     />))}
                 <input
                     accept=".dcm"

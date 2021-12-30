@@ -10,4 +10,7 @@ export class CsvFileHandler {
     getContentOfColumn(columnName){
         
     }
+    getPatientIDList(){
+
+    }
 }

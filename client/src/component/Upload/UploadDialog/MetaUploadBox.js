@@ -2,18 +2,16 @@ import * as React from 'react';
 import { Stack, Button,IconButton,Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 
-const MetaUploadBox=({csvFilePath,setCsvFilePath,setdicomFilePathList})=>{
-    console.log(csvFilePath)
+const MetaUploadBox=({csvFile,setCsvFile,setdicomFiles})=>{
     const handleChangeFile=(event)=>{
-        setCsvFilePath(event.target.files[0].name)
+        setCsvFile(event.target.files[0])
     }
     const handleClearEvent=()=>{
-        setCsvFilePath(undefined)
-        setdicomFilePathList([])
+        setCsvFile(undefined)
+        setdicomFiles(new Set([]))
     }
     function MetaUploadBoxContent(props){
-        setTimeout(() => {}, 1000)
-        if(csvFilePath===undefined){
+        if(csvFile===undefined){
             return (
                 <div>
                     <input
@@ -35,7 +33,7 @@ const MetaUploadBox=({csvFilePath,setCsvFilePath,setdicomFilePathList})=>{
             return (
                 <Stack direction="row" style={{justifyContent: 'center'}} width="100%">
                     <Typography margin='5px'>
-                        {csvFilePath}
+                        {csvFile.name}
                     </Typography>
                     <IconButton 
                         size="small"
