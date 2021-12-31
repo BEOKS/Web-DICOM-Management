@@ -14,3 +14,9 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
+  servlet:
+    multipart:
+      file-size-threshold: #임시 파일을 만드는 파일 사이즈 기준
+      location:  #임시 저장 경로
+      max-file-size: #파일 최대 크기
+      max-request-size: #요청 당 최대 파일 크기

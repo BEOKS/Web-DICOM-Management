@@ -15,7 +15,7 @@ public class MetaDataApiController {
     @Autowired
     private MetaDataService metaDataService;
 
-    @GetMapping("/MeataData/US/list")
+    @GetMapping("/MeataData/US")
     public List<US_MetaDataResponseDto> findAll_US_MetatData(){
         return metaDataService.findAll_US_MetatData();//Jackson Library를 통해 자바 객체를 json형식으로 반환
     }
