@@ -6,6 +6,9 @@ import okhttp3.*;
 import org.json.JSONObject;
 import org.springframework.http.*;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.BufferingClientHttpRequestFactory;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -17,8 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 @RestController
 public class DicomApiController {
@@ -40,9 +41,11 @@ public class DicomApiController {
 //        redirectAttributes.addFlashAttribute(file);
 //        return "redirect:http://localhost:8042/instances";
 //    }
+//    @Autowired
+//    MultipartFileServeice multipartFileServeice;
 
-    @PostMapping("/api/dicom3")
-    public void uploadDicom(@RequestPart("dicomfile") MultipartFile file) throws IOException {
+    @PostMapping("/api/dicom")
+    public String uploadDicom(@RequestPart("dicomfile") MultipartFile file) throws IOException {
         System.out.println(file.getSize());
         System.out.println(file.getInputStream());
         System.out.println(file.toString());
@@ -53,7 +56,11 @@ public class DicomApiController {
 //        file.transferTo(newfile);
 
         String BASE_URL = "http://localhost:8042/instances";
-        RestTemplate restTemplate = new RestTemplate();
+
+        ClientHttpRequestFactory factory = new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory());
+
+        RestTemplate restTemplate = new RestTemplate(factory);
+//        RestTemplate restTemplate = new RestTemplate();
 
 //        header setting
         final HttpHeaders headers = new HttpHeaders();
@@ -62,21 +69,21 @@ public class DicomApiController {
 
 //        body setting
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("application/dicom", file);
+        body.add("application/dicom", file.getBytes());
 
 //        post api call
         final HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(BASE_URL, requestEntity, String.class);
+        ResponseEntity<Object> response = restTemplate.postForEntity(BASE_URL, requestEntity, Object.class);
 
-        System.out.println(file.getSize());
+        System.out.println(response.toString());
+
 //        ObjectMapper objectMapper = new ObjectMapper();
 //        JsonNode jsonNode = objectMapper.readTree(response.getBody());
 
-//        return new jsonNode("");
-        return ;
+        return response.toString();
     }
 
-    @PostMapping("/api/dicom")
+    @PostMapping("/api/dicom3")
     public JSONObject UserLogoutInterface(@RequestPart("dicomfile") MultipartFile file) throws IOException {
         String BASE_URL = "http://localhost:8042/instances";
 
@@ -109,18 +116,17 @@ public class DicomApiController {
 //        System.out.println(response.toString());
         System.out.println(response.headers().toString());
 //        System.out.println(response.body().toString());
-        if (response.isSuccessful()) {
-            ResponseBody rbody = response.body();
-
-            if (rbody != null) {
-                String jsonText = rbody.string();
-                System.out.println("rbody" + rbody.toString());
-                System.out.println("jsonText" + jsonText.toString());
-                rbody.close();
-
-                JSONObject json = new JSONObject(jsonText);
-            }
-        }
+//        if (response.isSuccessful()) {
+//            ResponseBody rbody = response.body();
+//
+//            if (rbody != null)
+//                System.out.println("rbody" + rbody.toString());
+//                System.out.println("jsonText" + jsonText.toString());
+//                rbody.close();
+//
+//                JSONObject json = new JSONObject(jsonText);
+//            }
+//        }
 //        System.out.println("aaa" + response.body().string().toString());
 
 //        JSONObject json = new JSONObject(response.body().string());
