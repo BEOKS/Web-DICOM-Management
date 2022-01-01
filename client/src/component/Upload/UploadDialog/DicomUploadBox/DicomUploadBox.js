@@ -3,11 +3,10 @@ import { Button, Typography } from '@mui/material';
 import UploadBoxRow from './UploadBoxRow';
 import { Stack } from '@mui/material';
 const DicomUploadBox=({csvFile,dicomFiles,setdicomFiles})=>{
-
+    console.log('build DicomUploadBox Component ',csvFile,dicomFiles)
     const handleChangeFile=(event)=>{
-        console.log(event.target.files)
-        const newFileArray=event.target.files
-        console.log([...dicomFiles, ...newFileArray])
+        const newFileArray=[...event.target.files].filter(file => Array.isArray(dicomFiles) && !dicomFiles.some( e => e.name===file.name))
+        console.log('dicomFiles',[...dicomFiles, ...newFileArray])
         setdicomFiles([...dicomFiles, ...newFileArray])
     }
     if(csvFile===undefined){
@@ -24,7 +23,7 @@ const DicomUploadBox=({csvFile,dicomFiles,setdicomFiles})=>{
     return(
         <Stack margin >
             <Stack borderRadius="5px" style={{alignItems: "center", backgroundColor:'#f5f5f5'}}>
-                {dicomFiles.map((path)=> (
+                {Array.isArray(dicomFiles) && dicomFiles.map((path)=> (
                     <UploadBoxRow 
                         key={path.name}
                         fileName={path.name} 

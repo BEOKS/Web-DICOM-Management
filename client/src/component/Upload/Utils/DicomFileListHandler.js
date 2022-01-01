@@ -4,7 +4,9 @@ export class DicomFileListHandler {
     constructor(fileList) {
         this.fileList=fileList
         this.dicomFileList=[]
-        fileList.map(file => this.loadFile(file));
+        if(Array.isArray(fileList)){
+            fileList.map(file => this.loadFile(file));
+        }
         console.log('dicomFileList',this.dicomFileList)
     }
     loadFile(file){

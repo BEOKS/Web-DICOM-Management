@@ -10,6 +10,7 @@ const dialogContentDescrptionText="메타데이터는 csv의 'PatientID' 속성�
 
 let fileHandler;
 export default function UploadDialog(props){
+    console.log('Build UploadDialog Component.')
     const [dicomFiles, setdicomFiles]=useState([]);
     const [csvFile, setCsvFile]=useState();
     const [updatePossibility,setUpdatePossibility]=useState({'state':'info', 'errorDicomPathList':''});

@@ -3,6 +3,7 @@ import { Stack, Button,IconButton,Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 
 const MetaUploadBox=({csvFile,setCsvFile,setdicomFiles})=>{
+    console.log('build MetaUploadBox comopnent ',csvFile)
     const handleChangeFile=(event)=>{
         setCsvFile(event.target.files[0])
     }
