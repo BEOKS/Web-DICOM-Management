@@ -28,7 +28,7 @@ class FileHandler{
         const csvFilePatientIdsList=this.csvFileHandler.getPatientIDList()
         console.log('checkUpdatePossibility',csvFilePatientIdsList)
         console.log('checkUpdatePossibility',dicomFilePatientIdsList.map((key,value)=>[key,value]))
-        return {'state':'info', 'errorDicomPathList':''};
+        return {'state':'error', 'errorDicomPathList':[]};
     }
     
 }

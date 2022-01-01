@@ -7,13 +7,14 @@ import MetaUploadBox from './MetaUploadBox';
 import FileHandler from '../Utils/FileHandler';
 
 const dialogContentDescrptionText="메타데이터는 csv의 'PatientID' 속성에는 업로드하려는 Dicom 파일의 ID가 존재해야 합니다. "
+const dicomUploadErrorMsg="업로드한 Dicom 파일을 확인해주세요 "
 
 let fileHandler;
 export default function UploadDialog(props){
     console.log('Build UploadDialog Component.')
     const [dicomFiles, setdicomFiles]=useState([]);
     const [csvFile, setCsvFile]=useState();
-    const [updatePossibility,setUpdatePossibility]=useState({'state':'info', 'errorDicomPathList':''});
+
 
     if(fileHandler===undefined){
         fileHandler=new FileHandler(dicomFiles,csvFile)
@@ -21,9 +22,10 @@ export default function UploadDialog(props){
     else{
         fileHandler.updateFilePath(dicomFiles,csvFile);
     }
+    const updatePossibility=fileHandler.checkUpdatePossibility();
 
     const haldleOKEvent=()=>{
-        setUpdatePossibility(fileHandler.checkUpdatePossibility());
+
     }
     const handleClearEvent=()=>{
         props.setOpen(false)
@@ -37,6 +39,9 @@ export default function UploadDialog(props){
                 <Alert severity="info" > 
                     {dialogContentDescrptionText}
                 </Alert>
+                {
+                    updatePossibility.state==='error' && <Alert severity="error">{dicomUploadErrorMsg}</Alert>
+                }
                 <MetaUploadBox 
                     csvFile={csvFile}
                     setCsvFile={setCsvFile}
