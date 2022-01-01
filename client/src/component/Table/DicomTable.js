@@ -80,7 +80,7 @@ export default function DicomTable(props) {
         if (event.target.checked) {
             const newSelecteds = rows.map((n) => n[keys[0]]);
             setSelected(newSelecteds);
-            props.setSelectedRow(JSON.stringify(rows));
+            props.setSelectedRow(rows);
             return;
         }
         setSelected([]);
@@ -106,7 +106,7 @@ export default function DicomTable(props) {
 
         setSelected(newSelected);
         const selectedRows = rows.filter((row) => newSelected.includes(row[keys[0]]));
-        props.setSelectedRow(JSON.stringify(selectedRows));
+        props.setSelectedRow(selectedRows);
     };
 
     const handleChangePage = (event, newPage) => {
