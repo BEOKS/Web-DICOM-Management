@@ -22,23 +22,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
-// function createData(id, age, modality, manufacturer, manufacturerModelName, pCR, leftRight, ER, PR, HER2, IDC, compressionForce) {
-//     return {
-//         id,
-//         age,
-//         modality,
-//         manufacturer,
-//         manufacturerModelName,
-//         pCR,
-//         leftRight,
-//         ER,
-//         PR,
-//         HER2,
-//         IDC,
-//         compressionForce,
-//     };
-// }
-
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
@@ -69,80 +52,7 @@ function stableSort(array, comparator) {
     return stabilizedThis.map((el) => el[0]);
 }
 
-let headCells = [
-    // {
-    //     id: 'anonymized_id',
-    //     numeric: true,
-    //     disablePadding: false,
-    //     label: 'ID',
-    // },
-    // {
-    //     id: 'age',
-    //     numeric: true,
-    //     disablePadding: false,
-    //     label: 'Age',
-    // },
-    // {
-    //     id: 'modality',
-    //     numeric: false,
-    //     disablePadding: false,
-    //     label: 'Modality',
-    // },
-    // {
-    //     id: 'manufacturer',
-    //     numeric: false,
-    //     disablePadding: false,
-    //     label: 'Manufacturer',
-    // },
-    // {
-    //     id: 'manufacturerModelName',
-    //     numeric: false,
-    //     disablePadding: false,
-    //     label: 'Manufacturer Model',
-    // },
-    // {
-    //     id: 'class\\nnon-pCR: 0 pCR: 1',
-    //     numeric: true,
-    //     disablePadding: false,
-    //     label: 'pCR',
-    // },
-    // {
-    //     id: 'left: 0\\nright: 1',
-    //     numeric: true,
-    //     disablePadding: false,
-    //     label: 'Left/Right',
-    // },
-    // {
-    //     id: 'ER',
-    //     numeric: true,
-    //     disablePadding: false,
-    //     label: 'ER',
-    // },
-    // {
-    //     id: 'PR',
-    //     numeric: true,
-    //     disablePadding: false,
-    //     label: 'PR',
-    // },
-    // {
-    //     id: 'HER2',
-    //     numeric: true,
-    //     disablePadding: false,
-    //     label: 'HER2',
-    // },
-    // {
-    //     id: 'non-IDC: 0\\nIDC: 1',
-    //     numeric: true,
-    //     disablePadding: false,
-    //     label: 'IDC',
-    // },
-    // {
-    //     id: 'compressionForce',
-    //     numeric: true,
-    //     disablePadding: false,
-    //     label: 'Compression Force',
-    // },
-];
+let headCells = [];
 
 function EnhancedTableHead(props) {
     const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
@@ -265,22 +175,6 @@ export default function DicomTable(props) {
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-    // const [rows, setRows] = React.useState(
-    //     props.data.map((row) => {
-    //         return createData(
-    //             row["anonymized_id"],
-    //             row["age"],
-    //             row["modality"],
-    //             row["manufacturer"],
-    //             row["manufacturerModelName"],
-    //             row["class\nnon-pCR: 0 pCR: 1"],
-    //             row["left: 0\nright: 1"],
-    //             row["ER"],
-    //             row["PR"],
-    //             row["HER2"],
-    //             row["non-IDC: 0\nIDC: 1"],
-    //             row["compressionForce"]);
-    // }));
     const rows = [...props.data];
 
     const getKeysFromJSON = () => {
@@ -309,7 +203,6 @@ export default function DicomTable(props) {
         for (let i = 0; i < keys.length; i++) {
             headCells[i] = createHeadCell(keys[i], false, false, keys[i]);
         }
-        // console.log(headCells);
     };
     pushHeadCells();
 
@@ -332,11 +225,11 @@ export default function DicomTable(props) {
         if (event.target.checked) {
             const newSelecteds = rows.map((n) => n[keys[0]]);
             setSelected(newSelecteds);
-            getSelectedRow(rows);
+            props.setSelectedRow(JSON.stringify(rows));
             return;
         }
         setSelected([]);
-        getSelectedRow([]);
+        props.setSelectedRow([]);
     };
 
     const handleClick = (event, name) => {
@@ -358,13 +251,7 @@ export default function DicomTable(props) {
 
         setSelected(newSelected);
         const selectedRows = rows.filter((row) => newSelected.includes(row[keys[0]]));
-        getSelectedRow(selectedRows);
-    };
-
-    const getSelectedRow = (selectedRows) => {
-        // console.log(selectedRows);
-        // console.log(JSON.stringify(selectedRows));
-        return JSON.stringify(selectedRows);
+        props.setSelectedRow(JSON.stringify(selectedRows));
     };
 
     const handleChangePage = (event, newPage) => {
@@ -440,17 +327,6 @@ export default function DicomTable(props) {
                                             >
                                                 {row[keys[0]]}
                                             </TableCell>
-                                            {/*<TableCell align="right">{row["age"]}</TableCell>*/}
-                                            {/*<TableCell align="right">{row["modality"]}</TableCell>*/}
-                                            {/*<TableCell align="right">{row["manufacturer"]}</TableCell>*/}
-                                            {/*<TableCell align="right">{row["manufacturerModelName"]}</TableCell>*/}
-                                            {/*<TableCell align="right">{row["class\nnon-pCR: 0 pCR: 1"]}</TableCell>*/}
-                                            {/*<TableCell align="right">{row["left: 0\nright: 1"]}</TableCell>*/}
-                                            {/*<TableCell align="right">{row["ER"]}</TableCell>*/}
-                                            {/*<TableCell align="right">{row["PR"]}</TableCell>*/}
-                                            {/*<TableCell align="right">{row["HER2"]}</TableCell>*/}
-                                            {/*<TableCell align="right">{row["non-IDC: 0\nIDC: 1"]}</TableCell>*/}
-                                            {/*<TableCell align="right">{row["compressionForce"]}</TableCell>*/}
                                             { createTableCell(row) }
                                         </TableRow>
                                     );

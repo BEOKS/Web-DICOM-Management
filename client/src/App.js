@@ -94,6 +94,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function Page() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const [selectedPatientInfo, setSelectedPatientInfo] = React.useState(JSON.stringify([]));
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -156,7 +157,11 @@ export default function Page() {
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
-                <DicomTable data={metadata2}/>
+                <DicomTable
+                    data={metadata2}
+                    setSelectedRow={setSelectedPatientInfo}
+                />
+                {/*{ console.log(selectedPatientInfo) }*/}
             </Box>
         </Box>
     );
