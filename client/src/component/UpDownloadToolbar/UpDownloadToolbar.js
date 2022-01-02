@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Box from "@mui/material/Box";
+import { Grid } from '@mui/material';
 import UploadButton from "../Upload/UploadButton";
 
 export default function UpDownloadToolbar() {
@@ -12,7 +13,7 @@ export default function UpDownloadToolbar() {
                 px: 3
             }}
         >
-            <Box
+            <Grid
                 sx={{
                     width: '100%',
                     border: 'solid 1px #cfcfcf',
@@ -20,9 +21,11 @@ export default function UpDownloadToolbar() {
                     px: 3,
                     py: 1,
                 }}
+                container 
+                justifyContent="flex-end"
             >
                 <UploadButton />
-            </Box>
+            </Grid>
         </Box>
     );
 }
