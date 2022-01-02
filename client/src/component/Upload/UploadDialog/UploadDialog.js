@@ -14,6 +14,7 @@ export default function UploadDialog(props){
     console.log('Build UploadDialog Component.')
     const [dicomFiles, setdicomFiles]=useState([]);
     const [csvFile, setCsvFile]=useState();
+    const [updatePossibility,setUpdatePossibility]=useState();
 
 
     if(fileHandler===undefined){
@@ -22,9 +23,12 @@ export default function UploadDialog(props){
     else{
         fileHandler.updateFilePath(dicomFiles,csvFile);
     }
-    const updatePossibility=fileHandler.checkUpdatePossibility();
 
     const haldleOKEvent=()=>{
+        if(fileHandler.dicomFileListHandler.dicomFileList.length===0){
+            return;
+        }
+        setUpdatePossibility(fileHandler.checkUpdatePossibility());
 
     }
     const handleClearEvent=()=>{
@@ -40,7 +44,7 @@ export default function UploadDialog(props){
                     {dialogContentDescrptionText}
                 </Alert>
                 {
-                    updatePossibility.state==='error' && <Alert severity="error">{dicomUploadErrorMsg}</Alert>
+                    updatePossibility!==undefined && updatePossibility.state==='error' && <Alert severity="error">{dicomUploadErrorMsg}</Alert>
                 }
                 <MetaUploadBox 
                     csvFile={csvFile}
@@ -50,7 +54,7 @@ export default function UploadDialog(props){
                     csvFile={csvFile}
                     dicomFiles={dicomFiles}
                     setdicomFiles={setdicomFiles}
-                    errorDicomPathList={updatePossibility["errorDicomPathList"]}/>
+                    updatePossibility={updatePossibility}/>
             </DialogContent>
             <DialogActions>
                 <Button onClick={haldleOKEvent}>확인</Button>

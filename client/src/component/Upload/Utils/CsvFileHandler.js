@@ -2,10 +2,13 @@ export class CsvFileHandler {
     constructor(csvFile) {
         this.csvFile=csvFile;
         this.loadCsv(csvFile); 
-        console.log('CsvFileHandler: csv',this.csvText);
         this.patientIDLabel='Patient_ID'
     }
-
+    /**
+     *  this.csvJson에 로드한 csv 정보를 json 형태로 저장
+     * @param {*} file 
+     * @returns 
+     */
     async loadCsv(file) {
         if(file instanceof File){
             let result = await new Promise((resolve) => {
@@ -14,7 +17,7 @@ export class CsvFileHandler {
                 fileReader.readAsText(file);
             });
             console.log('loadCsv: csv',this.csvJSON(result),typeof(result));
-            this.csvText=result
+            this.csvJson=this.csvJSON(result) 
         }
         return null;
     }
@@ -40,12 +43,15 @@ export class CsvFileHandler {
         }
       
         //return result; //JavaScript object
-        return JSON.stringify(result); //JSON
+        return result; //JSON
       }
     getContentOfColumn(columnName){
         
     }
     getPatientIDList(){
-
+        return this.csvJson.map( json => json.anonymized_id)
+    }
+    uploadFile(){
+        
     }
 }

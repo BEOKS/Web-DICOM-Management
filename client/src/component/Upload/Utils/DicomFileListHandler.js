@@ -33,4 +33,7 @@ export class DicomFileListHandler {
     getPatientIDof(dicomFile){
         return dicomFile.string('x00100020');
     }
+    uploadFile(){
+        
+    }
 }

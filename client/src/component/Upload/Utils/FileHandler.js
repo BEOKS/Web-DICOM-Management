@@ -20,15 +20,22 @@ class FileHandler{
      * }
      */
     checkUpdatePossibility(){
-        const dicomFilePatientIdsList=this.dicomFileListHandler.dicomFileList.map( file =>{
-            const ret={[file.name] : this.dicomFileListHandler.getPatientIDof(file)};
-            return ret;
-        })
-        console.log('checkUpdatePossibility',dicomFilePatientIdsList)
+        if(this.dicomFileListHandler.dicomFileList.length===0){
+            console.log('dicomFileList empty')
+            return {'state':'warning', 'errorDicomPathList':[]};
+        }
+        const dicomFilePatientIdsList=this.dicomFileListHandler.dicomFileList.map( file =>
+            this.dicomFileListHandler.getPatientIDof(file)
+        )
         const csvFilePatientIdsList=this.csvFileHandler.getPatientIDList()
-        console.log('checkUpdatePossibility',csvFilePatientIdsList)
-        console.log('checkUpdatePossibility',dicomFilePatientIdsList.map((key,value)=>[key,value]))
-        return {'state':'error', 'errorDicomPathList':[]};
+        const errorDicomPathList=dicomFilePatientIdsList.map(id => 
+            csvFilePatientIdsList.includes(id))
+        const state= errorDicomPathList.includes(false)? 'error':'success';
+        console.log('checkUpdatePossibility',{'state': state, 'errorDicomPathList':errorDicomPathList})
+        return {'state': state, 'errorDicomPathList':errorDicomPathList};
+    }
+    uploadFiles(){
+
     }
     
 }

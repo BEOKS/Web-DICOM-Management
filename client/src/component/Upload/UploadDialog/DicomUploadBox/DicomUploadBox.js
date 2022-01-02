@@ -2,12 +2,24 @@ import * as React from 'react';
 import { Button, Typography } from '@mui/material';
 import UploadBoxRow from './UploadBoxRow';
 import { Stack } from '@mui/material';
-const DicomUploadBox=({csvFile,dicomFiles,setdicomFiles})=>{
+const DicomUploadBox=({csvFile,dicomFiles,setdicomFiles,updatePossibility})=>{
     console.log('build DicomUploadBox Component ',csvFile,dicomFiles)
     const handleChangeFile=(event)=>{
         const newFileArray=[...event.target.files].filter(file => Array.isArray(dicomFiles) && !dicomFiles.some( e => e.name===file.name))
         console.log('dicomFiles',[...dicomFiles, ...newFileArray])
         setdicomFiles([...dicomFiles, ...newFileArray])
+    }
+    console.log('DicomUploadBox', updatePossibility);
+    const checkSeverity=(index)=>{
+        if(updatePossibility===undefined || updatePossibility.errorDicomPathList===undefined){
+            return "success"
+        }
+        else if(updatePossibility.errorDicomPathList[index]){
+            return "success"
+        }
+        else{
+            return "error"
+        }
     }
     if(csvFile===undefined){
         return(
@@ -23,11 +35,11 @@ const DicomUploadBox=({csvFile,dicomFiles,setdicomFiles})=>{
     return(
         <Stack margin >
             <Stack borderRadius="5px" style={{alignItems: "center", backgroundColor:'#f5f5f5'}}>
-                {Array.isArray(dicomFiles) && dicomFiles.map((path)=> (
+                {Array.isArray(dicomFiles) && dicomFiles.map((path,index)=> (
                     <UploadBoxRow 
                         key={path.name}
                         fileName={path.name} 
-                        severity={"success"}
+                        severity={checkSeverity(index)}
                         dicomFiles={dicomFiles}
                         setdicomFiles={setdicomFiles}
                     />))}
