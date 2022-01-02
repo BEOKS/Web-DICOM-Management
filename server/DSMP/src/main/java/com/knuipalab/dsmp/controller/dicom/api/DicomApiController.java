@@ -12,6 +12,7 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,61 +25,54 @@ import java.io.IOException;
 @RestController
 public class DicomApiController {
 
-    //    {
-//        ID: "",
-//        ParentPatient : "",
-//        ParentSeries : "",
-//        ParentStudy : "",
-//        Path : "",
-//        Status : ""
-//    }
-
-//    @PostMapping("/api/dicom")
-//    public String uploadDicom(@RequestParam("dicomfile") MultipartFile file,
-//                                RedirectAttributes redirectAttributes) throws IOException {
-//        System.out.println(file.getSize());
-//        System.out.println(file.getContentType());
-//        redirectAttributes.addFlashAttribute(file);
-//        return "redirect:http://localhost:8042/instances";
-//    }
-//    @Autowired
-//    MultipartFileServeice multipartFileServeice;
-
     @PostMapping("/api/dicom")
-    public String uploadDicom(@RequestPart("dicomfile") MultipartFile file) throws IOException {
-        System.out.println(file.getSize());
-        System.out.println(file.getInputStream());
-        System.out.println(file.toString());
-        System.out.println(file.getContentType());
-        System.out.println(file.getOriginalFilename());
+    public JsonNode uploadDicom(@RequestPart("dicomfile") MultipartFile file) throws IOException {
 
-//        File newfile = new File(file.getOriginalFilename());
-//        file.transferTo(newfile);
+        System.out.println("--------/api/dicom POST api Call------------");
+        System.out.println("-----------Dicom File Info------------");
+        System.out.println("File Name: " + file.getOriginalFilename());
+        System.out.println("Content-type: " + file.getContentType());
+        System.out.println("File Size: " + file.getSize());
+        System.out.println("File: " + file.toString());
 
         String BASE_URL = "http://localhost:8042/instances";
+//        String BASE_URL = "https://demo.orthanc-server.com/instances";
 
-        ClientHttpRequestFactory factory = new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory());
-
-        RestTemplate restTemplate = new RestTemplate(factory);
-//        RestTemplate restTemplate = new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
 
 //        header setting
-        final HttpHeaders headers = new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/dicom");
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-//        body setting
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("application/dicom", file.getBytes());
 
 //        post api call
-        final HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-        ResponseEntity<Object> response = restTemplate.postForEntity(BASE_URL, requestEntity, Object.class);
+        byte[] content = file.getBytes();
+        HttpEntity<byte []> requestEntity = new HttpEntity<>(content, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(BASE_URL, requestEntity, String.class);
 
+//        reponse to json
+        System.out.println("-----------Response Result------------");
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode;
+        try {
+            jsonNode = objectMapper.readTree(response.getBody());
+        }
+        catch(Exception ex){
+            System.err.println("Error get Response");
+            jsonNode = objectMapper.readTree(response.toString());
+        }
         System.out.println(response.toString());
 
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        JsonNode jsonNode = objectMapper.readTree(response.getBody());
+        return jsonNode;
+    }
+
+    @GetMapping("/api/dicom")
+    public String listDicom(){
+        String BASE_URL = "http://localhost:8042/instances";
+        RestTemplate restTemplate = new RestTemplate();
+
+//        get api call
+        ResponseEntity<String> response = restTemplate.getForEntity(BASE_URL, String.class);
+        System.out.println(response.toString());
 
         return response.toString();
     }
