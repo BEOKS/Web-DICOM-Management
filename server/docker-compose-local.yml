@@ -15,6 +15,9 @@ services:
       - orthanc
   mongodb: 
     image : mongo
+    volumes:
+      # Making the mongo database persistent
+      - ./mongoDB/db:/data/db
     restart : always
     environment :
       MONGO_INITDB_ROOT_USERNAME: knuipalab
@@ -30,6 +33,8 @@ services:
     volumes:
       # Config
       - ./orthanc/config/orthanc.json:/etc/orthanc/orthanc.json:ro
+      # Making the Orthanc database persistent
+      - ./orthanc-db/:/var/lib/orthanc/db/
     ports:
       - '4242:4242' # DICOM
       - '8042:8042' # Web
