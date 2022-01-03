@@ -17,7 +17,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import MoreIcon from '@mui/icons-material/More';
-import DicomTable from "./component/table/DicomTable";
+import DicomTable from "./component/Table/DicomTable";
 import UpDownloadToolbar from "./component/UpDownloadToolbar/UpDownloadToolbar";
 
 // 지금은 우선 로컬에서 메타데이터 불러오기
