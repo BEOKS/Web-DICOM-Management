@@ -3,7 +3,6 @@ package com.knuipalab.dsmp.dto.metadata;
 import com.knuipalab.dsmp.domain.metadata.MetaData;
 import lombok.Getter;
 import org.bson.conversions.Bson;
-import org.bson.json.JsonObject;
 
 @Getter
 public class MetaDataResponseDto {
