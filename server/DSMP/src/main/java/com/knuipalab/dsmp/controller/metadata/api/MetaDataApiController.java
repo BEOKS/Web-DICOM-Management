@@ -1,6 +1,6 @@
 package com.knuipalab.dsmp.controller.metadata.api;
 
-import com.knuipalab.dsmp.dto.metadata.US_MetaDataResponseDto;
+import com.knuipalab.dsmp.dto.metadata.MetaDataResponseDto;
 import com.knuipalab.dsmp.service.metadata.MetaDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +15,10 @@ public class MetaDataApiController {
     @Autowired
     private MetaDataService metaDataService;
 
-    @GetMapping("/MeataData/US/list")
-    public List<US_MetaDataResponseDto> findAll_US_MetatData(){
-        return metaDataService.findAll_US_MetatData();//Jackson Library를 통해 자바 객체를 json형식으로 반환
+    @GetMapping("/MetaData")
+    public List<MetaDataResponseDto> findAll_MetaData(){
+        System.out.println(metaDataService.findAll_MetaData());
+        return metaDataService.findAll_MetaData();//Jackson Library를 통해 자바 객체를 json형식으로 반환
     }
 
 }
