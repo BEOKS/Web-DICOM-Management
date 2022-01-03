@@ -3,8 +3,7 @@ import com.knuipalab.dsmp.domain.metadata.MetaData;
 import com.knuipalab.dsmp.domain.metadata.MetaDataRepository;
 import com.knuipalab.dsmp.dto.metadata.MetaDataResponseDto;
 import com.knuipalab.dsmp.dto.metadata.MetaDataRequestDto;
-import lombok.RequiredArgsConstructor;
-import org.bson.Document;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,17 +44,18 @@ public class MetaDataService {
 
         MetaData metaData = new MetaData().builder().body(metaDataRequestDto.getBody()).build();
 
-        metaDataRepository.save(metaData);
+        metaDataRepository.save(metaData); // Id가 DB에 존재하면 update, 없으면 save
     }
 
     @Transactional
     public void update(String id, MetaDataRequestDto metaDataRequestDto){
 
-        MetaData metaData = metaDataRepository.findById(id) // 영속화 완료 : DB에서 가져온 데이터를 영속화 컨텍스트의 1차캐시에 저장 하여 변화를 감지하거나 접근을 용이하게 한다.
+        MetaData metaData = metaDataRepository.findById(id)
                 .orElseThrow(()-> new IllegalArgumentException("해당 Id값을 가진 데이터 베이스 정보가 없습니다."));
 
-        metaData.update(metaDataRequestDto.getBody()); //트랜잭션 종료시 -> 더티체킹으로 인해 자동으로 영속화된 기존의 컨텐츠와 비교후  변화 감지시  db flush .
+        metaData.update(metaDataRequestDto.getBody());
 
+        metaDataRepository.save(metaData); // Id가 DB에 존재하면 update, 없으면 save
     }
 
     @Transactional

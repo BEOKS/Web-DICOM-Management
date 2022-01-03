@@ -34,7 +34,7 @@ public class MetaData {
                 '}';
     }
 
-    public void update(Bson body){
-        this.body = body;
+    public void update(Bson newBody){
+        this.body = newBody;
     }
 }
