@@ -1,7 +1,6 @@
 buildscript {
     ext{ // 전역
         springBootVersion = '2.5.6'
-        flapdoodleVersion = '2.2.0'
     }
     repositories {
         mavenCentral()
@@ -47,7 +46,7 @@ dependencies {
     testImplementation("org.junit.vintage:junit-vintage-engine") {
         exclude group: "org.hamcrest", module: "hamcrest-core"
     }
-    testImplementation "de.flapdoodle.embed:de.flapdoodle.embed.mongo:${flapdoodleVersion}"// mongoDB for testcode
+    testImplementation "de.flapdoodle.embed:de.flapdoodle.embed.mongo"// mongoDB for testcode
 
 }
 
