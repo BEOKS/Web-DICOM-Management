@@ -42,6 +42,7 @@ public class MetaDataApiController {
     public void insert(@RequestBody String strBody){
         MetaDataRequestDto metaDataRequestDto = new MetaDataRequestDto(strBody);
         metaDataService.insert(metaDataRequestDto);
+
     }
 
 }
