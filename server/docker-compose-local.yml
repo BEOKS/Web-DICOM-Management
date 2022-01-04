@@ -5,7 +5,7 @@ services:
       context: ./DSMP/
       dockerfile: ./Dockerfile
     ports:
-      - 8083:8083
+      - 8080:8080
     networks:
       innerNetwork:
         aliases:

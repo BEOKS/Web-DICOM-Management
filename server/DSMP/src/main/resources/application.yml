@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      host: localhost  #local에서는 'localhost', docker server에서는 'mongodb'로 설정
+      host: mongodb  #local에서는 'localhost', docker server에서는 'mongodb'로 설정
       username: knuipalab
       password: knuipalab418
       port: 27017
@@ -20,6 +20,3 @@ spring:
       location:  #임시 저장 경로
       max-file-size: #파일 최대 크기
       max-request-size: #요청 당 최대 파일 크기
-
-
-
