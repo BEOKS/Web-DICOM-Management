@@ -35,7 +35,7 @@ export default function UploadDialog(props){
     const handleClearEvent=()=>{
         props.setOpen(false)
         setCsvFile(undefined)
-        setdicomFiles(new Set([]))
+        setdicomFiles([])
         setUpdatePossibility(undefined)
         setSnackBarInfo({})
     }
