@@ -9,8 +9,13 @@ class FileHandler{
         this.csvFileHandler=new CsvFileHandler(csvFile)
     }
     updateFilePath(dicomFiles,csvFile){
-        this.dicomFileListHandler.update(dicomFiles)
-        this.csvFile.update(csvFile)
+        this.dicomFileListHandler.updateFileList(dicomFiles)
+        this.csvFileHandler.updateFile(csvFile)
+    }
+    async loadFile(onloadCallBack,dicomOnLoadAllCallBack=()=>{}){
+        await this.csvFileHandler.loadCsv(()=>{});
+        await this.dicomFileListHandler.loadFile(()=>{},dicomOnLoadAllCallBack);
+        onloadCallBack(this.csvFileHandler.csvJson,this.dicomFileListHandler.dicomFileList);
     }
     /**
      * @returns : {

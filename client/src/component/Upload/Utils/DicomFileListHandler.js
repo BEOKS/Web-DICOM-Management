@@ -3,26 +3,34 @@ import dicomParser from 'dicom-parser'
 export class DicomFileListHandler {
     constructor(fileList) {
         this.fileList=fileList
-        // this.dicomFileList=[]
+        this.dicomFileList=[]
         // if(Array.isArray(fileList)){
         //     fileList.map(file => this.loadFile(file));
         // }
         // console.log('dicomFileList',this.dicomFileList)
     }
-    loadFile(file){
+    updateFileList(fileList){
+        this.fileList=fileList
+        this.dicomFileList=[]
+    }
+    async loadFile(onloadEachCallBack,onLoadAllCallBack){
         const storeFile=(dataSet)=>{
             this.dicomFileList.push(dataSet)
-            console.log('dicomFileList',this.dicomFileList)
         }
-        let reader = new FileReader();
-        reader.onload = function(file) {
-            var arrayBuffer = reader.result;
-            // Here we have the file data as an ArrayBuffer.  dicomParser requires as input a
-            // Uint8Array so we create that here
-            var byteArray = new Uint8Array(arrayBuffer);
-            storeFile(dicomParser.parseDicom(byteArray));
+        for(let index=0;index<this.fileList.length;index++){
+            const file=this.fileList[index]
+            if(file instanceof File){
+                let result = await new Promise((resolve) => {
+                    let fileReader = new FileReader();
+                    fileReader.onload = (e) => resolve(fileReader.result);
+                    fileReader.readAsArrayBuffer(file);
+                });
+                let byteArray = new Uint8Array(result)
+                storeFile(dicomParser.parseDicom(byteArray));
+                onloadEachCallBack(this.dicomFileList[index]);
+            }
         }
-        reader.readAsArrayBuffer(file)
+        onLoadAllCallBack(this.dicomFilelist);
     }
     anonymizeDicom(dicomFile) {
 
@@ -30,7 +38,7 @@ export class DicomFileListHandler {
     updateDicomFileList(filePath) {
 
     }
-    getPatientIDof(dicomFile){
+    static getPatientIDof(dicomFile){
         return dicomFile.string('x00100020');
     }
     uploadFile(){

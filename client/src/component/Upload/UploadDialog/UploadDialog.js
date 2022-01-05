@@ -5,6 +5,7 @@ import { useState } from 'react';
 import DicomUploadBox from './DicomUploadBox/DicomUploadBox';
 import MetaUploadBox from './MetaUploadBox';
 import FileHandler from '../Utils/FileHandler';
+import { DicomFileListHandler } from '../Utils/DicomFileListHandler';
 
 const dialogContentDescrptionText="메타데이터는 csv의 'PatientID' 속성에는 업로드하려는 Dicom 파일의 ID가 존재해야 합니다. "
 const dicomUploadErrorMsg="업로드한 Dicom 파일을 확인해주세요 "
@@ -25,10 +26,14 @@ export default function UploadDialog(props){
     }
 
     const haldleOKEvent=()=>{
-        if(fileHandler.dicomFileListHandler.dicomFileList.length===0){
-            return;
-        }
-        setUpdatePossibility(fileHandler.checkUpdatePossibility());
+        fileHandler.loadFile(
+            (csvFile,dicomFileList)=>{console.log('haldleOKEvent',csvFile,dicomFileList)}
+        );
+        return;
+        // if(fileHandler.dicomFileListHandler.dicomFileList.length===0){
+        //     return;
+        // }
+        // setUpdatePossibility(fileHandler.checkUpdatePossibility());
 
     }
     const handleClearEvent=()=>{

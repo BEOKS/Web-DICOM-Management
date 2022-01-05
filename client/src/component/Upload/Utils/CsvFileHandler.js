@@ -2,25 +2,26 @@ export class CsvFileHandler {
     constructor(csvFile) {
         this.csvFile=csvFile;
     }
+    updateFile(csvFile){
+        this.csvFile=csvFile;
+    }
     /**
      *  this.csvJson에 로드한 csv 정보를 json 형태로 저장
      * @param {*} file 
      * @returns 
      */
-    async loadCsv(file) {
-        if(file instanceof File){
+    async loadCsv(onloadCallBack) {
+        if(this.csvFile instanceof File){
             let result = await new Promise((resolve) => {
                 let fileReader = new FileReader();
                 fileReader.onload = (e) => resolve(fileReader.result);
-                fileReader.readAsText(file);
+                fileReader.readAsText(this.csvFile);
             });
-            console.log('loadCsv: csv',this.csvJSON(result),typeof(result));
             this.csvJson=this.csvJSON(result) 
+            onloadCallBack(this.csvJson)
         }
-        return null;
     }
     csvJSON(csv){
-        console.log('csvJson',csv,typeof(csv))
         var lines=csv.split("\n");
       
         var result = [];
