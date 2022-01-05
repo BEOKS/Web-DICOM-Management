@@ -23,15 +23,15 @@ class FileHandler{
      *  errorDicomPathList : 메타 데이터의 PatientID 속성에 포함되어 있지 않은 dicom 파일의 리스트입니다.
      * }
      */
-    checkUpdatePossibility(){
-        if(this.dicomFileListHandler.dicomFileList.length===0){
+    checkUpdatePossibility(csvFile,dicomFileList){
+        if(dicomFileList.length===0){
             console.log('dicomFileList empty')
             return {'state':'warning', 'errorDicomPathList':[]};
         }
-        const dicomFilePatientIdsList=this.dicomFileListHandler.dicomFileList.map( file =>
-            this.dicomFileListHandler.getPatientIDof(file)
+        const dicomFilePatientIdsList=dicomFileList.map( file =>
+            DicomFileListHandler.getPatientIDof(file)
         )
-        const csvFilePatientIdsList=this.csvFileHandler.getPatientIDList()
+        const csvFilePatientIdsList=csvFile.map( json => json.anonymized_id)
         const errorDicomPathList=dicomFilePatientIdsList.map(id => 
             csvFilePatientIdsList.includes(id))
         const state= errorDicomPathList.includes(false)? 'error':'success';

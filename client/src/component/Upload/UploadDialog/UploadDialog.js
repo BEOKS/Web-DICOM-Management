@@ -27,19 +27,14 @@ export default function UploadDialog(props){
 
     const haldleOKEvent=()=>{
         fileHandler.loadFile(
-            (csvFile,dicomFileList)=>{console.log('haldleOKEvent',csvFile,dicomFileList)}
+            (csvFile,dicomFileList)=>{setUpdatePossibility(fileHandler.checkUpdatePossibility(csvFile,dicomFileList))}
         );
-        return;
-        // if(fileHandler.dicomFileListHandler.dicomFileList.length===0){
-        //     return;
-        // }
-        // setUpdatePossibility(fileHandler.checkUpdatePossibility());
-
     }
     const handleClearEvent=()=>{
         props.setOpen(false)
         setCsvFile(undefined)
         setdicomFiles(new Set([]))
+        setUpdatePossibility(undefined)
     }
     return(
         <Dialog open={props.open}>
