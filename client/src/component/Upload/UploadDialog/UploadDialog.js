@@ -1,11 +1,10 @@
 import * as React from 'react'
 import { Button, Dialog, DialogTitle, DialogContent,
-    DialogActions,Alert  } from "@mui/material";
+    DialogActions,Alert, Snackbar, CircularProgress  } from "@mui/material";
 import { useState } from 'react';
 import DicomUploadBox from './DicomUploadBox/DicomUploadBox';
 import MetaUploadBox from './MetaUploadBox';
 import FileHandler from '../Utils/FileHandler';
-import { DicomFileListHandler } from '../Utils/DicomFileListHandler';
 
 const dialogContentDescrptionText="메타데이터는 csv의 'PatientID' 속성에는 업로드하려는 Dicom 파일의 ID가 존재해야 합니다. "
 const dicomUploadErrorMsg="업로드한 Dicom 파일을 확인해주세요 "
@@ -16,8 +15,7 @@ export default function UploadDialog(props){
     const [dicomFiles, setdicomFiles]=useState([]);
     const [csvFile, setCsvFile]=useState();
     const [updatePossibility,setUpdatePossibility]=useState();
-
-
+    const [snackbarInfo,setSnackBarInfo]=useState({});
     if(fileHandler===undefined){
         fileHandler=new FileHandler(dicomFiles,csvFile)
     }
@@ -26,8 +24,12 @@ export default function UploadDialog(props){
     }
 
     const haldleOKEvent=()=>{
+        setSnackBarInfo({...snackbarInfo,'open':true,'message':'Checking Upload Possibility ...'})
         fileHandler.loadFile(
-            (csvFile,dicomFileList)=>{setUpdatePossibility(fileHandler.checkUpdatePossibility(csvFile,dicomFileList))}
+            (csvFile,dicomFileList)=>{
+                setUpdatePossibility(fileHandler.checkUpdatePossibility(csvFile,dicomFileList))
+                setSnackBarInfo({...snackbarInfo,'open':false})
+            }
         );
     }
     const handleClearEvent=()=>{
@@ -35,6 +37,7 @@ export default function UploadDialog(props){
         setCsvFile(undefined)
         setdicomFiles(new Set([]))
         setUpdatePossibility(undefined)
+        setSnackBarInfo({})
     }
     return(
         <Dialog open={props.open}>
@@ -60,6 +63,13 @@ export default function UploadDialog(props){
                 <Button onClick={haldleOKEvent}>확인</Button>
                 <Button onClick={handleClearEvent}>취소</Button>
             </DialogActions>
+            <Snackbar
+                open={snackbarInfo.open}
+                message={snackbarInfo.message}
+                anchorOrigin={{ 'vertical':'bottom', 'horizontal':'right' }}
+                key={'bottomright'}
+                action={<CircularProgress />}
+            />
         </Dialog>
     )
 }

@@ -27,6 +27,8 @@ import metadata2 from './metadata2.json'
 
 const drawerWidth = 240;
 
+document.title="IMDC"
+
 const openedMixin = (theme) => ({
     width: drawerWidth,
     transition: theme.transitions.create('width', {
