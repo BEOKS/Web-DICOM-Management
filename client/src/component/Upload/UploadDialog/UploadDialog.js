@@ -5,6 +5,7 @@ import { useState } from 'react';
 import DicomUploadBox from './DicomUploadBox/DicomUploadBox';
 import MetaUploadBox from './MetaUploadBox';
 import FileHandler from '../Utils/FileHandler';
+import CircularProgressWithLabel from './CircularProgressWithLabel';
 
 const dialogContentDescrptionText="메타데이터는 csv의 'PatientID' 속성에는 업로드하려는 Dicom 파일의 ID가 존재해야 합니다. "
 const dicomUploadErrorMsg="업로드한 Dicom 파일을 확인해주세요 "
@@ -27,8 +28,15 @@ export default function UploadDialog(props){
         setSnackBarInfo({...snackbarInfo,'open':true,'message':'Checking Upload Possibility ...'})
         fileHandler.loadFile(
             (csvFile,dicomFileList)=>{
+                const updatePossibility=fileHandler.checkUpdatePossibility(csvFile,dicomFileList);
+                if( updatePossibility!==undefined && updatePossibility.state==='success'){
+                    setSnackBarInfo({...snackbarInfo,'open':true,'message':'Uploading Files ...','progress':23})
+                    fileHandler.uploadFiles((progress)=>setSnackBarInfo({'message':'Uploading Files ...','open':true,'progress':progress}));
+                }   
+                else{
+                    setSnackBarInfo({...snackbarInfo,'open':false})
+                }
                 setUpdatePossibility(fileHandler.checkUpdatePossibility(csvFile,dicomFileList))
-                setSnackBarInfo({...snackbarInfo,'open':false})
             }
         );
     }
@@ -64,12 +72,13 @@ export default function UploadDialog(props){
                 <Button onClick={handleClearEvent}>취소</Button>
             </DialogActions>
             <Snackbar
+                key='DataLoadingMessenger'
                 open={snackbarInfo.open}
                 message={snackbarInfo.message}
                 anchorOrigin={{ 'vertical':'bottom', 'horizontal':'right' }}
-                key={'bottomright'}
-                action={<CircularProgress />}
+                action={snackbarInfo.progress ? <CircularProgressWithLabel value={snackbarInfo.progress}/> : <CircularProgress/>}
             />
         </Dialog>
     )
 }
+

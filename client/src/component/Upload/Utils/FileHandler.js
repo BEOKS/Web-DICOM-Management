@@ -38,8 +38,8 @@ class FileHandler{
         console.log('checkUpdatePossibility',{'state': state, 'errorDicomPathList':errorDicomPathList})
         return {'state': state, 'errorDicomPathList':errorDicomPathList};
     }
-    uploadFiles(){
-
+    uploadFiles(onloadEachFileCallBack){
+        onloadEachFileCallBack(80)
     }
     
 }
