@@ -24,12 +24,17 @@ export default function Page() {
         setOpen(false);
     };
 
+    // props로 넘겨주기 위한 임시 데이터 (프로젝트 리스트)
+    const projects = { project_list : ['MR project', 'US project', 'AA project'] };
+
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <ProjectDrawer
                 open={open}
                 handleDrawerClose={handleDrawerClose}
+                projects={projects.project_list}
+                others={['ETC']}
             />
             <BaseAppBar 
                 open={open}

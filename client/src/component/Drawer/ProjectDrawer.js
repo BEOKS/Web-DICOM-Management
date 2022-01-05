@@ -11,6 +11,8 @@ import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import MoreIcon from '@mui/icons-material/More';
 import IconButton from '@mui/material/IconButton';
 import { useTheme } from '@mui/material/styles';
+import { Box } from '@mui/system';
+import { Button, Grid } from '@mui/material';
 
 export const drawerWidth = 240;
 
@@ -72,8 +74,9 @@ export default function ProjectDrawer(props) {
                 </IconButton>
             </DrawerHeader>
             <Divider />
+            
             <List>
-                {['Project 1', 'Project 2', 'Project 3', 'Project 4'].map((text) => (
+                {props.projects.map((text) => (
                     <ListItem button key={text}>
                         <ListItemIcon>
                             <MedicalServicesIcon />
@@ -84,7 +87,7 @@ export default function ProjectDrawer(props) {
             </List>
             <Divider />
             <List>
-                {['ETC'].map((text) => (
+                {props.others.map((text) => (
                     <ListItem button key={text}>
                         <ListItemIcon>
                             <MoreIcon />
