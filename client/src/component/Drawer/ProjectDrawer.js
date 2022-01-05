@@ -7,12 +7,12 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import MoreIcon from '@mui/icons-material/More';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import IconButton from '@mui/material/IconButton';
 import { useTheme } from '@mui/material/styles';
-import { Box } from '@mui/system';
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 
 export const drawerWidth = 240;
 
@@ -74,12 +74,11 @@ export default function ProjectDrawer(props) {
                 </IconButton>
             </DrawerHeader>
             <Divider />
-            
             <List>
                 {props.projects.map((text) => (
                     <ListItem button key={text}>
                         <ListItemIcon>
-                            <MedicalServicesIcon />
+                            <FolderOpenIcon />
                         </ListItemIcon>
                         <ListItemText primary={text} />
                     </ListItem>
@@ -96,6 +95,26 @@ export default function ProjectDrawer(props) {
                     </ListItem>
                 ))}
             </List>
+            <Grid
+                container
+                height='100%'
+                alignItems='flex-end'
+            >
+                <List
+                    sx={{
+                        width: '100%',
+                        color: 'primary.main',
+                        fontWeight: 'bold'
+                    }}
+                >
+                    <ListItem button key='Add Project'>
+                        <ListItemIcon>
+                            <AddCircleIcon color='primary' />
+                        </ListItemIcon>
+                        <ListItemText primary='Add Project' />
+                    </ListItem>
+                </List>
+            </Grid>
         </Drawer>
     );
 }
