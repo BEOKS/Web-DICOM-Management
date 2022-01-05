@@ -1,8 +1,6 @@
 export class CsvFileHandler {
     constructor(csvFile) {
         this.csvFile=csvFile;
-        this.loadCsv(csvFile); 
-        this.patientIDLabel='Patient_ID'
     }
     /**
      *  this.csvJson에 로드한 csv 정보를 json 형태로 저장

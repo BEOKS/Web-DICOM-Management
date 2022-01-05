@@ -3,11 +3,11 @@ import dicomParser from 'dicom-parser'
 export class DicomFileListHandler {
     constructor(fileList) {
         this.fileList=fileList
-        this.dicomFileList=[]
-        if(Array.isArray(fileList)){
-            fileList.map(file => this.loadFile(file));
-        }
-        console.log('dicomFileList',this.dicomFileList)
+        // this.dicomFileList=[]
+        // if(Array.isArray(fileList)){
+        //     fileList.map(file => this.loadFile(file));
+        // }
+        // console.log('dicomFileList',this.dicomFileList)
     }
     loadFile(file){
         const storeFile=(dataSet)=>{

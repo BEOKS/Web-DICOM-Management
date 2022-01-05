@@ -5,13 +5,12 @@ import { DicomFileListHandler } from "./DicomFileListHandler"
  */
 class FileHandler{
     constructor(dicomFiles,csvFile){
-        this.updateFilePath(dicomFiles,csvFile)
-    }
-    updateFilePath(dicomFiles,csvFile){
-        this.dicomFiles=dicomFiles;
-        this.csvFile=csvFile;
         this.dicomFileListHandler=new DicomFileListHandler(dicomFiles)
         this.csvFileHandler=new CsvFileHandler(csvFile)
+    }
+    updateFilePath(dicomFiles,csvFile){
+        this.dicomFileListHandler.update(dicomFiles)
+        this.csvFile.update(csvFile)
     }
     /**
      * @returns : {
