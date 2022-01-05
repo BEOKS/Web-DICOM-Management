@@ -9,6 +9,9 @@ export class DicomFileListHandler {
         // }
         // console.log('dicomFileList',this.dicomFileList)
     }
+    uploadToServer(){
+        
+    }
     updateFileList(fileList){
         this.fileList=fileList
         this.dicomFileList=[]

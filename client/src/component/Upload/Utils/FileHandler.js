@@ -31,7 +31,7 @@ class FileHandler{
         const dicomFilePatientIdsList=dicomFileList.map( file =>
             DicomFileListHandler.getPatientIDof(file)
         )
-        const csvFilePatientIdsList=csvFile.map( json => json.anonymized_id)
+        const csvFilePatientIdsList=csvFile.data.map( json => json.anonymized_id)
         const errorDicomPathList=dicomFilePatientIdsList.map(id => 
             csvFilePatientIdsList.includes(id))
         const state= errorDicomPathList.includes(false)? 'error':'success';
@@ -39,6 +39,8 @@ class FileHandler{
         return {'state': state, 'errorDicomPathList':errorDicomPathList};
     }
     uploadFiles(onloadEachFileCallBack){
+        const response=this.csvFileHandler.uploadToServer();
+        console.log('uploadFiles : csv',response)
         onloadEachFileCallBack(80)
     }
     

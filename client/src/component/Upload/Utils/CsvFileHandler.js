@@ -1,9 +1,14 @@
+import { updateMetaData } from "../../../api/metadata";
 export class CsvFileHandler {
     constructor(csvFile) {
         this.csvFile=csvFile;
     }
     updateFile(csvFile){
         this.csvFile=csvFile;
+    }
+    uploadToServer(){
+        const response = updateMetaData(this.csvJson)
+        return response;
     }
     /**
      *  this.csvJson에 로드한 csv 정보를 json 형태로 저장
@@ -24,7 +29,7 @@ export class CsvFileHandler {
     csvJSON(csv){
         var lines=csv.split("\n");
       
-        var result = [];
+        var result = {data:[]};
 
         var headers=lines[0].split(",");
       
@@ -37,7 +42,7 @@ export class CsvFileHandler {
                 obj[headers[j]] = currentline[j];
             }
       
-            result.push(obj);
+            result.data.push(obj);
       
         }
       
