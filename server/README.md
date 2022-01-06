@@ -1,16 +1,25 @@
 # DicomServer
 ##  Usage
 ### Before
-최신 버전의 [도커](https://docs.docker.com/get-docker/)를 설치해주세요. (docker-compose는 v2 버전으로 설치되어야 합니다, 리눅스의 경우 간혹 v1으로 설치되므로 업데이트가 필요합니다.)
+1. 최신 버전의 [도커](https://docs.docker.com/get-docker/)를 설치해주세요. (docker-compose는 v2 버전으로 설치되어야 합니다, 리눅스의 경우 간혹 v1으로 설치되므로 업데이트가 필요합니다.)
+2. java SDK (version. 17.0.1)을 설치합니다. (설치하지 않을 경우 spring 프로젝트 파일이 정상적으로 실행되지 않습니다.)
 ### MAC, LINUX
 ```
 #/DSNP/server
-sudo sh run_server.sh
+sudo sh run_docker.sh local #local에서 실행할 때
+sudo sh run_docker.sh prod #서버에서 실행할 때
 ```
 ### WINDOWS
 ```
-run_server.sh
+run_docker.sh local #local에서 실행할 때
+run_docker.sh prod #서버에서 실행할 때
 ```
+
+> ``` run_docker.sh local ```로 커맨드 입력시, orthanc와 MongoDB
+> 컨테이너에 포트접속이 활성화 되어 개발자가 로컬에서 접속할 수 있다.
+> ``` run_docker.sh prod```로 커맨드 입력시, orthanc와 MongoDB 컨테이너는
+> Spring 컨테이너에서만 접속이 가능하다. (즉, API를 통해서만 접근 가능)
+
 ### 실행결과
 ![image](https://user-images.githubusercontent.com/30094719/143684942-ab57c412-0f0c-47ef-9860-7425b580a02a.png)
 
@@ -18,7 +27,7 @@ run_server.sh
 
 3가지 컨테이너가 실행되고 위와 같은 출력이 나오며 http://localhost:8080/ 에 정상적으로 접속 가능하다면 성공입니다. 에러가 발생한다면 이슈를 발행해주세요!
 ## MongoDB 시각화
-
+0. ```run_docker.sh local```로 컨테이너를 실행시킵니다.
 1. MongoDB Compass를 실행시킵니다.
 2. connection string으로 아래 URI를 입력합니다(서버에 MongoDB 컨테이너를 실행했을 경우 localhost대신 서버의 IP를 입력합니다.)
 ```

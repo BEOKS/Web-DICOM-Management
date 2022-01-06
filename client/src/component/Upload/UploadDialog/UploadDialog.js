@@ -1,51 +1,77 @@
 import * as React from 'react'
 import { Button, Dialog, DialogTitle, DialogContent,
-    DialogActions, DialogContentText } from "@mui/material";
+    DialogActions,Alert  } from "@mui/material";
 import { useState } from 'react';
-import DicomUploadBox from './DicomUploadBox';
+import DicomUploadBox from './DicomUploadBox/DicomUploadBox';
 import MetaUploadBox from './MetaUploadBox';
 import FileHandler from '../Utils/FileHandler';
-import ErrorDescriptionBox from './ErrorDescriptionBox';
 
-const dialogContentDescrptionText="Dicom 파일과 메타데이터를 업로드 할 수 있습니다. 메타데이터는 csv파일형태로 업로드 하며 csv에는 'Filename' 속성에 파일 이름을 명시해야합니다. "
+const dialogContentDescrptionText="메타데이터는 csv의 'PatientID' 속성에는 업로드하려는 Dicom 파일의 ID가 존재해야 합니다. "
+const dicomUploadErrorMsg="업로드한 Dicom 파일을 확인해주세요 "
 
-let fileHandler=null
-export default function UploadDialog(props){
-    const [dicomFilePathList, setdicomFilePathList]=useState([]);
-    const [csvFilePath, setCsvFilePath]=useState();
-    const [nonSyncDicomFilePatientIDs,setNonSyncDicomFilePatientIDs]=useState();
-    const [nonSyncCSVFilePatientIDs,setNonSyncCSVFilePatientIDs]=useState();
-
-    function handleDicomAndCsvSync(dicomFilePathList,csvFilePath){
-        if(fileHandler===null){
-            fileHandler=new FileHandler(dicomFilePathList,csvFilePath);
-        }
-        else{
-            fileHandler.update(dicomFilePathList,csvFilePath);
-        }
-        const [nonSyncDicomFilePatientIDs,nonSyncCSVFilePatientIDs]=fileHandler.checkDicomAndCsvPatientIDEqual();
-        setNonSyncDicomFilePatientIDs(nonSyncDicomFilePatientIDs);
-        setNonSyncCSVFilePatientIDs(nonSyncCSVFilePatientIDs);
+let fileHandler;
+export default function UploadDialog({open,setOpen,snackbarInfo,setSnackBarInfo}){
+    console.log('Build UploadDialog Component.')
+    const [dicomFiles, setdicomFiles]=useState([]);
+    const [csvFile, setCsvFile]=useState();
+    const [updatePossibility,setUpdatePossibility]=useState();
+    if(fileHandler===undefined){
+        fileHandler=new FileHandler(dicomFiles,csvFile)
     }
-    
+    else{
+        fileHandler.updateFilePath(dicomFiles,csvFile);
+    }
+    console.log('UploadDialog data',fileHandler)
+    const haldleOKEvent= ()=>{
+        setSnackBarInfo({...snackbarInfo,'open':true,'message':'Checking Upload Possibility ...'})
+        fileHandler.loadFile(
+            async (csvFile,dicomFileList)=>{
+                const updatePossibility=await fileHandler.checkUpdatePossibility(csvFile,dicomFileList);
+                if( updatePossibility!==undefined && updatePossibility.state==='success'){
+                    setSnackBarInfo({...snackbarInfo,'open':true,'message':'Uploading Files ...','progress':23})
+                    fileHandler.uploadFiles((progress,message)=>setSnackBarInfo({'message':message,'open':true,'progress':progress}));
+                }   
+                else{
+                    setSnackBarInfo({...snackbarInfo,'open':false})
+                }
+                setUpdatePossibility(fileHandler.checkUpdatePossibility(csvFile,dicomFileList))
+            }
+        );
+    }
+    const handleClearEvent=()=>{
+        setOpen(false)
+        setCsvFile(undefined)
+        setdicomFiles([])
+        setUpdatePossibility(undefined)
+        if(snackbarInfo.progress===undefined){
+            setSnackBarInfo({})
+        }
+    }
     return(
-        <Dialog open={props.open}>
+        <Dialog open={open}>
             <DialogTitle>Dicom 파일 업로드</DialogTitle>
             <DialogContent>
-                <DialogContentText> 
+                <Alert severity="info" > 
                     {dialogContentDescrptionText}
-                </DialogContentText>
-                <DicomUploadBox setdicomFilePathList={setdicomFilePathList}/>
-                <MetaUploadBox setCsvFilePath={setCsvFilePath}/>
-                <ErrorDescriptionBox 
-                    nonSyncDicomFilePatientIDs={nonSyncDicomFilePatientIDs}
-                    nonSyncCSVFilePatientIDs={nonSyncCSVFilePatientIDs}
-                />
+                </Alert>
+                {
+                    updatePossibility!==undefined && updatePossibility.state==='error' && <Alert severity="error">{dicomUploadErrorMsg}</Alert>
+                }
+                <MetaUploadBox 
+                    csvFile={csvFile}
+                    setCsvFile={setCsvFile}
+                    setdicomFiles={setdicomFiles}/>
+                <DicomUploadBox
+                    csvFile={csvFile}
+                    dicomFiles={dicomFiles}
+                    setdicomFiles={setdicomFiles}
+                    updatePossibility={updatePossibility}/>
             </DialogContent>
             <DialogActions>
-                <Button onClick={()=>handleDicomAndCsvSync(dicomFilePathList,csvFilePath)}>확인</Button>
-                <Button onClick={()=>props.setOpen(false)}>취소</Button>
+                <Button onClick={haldleOKEvent}>확인</Button>
+                <Button onClick={handleClearEvent}>취소</Button>
             </DialogActions>
         </Dialog>
     )
 }
+
