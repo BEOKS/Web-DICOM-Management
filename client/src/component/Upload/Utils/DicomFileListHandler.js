@@ -1,5 +1,8 @@
+import axios from 'axios'
 import dicomParser from 'dicom-parser'
 
+let uploadCount=0
+let fileListLength=0;
 export class DicomFileListHandler {
     constructor(fileList) {
         this.fileList=fileList
@@ -9,8 +12,36 @@ export class DicomFileListHandler {
         // }
         // console.log('dicomFileList',this.dicomFileList)
     }
-    uploadToServer(){
-        
+    uploadToServer(onloadEachFileCallBack){
+        uploadCount=0;
+        fileListLength=this.fileList.length;
+        const url='/api/dicom'
+        console.log('dicom uploadToServer : uploadToServer',this.fileList);
+        for(let index=0;index<this.fileList.length;index++){
+            const file=this.fileList[index]
+            const formData = new FormData();
+            formData.append('dicomfile',file)
+            const config = {
+                headers: {
+                    'content-type': 'multipart/form-data'
+                }
+            }
+            console.log('uploadToServer',this.dicomFileList)
+            axios.post(url,formData,config)
+                .then(response=>{
+                    uploadCount+=1;
+                    if(uploadCount===this.dicomFileList.length){
+                        onloadEachFileCallBack(100,
+                            "Finish Uploading Dicom Files!")
+                    }
+                    onloadEachFileCallBack((uploadCount/fileListLength)*100,
+                        "Uploading "+file.name)
+                })
+                .catch(error=>{
+                    console.error(error)
+                    onloadEachFileCallBack((uploadCount/fileListLength)*100,"error")
+                })
+        }
     }
     updateFileList(fileList){
         this.fileList=fileList
