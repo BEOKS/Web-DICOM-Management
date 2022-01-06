@@ -1,30 +1,49 @@
 import { CsvFileHandler } from "./CsvFileHandler"
 import { DicomFileListHandler } from "./DicomFileListHandler"
-
+/**
+ * FileHandler는 Dicom과 메타데이터를 다루기 위한 싱글톤 클래스입니다.
+ */
 class FileHandler{
-    constructor(dicomFilePathList,csvFilePath){
-        this.dicomFileListHandler=new DicomFileListHandler(dicomFilePathList)
-        this.csvFileHandler=new CsvFileHandler(csvFilePath)
+    constructor(dicomFiles,csvFile){
+        this.dicomFileListHandler=new DicomFileListHandler(dicomFiles)
+        this.csvFileHandler=new CsvFileHandler(csvFile)
+    }
+    updateFilePath(dicomFiles,csvFile){
+        this.dicomFileListHandler.updateFileList(dicomFiles)
+        this.csvFileHandler.updateFile(csvFile)
+    }
+    async loadFile(onloadCallBack,dicomOnLoadAllCallBack=()=>{}){
+        await this.csvFileHandler.loadCsv(()=>{});
+        await this.dicomFileListHandler.loadFile(()=>{},dicomOnLoadAllCallBack);
+        onloadCallBack(this.csvFileHandler.csvJson,this.dicomFileListHandler.dicomFileList);
     }
     /**
-     * @Description : Dicom 파일들의 Patient ID가 csv파일의 'Patient_ID'와 일치하는지 확인
-     * @return : 일치하지 않는 Patient ID List를 전달 (Dicom - CSV, CSV - Dicom)
+     * @returns : {
+     *  state : "success" or "error" string, 
+     *  errorDicomPathList : 메타 데이터의 PatientID 속성에 포함되어 있지 않은 dicom 파일의 리스트입니다.
+     * }
      */
-    checkDicomAndCsvPatientIDEqual(){
-        const dicomFilePatientIDList=this.dicomFileListHandler
-                                .dicomFileList()
-                                .map(dicom => this.dicomFileListHandler.getPatientID(dicom))
-        const csvPatientIDList=this.csvFileHandler.getContentOfColumn()
-        return this.arrayEquals(dicomFilePatientIDList,csvPatientIDList)
+    async checkUpdatePossibility(csvFile,dicomFileList){
+        if(dicomFileList.length===0){
+            console.log('dicomFileList empty')
+            return {'state':'warning', 'errorDicomPathList':[]};
+        }
+        const dicomFilePatientIdsList=dicomFileList.map( file =>
+            DicomFileListHandler.getPatientIDof(file)
+        )
+        const csvFilePatientIdsList=csvFile.data.map( json => json.anonymized_id)
+        const errorDicomPathList=dicomFilePatientIdsList.map(id => 
+            csvFilePatientIdsList.includes(id))
+        const state= errorDicomPathList.includes(false)? 'error':'success';
+        console.log('checkUpdatePossibility',{'state': state, 'errorDicomPathList':errorDicomPathList})
+        return {'state': state, 'errorDicomPathList':errorDicomPathList};
     }
-    arrayEquals(a, b) {
-        return Array.isArray(a) &&
-            Array.isArray(b) &&
-            a.length === b.length &&
-            a.every((val, index) => val === b[index]);
+    async uploadFiles(onloadEachFileCallBack){
+        await this.csvFileHandler.uploadToServer(onloadEachFileCallBack);
+        await this.dicomFileListHandler.uploadToServer(onloadEachFileCallBack);
+        //this.dicomFileListHandler.uploadToServer(onloadEachFileCallBack)
     }
-    update(dicomFilePathList,csvFilePath){
-
-    }
+    
 }
 export default FileHandler;
+
