@@ -11,7 +11,7 @@ const dicomUploadErrorMsg="업로드한 Dicom 파일을 확인해주세요 "
 
 let fileHandler;
 export default function UploadDialog({open,setOpen,snackbarInfo,setSnackBarInfo}){
-    console.log('Build UploadDialog Component.')
+    // console.log('Build UploadDialog Component.')
     const [dicomFiles, setdicomFiles]=useState([]);
     const [csvFile, setCsvFile]=useState();
     const [updatePossibility,setUpdatePossibility]=useState();
@@ -21,7 +21,7 @@ export default function UploadDialog({open,setOpen,snackbarInfo,setSnackBarInfo}
     else{
         fileHandler.updateFilePath(dicomFiles,csvFile);
     }
-    console.log('UploadDialog data',fileHandler)
+    // console.log('UploadDialog data',fileHandler)
     const haldleOKEvent= ()=>{
         setSnackBarInfo({...snackbarInfo,'open':true,'message':'Checking Upload Possibility ...'})
         fileHandler.loadFile(
