@@ -30,12 +30,15 @@ export class DicomFileListHandler {
             axios.post(url,formData,config)
                 .then(response=>{
                     uploadCount+=1;
-                    if(uploadCount===this.dicomFileList.length){
+                    console.log('awdsf',uploadCount,fileListLength)
+                    if(uploadCount===fileListLength){
                         onloadEachFileCallBack(100,
                             "Finish Uploading Dicom Files!")
                     }
-                    onloadEachFileCallBack((uploadCount/fileListLength)*100,
+                    else{
+                        onloadEachFileCallBack((uploadCount/fileListLength)*100,
                         "Uploading "+file.name)
+                    }
                 })
                 .catch(error=>{
                     console.error(error)

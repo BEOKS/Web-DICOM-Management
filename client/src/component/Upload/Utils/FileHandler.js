@@ -40,7 +40,7 @@ class FileHandler{
     }
     async uploadFiles(onloadEachFileCallBack){
         await this.csvFileHandler.uploadToServer(onloadEachFileCallBack);
-        await this.dicomFileListHandler.uploadToServer(onloadEachFileCallBack);
+        this.dicomFileListHandler.uploadToServer(onloadEachFileCallBack);
         //this.dicomFileListHandler.uploadToServer(onloadEachFileCallBack)
     }
     
