@@ -7,12 +7,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import EnhancedTableHead from './EnhancedTableHead'
 import EnhancedTableToolbar from "./EnhancedTableToolbar";
 import { stableSort, getComparator } from './Utils';
+import DicomRow from './DicomRow';
 
 export default function DicomTable(props) {
     const [order, setOrder] = React.useState('asc');
@@ -32,14 +32,6 @@ export default function DicomTable(props) {
         }
     };
     const keys = getKeysFromJSON();
-
-    const createTableCell = (row) => {
-        const elements = [];
-        for (let i = 1; i < keys.length; i++) {
-            elements[i - 1] = <TableCell align="right" key={keys[i]}>{row[keys[i]]}</TableCell>;
-        }
-        return elements;
-    };
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -129,34 +121,14 @@ export default function DicomTable(props) {
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
-                                        <TableRow
-                                            hover
-                                            onClick={(event) => handleClick(event, row[keys[0]])}
-                                            role="checkbox"
-                                            aria-checked={isItemSelected}
-                                            tabIndex={-1}
+                                        <DicomRow 
+                                            isItemSelected={isItemSelected}
+                                            labelId={labelId}
+                                            handleClick={handleClick}
+                                            row={row}
+                                            keys={keys}
                                             key={row[keys[0]]}
-                                            selected={isItemSelected}
-                                        >
-                                            <TableCell padding="checkbox">
-                                                <Checkbox
-                                                    color="primary"
-                                                    checked={isItemSelected}
-                                                    inputProps={{
-                                                        'aria-labelledby': labelId,
-                                                    }}
-                                                />
-                                            </TableCell>
-                                            <TableCell
-                                                component="th"
-                                                id={labelId}
-                                                scope="row"
-                                                padding="none"
-                                            >
-                                                {row[keys[0]]}
-                                            </TableCell>
-                                            { createTableCell(row) }
-                                        </TableRow>
+                                        />
                                     );
                                 })}
                             {emptyRows > 0 && (
@@ -165,7 +137,7 @@ export default function DicomTable(props) {
                                         height: (dense ? 33 : 53) * emptyRows,
                                     }}
                                 >
-                                    <TableCell colSpan={ keys.length + 1 } />
+                                    <TableCell colSpan={ keys.length + 2 } />
                                 </TableRow>
                             )}
                         </TableBody>
