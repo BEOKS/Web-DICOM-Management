@@ -35,7 +35,10 @@ export default function StudyTable(props) {
                             </TableHead>
                             <TableBody>
                                 {studyUIDList.map((studyRow) => (
-                                    <TableRow key={studyRow.studyUID}>
+                                    <TableRow
+                                        hover
+                                        // onClick={() => {뷰어 페이지로 리다이렉션 예정}}
+                                        key={studyRow.studyUID}>
                                         <TableCell component="th" scope="row">
                                             {studyRow.studyUID}
                                         </TableCell>
