@@ -28,7 +28,7 @@ export default function DicomRow(props) {
         <React.Fragment>
             <TableRow
                 hover
-                onClick={(event) => handleClick(event, row[keys[0]])}
+                onClick={(event) => {handleClick(event, row[keys[0]])}}
                 role="checkbox"
                 aria-checked={isItemSelected}
                 tabIndex={-1}
@@ -40,7 +40,10 @@ export default function DicomRow(props) {
                     <IconButton
                         aria-label="expand row"
                         size="small"
-                        onClick={() => setOpen(!open)}
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            setOpen(!open);
+                            }}
                     >
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
