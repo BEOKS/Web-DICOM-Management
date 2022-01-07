@@ -16,7 +16,8 @@ import { Grid } from '@mui/material';
 
 import { Dialog,DialogTitle,DialogContent,DialogContentText,DialogActions,TextField,Button } from '@mui/material';
 import { useState } from 'react';
-import { uploadProject } from './Utils/ProjectUtils';
+import { createProject } from './Utils/ProjectUtils';
+const SUCCESS=1,FAIL=0;
 
 export const drawerWidth = 240;
 
@@ -71,6 +72,15 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others}) 
     const theme = useTheme();
     const [dialogOpen,setDialogOpen]=useState(false);
     const [projectName,setProjectName]=useState();
+
+    const handleProjectCreateRequset=(status,message='')=>{
+        if(status===FAIL){
+            alert(message)
+        }
+        if(status===SUCCESS){
+            setDialogOpen(false)
+        }
+    }
     return (
         <div>
             <Drawer variant="permanent" open={open}>
@@ -140,7 +150,7 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others}) 
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={()=>uploadProject(projectName)}>확인</Button>
+                <Button onClick={()=>createProject(projectName,handleProjectCreateRequset)}>확인</Button>
                 <Button onClick={()=>setDialogOpen(false)}>취소</Button>
             </DialogActions>
         </Dialog>
