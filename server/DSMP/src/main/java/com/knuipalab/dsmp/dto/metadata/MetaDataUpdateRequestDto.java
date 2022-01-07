@@ -1,17 +1,22 @@
 package com.knuipalab.dsmp.dto.metadata;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
+@Setter
 @Getter
-public class MetaDataRequestDto {
+@NoArgsConstructor
+public class MetaDataUpdateRequestDto {
 
     private Bson body;
 
-    public MetaDataRequestDto(String strBody){
+    public MetaDataUpdateRequestDto(String strBody){
         Document body = Document.parse(strBody);
         this.body = body;
     }
 }
+
+
