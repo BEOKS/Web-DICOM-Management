@@ -40,6 +40,7 @@ export default function DicomRow(props) {
                         aria-label="expand row"
                         size="small"
                         onClick={(event) => {
+                            // 나중에 여기서 row[keys[0]]을 이용해 API 호출하기 (Patient ID)
                             event.stopPropagation();
                             setOpen(!open);
                             }}

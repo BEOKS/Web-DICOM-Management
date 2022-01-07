@@ -43,11 +43,13 @@ export default function DicomTable(props) {
         if (event.target.checked) {
             const newSelecteds = rows.map((n) => n[keys[0]]);
             setSelected(newSelecteds);
-            props.setSelectedRow(rows);
+            props.setSelectedPatientId(newSelecteds.map((patientId) => {
+                return {anonymized_id: patientId};
+            }));
             return;
         }
         setSelected([]);
-        props.setSelectedRow([]);
+        props.setSelectedPatientId([]);
     };
 
     const handleClick = (event, name) => {
@@ -68,8 +70,11 @@ export default function DicomTable(props) {
         }
 
         setSelected(newSelected);
-        const selectedRows = rows.filter((row) => newSelected.includes(row[keys[0]]));
-        props.setSelectedRow(selectedRows);
+
+        const patients = newSelected.map((patientId) => {
+            return {anonymized_id: patientId};
+        });
+        props.setSelectedPatientId(patients);
     };
 
     const handleChangePage = (event, newPage) => {

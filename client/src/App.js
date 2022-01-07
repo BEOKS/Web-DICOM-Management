@@ -14,7 +14,7 @@ import metadata2 from './metadata2.json'
 
 export default function Page() {
     const [open, setOpen] = React.useState(false);
-    const [selectedPatientInfo, setSelectedPatientInfo] = React.useState([]);
+    const [selectedPatientId, setSelectedPatientId] = React.useState([]);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -45,9 +45,9 @@ export default function Page() {
                 <UpDownloadToolbar />
                 <DicomTable
                     data={metadata2}
-                    setSelectedRow={setSelectedPatientInfo}
+                    setSelectedPatientId={setSelectedPatientId}
                 />
-                { console.log(selectedPatientInfo) }
+                { console.log(selectedPatientId) }
             </Box>
         </Box>
     );
