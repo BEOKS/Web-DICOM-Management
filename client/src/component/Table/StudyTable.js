@@ -21,13 +21,13 @@ export default function StudyTable(props) {
 
     return (
         <TableRow>
-            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+            <TableCell style={{ paddingBottom: 0, paddingTop: 0, border: 0 }} colSpan={props.colSpan}>
                 <Collapse in={props.open} timeout="auto" unmountOnExit>
-                    <Box sx={{ margin: 1 }}>
+                    <Box sx={{ margin: 3 }}>
                         <Typography variant="h6" gutterBottom component="div">
                             Study UID List
                         </Typography>
-                        <Table size="small" aria-label="purchases">
+                        <Table size="small" aria-label="study uid list">
                             <TableHead>
                                 <TableRow>
                                     <TableCell>study_uid</TableCell>
