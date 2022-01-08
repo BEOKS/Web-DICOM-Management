@@ -66,13 +66,16 @@ public class ProjectService {
     }
 
     @Transactional
-    public void deleteById(String projectId){
+    public void delete(String projectId){
 
         List<MetaData> metaDataList = metaDataRepository.findByProjectId(projectId);
 
         metaDataRepository.deleteAll(metaDataList);
 
-        projectRepository.deleteById(projectId);
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(()->new IllegalArgumentException("해당 Id값을 가진 프로젝트 정보가 없습니다."));
+
+        projectRepository.delete(project);
     }
 
 

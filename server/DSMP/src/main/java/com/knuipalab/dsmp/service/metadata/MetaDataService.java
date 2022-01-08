@@ -38,13 +38,15 @@ public class MetaDataService {
     @Transactional (readOnly = true)
     public List<MetaDataResponseDto> findByProjectId(String projectId) {
 
+        projectService.findById(projectId);
+
         List <MetaDataResponseDto> metaResponseDtoList = new ArrayList<MetaDataResponseDto>();
-        System.out.println(projectId);
         List <MetaData> metaDataList = metaDataRepository.findByProjectId(projectId);
-        System.out.println(metaDataList);
-        for(MetaData metaData: metaDataList){ // metaDataRepository로 MeataData 정보 받아와서 Dto로 전환 -> 접근성 제한 목적
+
+        for(MetaData metaData: metaDataList){
             metaResponseDtoList.add(new MetaDataResponseDto(metaData));
         }
+
         return metaResponseDtoList;
     }
 
@@ -58,23 +60,26 @@ public class MetaDataService {
                 .projectId(metaDataCreateRequestDto.getProjectId())
                 .body(metaDataCreateRequestDto.getBody()).build();
 
-        metaDataRepository.save(metaData); // Id가 DB에 존재하면 update, 없으면 save
+        metaDataRepository.save(metaData);
     }
 
     @Transactional
     public void update(String metadataId, MetaDataUpdateRequestDto metaDataUpdateRequestDto){
 
         MetaData metaData = metaDataRepository.findById(metadataId)
-                .orElseThrow(()-> new IllegalArgumentException("해당 Id값을 가진 메타데이터 정보가 없습니다."));
+                .orElseThrow(()-> new IllegalArgumentException("해당 metadataId 값을 가진 메타데이터 정보가 없습니다."));
 
         metaData.update(metaDataUpdateRequestDto.getBody());
 
-        metaDataRepository.save(metaData); // Id가 DB에 존재하면 update, 없으면 save
+        metaDataRepository.save(metaData);
     }
 
     @Transactional
-    public void deleteById(String metadataId){
-        metaDataRepository.deleteById(metadataId);
+    public void delete(String metadataId){
+        MetaData metaData = metaDataRepository.findById(metadataId)
+                .orElseThrow(()-> new IllegalArgumentException("해당 metadataId 값을 가진 메타데이터 정보가 없습니다."));
+
+        metaDataRepository.delete(metaData);
     }
 
 }
