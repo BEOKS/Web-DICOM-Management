@@ -46,7 +46,7 @@ public class MetaDataApiController {
     // metadataId를 기반으로 삭제
     @DeleteMapping("api/MetaData/{metadataId}")
     public void deleteById(@PathVariable String metadataId){
-        metaDataService.deleteById(metadataId);
+        metaDataService.delete(metadataId);
     }
 
 }
