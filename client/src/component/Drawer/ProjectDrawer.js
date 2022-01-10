@@ -14,6 +14,11 @@ import IconButton from '@mui/material/IconButton';
 import { useTheme } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 
+import { Dialog,DialogTitle,DialogContent,DialogContentText,DialogActions,TextField,Button } from '@mui/material';
+import { useState } from 'react';
+import { createProject } from './Utils/ProjectUtils';
+const SUCCESS=1,FAIL=0;
+
 export const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -63,13 +68,24 @@ export const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 
     })
 );
 
-export default function ProjectDrawer(props) {
+export default function ProjectDrawer({open,handleDrawerClose,projects,others}) {
     const theme = useTheme();
+    const [dialogOpen,setDialogOpen]=useState(false);
+    const [projectName,setProjectName]=useState();
 
+    const handleProjectCreateRequset=(status,message='')=>{
+        if(status===FAIL){
+            alert(message)
+        }
+        if(status===SUCCESS){
+            setDialogOpen(false)
+        }
+    }
     return (
-        <Drawer variant="permanent" open={props.open}>
+        <div>
+            <Drawer variant="permanent" open={open}>
             <DrawerHeader>
-                <IconButton onClick={props.handleDrawerClose}>
+                <IconButton onClick={handleDrawerClose}>
                     {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                 </IconButton>
             </DrawerHeader>
@@ -77,6 +93,7 @@ export default function ProjectDrawer(props) {
             <List>
                 {props.projects.map((project) => (
                     <ListItem button key={project.projectName}>
+
                         <ListItemIcon>
                             <FolderOpenIcon />
                         </ListItemIcon>
@@ -86,7 +103,7 @@ export default function ProjectDrawer(props) {
             </List>
             <Divider />
             <List>
-                {props.others.map((text) => (
+                {others.map((text) => (
                     <ListItem button key={text}>
                         <ListItemIcon>
                             <MoreIcon />
@@ -107,7 +124,7 @@ export default function ProjectDrawer(props) {
                         fontWeight: 'bold'
                     }}
                 >
-                    <ListItem button key='Add Project'>
+                    <ListItem button key='Add Project' onClick={()=>setDialogOpen(true)}>
                         <ListItemIcon>
                             <AddCircleIcon color='primary' />
                         </ListItemIcon>
@@ -116,5 +133,28 @@ export default function ProjectDrawer(props) {
                 </List>
             </Grid>
         </Drawer>
+        <Dialog open={dialogOpen} onClose={()=>setDialogOpen(false)}>
+            <DialogTitle>Subscribe</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    프로젝트 이름을 입력해주세요
+                </DialogContentText>
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Project name"
+                    type="text"
+                    fullWidth
+                    onChange={(e)=>setProjectName(e.target.value)}
+                    variant="standard"
+                />
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={()=>createProject(projectName,handleProjectCreateRequset)}>확인</Button>
+                <Button onClick={()=>setDialogOpen(false)}>취소</Button>
+            </DialogActions>
+        </Dialog>
+        </div>
     );
 }
