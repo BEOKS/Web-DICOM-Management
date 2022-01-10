@@ -75,12 +75,12 @@ export default function ProjectDrawer(props) {
             </DrawerHeader>
             <Divider />
             <List>
-                {props.projects.map((text) => (
-                    <ListItem button key={text}>
+                {props.projects.map((project) => (
+                    <ListItem button key={project.projectName}>
                         <ListItemIcon>
                             <FolderOpenIcon />
                         </ListItemIcon>
-                        <ListItemText primary={text} />
+                        <ListItemText primary={project.projectName} />
                     </ListItem>
                 ))}
             </List>
