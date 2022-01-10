@@ -17,6 +17,7 @@ export default function Page() {
     const [open, setOpen] = React.useState(false);
     const [selectedPatientId, setSelectedPatientId] = React.useState([]);
     const [projects, setProjects] = React.useState([]);
+    const [presentProject, setPresentProject] = React.useState('');
 
     const getProjects = () => {
         axios.get('api/Project')
@@ -29,7 +30,7 @@ export default function Page() {
 
     React.useEffect(() => {
         getProjects();
-    }, [projects]);
+    });
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -47,10 +48,12 @@ export default function Page() {
                 handleDrawerClose={handleDrawerClose}
                 projects={projects}
                 others={['ETC']}
+                setPresentProject={setPresentProject}
             />
             <BaseAppBar
                 open={open}
                 handleDrawerOpen={handleDrawerOpen}
+                presentProject={presentProject}
             />
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
@@ -59,7 +62,7 @@ export default function Page() {
                     data={metadata2}
                     setSelectedPatientId={setSelectedPatientId}
                 />
-                {console.log(selectedPatientId)}
+                {/* {console.log(selectedPatientId)} */}
             </Box>
         </Box>
     );

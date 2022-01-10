@@ -15,7 +15,7 @@ import { useTheme } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 
 import { Dialog,DialogTitle,DialogContent,DialogContentText,DialogActions,TextField,Button } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createProject } from './Utils/ProjectUtils';
 const SUCCESS=1,FAIL=0;
 
@@ -68,7 +68,7 @@ export const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 
     })
 );
 
-export default function ProjectDrawer({open,handleDrawerClose,projects,others}) {
+export default function ProjectDrawer({open,handleDrawerClose,projects,others,setPresentProject}) {
     const theme = useTheme();
     const [dialogOpen,setDialogOpen]=useState(false);
     const [projectName,setProjectName]=useState();
@@ -81,6 +81,7 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others}) 
             setDialogOpen(false)
         }
     }
+
     return (
         <div>
             <Drawer variant="permanent" open={open}>
@@ -91,9 +92,11 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others}) 
             </DrawerHeader>
             <Divider />
             <List>
-                {props.projects.map((project) => (
-                    <ListItem button key={project.projectName}>
-
+                {projects.map((project) => (
+                    <ListItem 
+                    button 
+                    key={project.projectName}
+                    onClick={()=>setPresentProject(project.projectName)}>
                         <ListItemIcon>
                             <FolderOpenIcon />
                         </ListItemIcon>

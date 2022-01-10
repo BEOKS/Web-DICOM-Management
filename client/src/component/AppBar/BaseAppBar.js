@@ -41,7 +41,7 @@ export default function BaseAppBar(props) {
                     <MenuIcon />
                 </IconButton>
                 <Typography variant="h6" noWrap component="div">
-                    Project Name
+                    {props.presentProject === '' ? 'Dicom' : props.presentProject}
                 </Typography>
             </Toolbar>
         </AppBar>
