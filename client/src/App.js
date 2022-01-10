@@ -16,7 +16,7 @@ import metadata2 from './metadata2.json'
 export default function Page() {
     const [open, setOpen] = React.useState(false);
     const [selectedPatientId, setSelectedPatientId] = React.useState([]);
-    const [projects, setProjects] = React.useState(null);
+    const [projects, setProjects] = React.useState([]);
 
     const getProjects = () => {
         axios.get('api/Project')
