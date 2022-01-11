@@ -7,12 +7,15 @@ import org.bson.conversions.Bson;
 @Getter
 public class MetaDataResponseDto {
 
-    private String _id;
+    private String metadataId;
+
+    private String projectId;
 
     private Bson body;
 
     public MetaDataResponseDto(MetaData entity){
-        this._id = entity.get_id();
+        this.metadataId = entity.getMetadataId();
+        this.projectId = entity.getProjectId();
         this.body = entity.getBody();
     }
 }
