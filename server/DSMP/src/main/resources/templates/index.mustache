@@ -1,17 +1,32 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>Hi</title>
+    <title>Dicom API Test</title>
 </head>
 
 <body>
-<form action="/Dicom/3fb6fc01-4ca0db35-dff6d53b-232b607d-1608a2e5" method="get">
-    <button type="submit">다운로드 버튼</button>
+
+<form action="/api/patient/00000003/dicom" method="get">
+    <button type="submit">Patient ID로 다운로드</button>
 </form>
+
+<br>
+
+<form action="/api/patient/00000003/study" method="GET" enctype="text/plain">
+    <button type="submit">Study UID GET by PatientID</button>
+</form>
+
+<br>
+
+<form action="/api/dicom/3fb6fc01-4ca0db35-dff6d53b-232b607d-1608a2e5" method="get">
+    <button type="submit">파일 하나 다운로드</button>
+</form>
+
+<br>
 
 <form action="/api/dicom" method="POST" enctype="multipart/form-data">
     <input type='file' name='dicomfile'/>
-    <button type="submit">업로드 버튼</button>
+    <button type="submit">업로드</button>
 </form>
 
 </body>
