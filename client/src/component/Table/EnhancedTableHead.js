@@ -17,7 +17,7 @@ export default function EnhancedTableHead(props) {
     };
 
     const createHeadCell = (id, numeric, disablePadding, label) => {
-        if (!isNaN(props.rows[0][id])) {
+        if (!isNaN(props.rows[0].body[id])) {
             numeric = true;
         }
 

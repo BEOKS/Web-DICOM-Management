@@ -28,7 +28,7 @@ export default function DicomTable(props) {
         if (rows.length <= 0) {
             return [];
         } else {
-            return Object.keys(rows[0]);
+            return Object.keys(rows[0].body);
         }
     };
     const keys = getKeysFromJSON();
@@ -41,7 +41,7 @@ export default function DicomTable(props) {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = rows.map((n) => n[keys[0]]);
+            const newSelecteds = rows.map((n) => n.body[keys[0]]);
             setSelected(newSelecteds);
             props.setSelectedPatientId(newSelecteds.map((patientId) => {
                 return {anonymized_id: patientId};
@@ -122,7 +122,7 @@ export default function DicomTable(props) {
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
-                                    const isItemSelected = isSelected(row[keys[0]]);
+                                    const isItemSelected = isSelected(row.body[keys[0]]);
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
@@ -130,9 +130,9 @@ export default function DicomTable(props) {
                                             isItemSelected={isItemSelected}
                                             labelId={labelId}
                                             handleClick={handleClick}
-                                            row={row}
+                                            row={row.body}
                                             keys={keys}
-                                            key={row[keys[0]]}
+                                            key={row.body[keys[0]]}
                                         />
                                     );
                                 })}
