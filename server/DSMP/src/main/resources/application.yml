@@ -7,7 +7,7 @@ spring:
     mongodb:
       host: mongodb  #local에서는 'localhost', docker server에서는 'mongodb'로 설정
       port: 27017
-      database: metadata
+      database: DSMP
       authentication-database: admin
       username: knuipalab
       password: knuipalab418

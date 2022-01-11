@@ -38,6 +38,7 @@ dependencies {
     implementation 'org.projectlombok:lombok' //lombok
     annotationProcessor 'org.projectlombok:lombok'// lombok
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb' // mongoDB
+    implementation 'com.fasterxml.jackson.core:jackson-databind' //jackson
     implementation 'commons-io:commons-io:2.8.0'
     implementation 'commons-fileupload:commons-fileupload:1.4'
     implementation 'com.squareup.okhttp3:okhttp:3.14.6' // okhttp3
