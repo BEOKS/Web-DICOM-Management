@@ -23,7 +23,6 @@ export default function DicomRow(props) {
         }
         return elements;
     };
-
     return (
         <React.Fragment>
             <TableRow
@@ -67,7 +66,7 @@ export default function DicomRow(props) {
                 </TableCell>
                 {createTableCell(row)}
             </TableRow>
-            <StudyTable open={open} colSpan={keys.length + 2}/>
+            <StudyTable open={open} colSpan={keys.length + 2} patientId={row[keys[0]]}/>
         </React.Fragment>
     );
 }

@@ -7,18 +7,22 @@ import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
-
+import { useState,useEffect } from 'react';
+import axios from 'axios';
 export default function StudyTable(props) {
 
     // Patient ID를 통해 서버에서 Study UID list를 받아왔다고 가정
-    const studyUIDList = [
-        { studyUID: 100 },
-        { studyUID: 200 },
-        { studyUID: 300 },
-        { studyUID: 400 },
-        { studyUID: 500 },
-    ];
-
+    const [studyUIDList,setStudyUIDList]=useState([])
+    useEffect(()=>{
+        const url=`api/patient/${props.patientId}/study`
+        console.log(url)
+        axios.get(url)
+            .then(response=>{
+                setStudyUIDList(response.data)
+                console.log(response.data)
+            })
+    },[props.patientId,props.open])
+    
     return (
         <TableRow>
             <TableCell style={{ paddingBottom: 0, paddingTop: 0, border: 0 }} colSpan={props.colSpan}>
@@ -34,13 +38,15 @@ export default function StudyTable(props) {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {studyUIDList.map((studyRow) => (
+                                {studyUIDList.map((studyRow,index) => (
                                     <TableRow
                                         hover
                                         // onClick={() => {뷰어 페이지로 리다이렉션 예정}}
-                                        key={studyRow.studyUID}>
+                                        key={index}>
                                         <TableCell component="th" scope="row">
-                                            {studyRow.studyUID}
+                                            <a href='https://www.naver.com'>
+                                            {studyRow}
+                                            </a>
                                         </TableCell>
                                     </TableRow>
                                 ))}
