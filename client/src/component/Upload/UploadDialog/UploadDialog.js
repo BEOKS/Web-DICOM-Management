@@ -29,6 +29,7 @@ export default function UploadDialog({open,setOpen,snackbarInfo,setSnackBarInfo,
                     setOpen(false);
                     setSnackBarInfo({...snackbarInfo,'open':true,'message':'Uploading Files ...','progress':23})
                     fileHandler.uploadFiles((progress,message,open=true)=>setSnackBarInfo({'message':message,'open':open,'progress':progress}));
+                    handleClearEvent();
                 }   
                 else{
                     setSnackBarInfo({...snackbarInfo,'open':false})

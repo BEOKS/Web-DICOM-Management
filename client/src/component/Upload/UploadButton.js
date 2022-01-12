@@ -9,7 +9,10 @@ export default function  UploadButton({projects}){
     const [open, setOpen] = React.useState(false);
     const [snackbarInfo,setSnackBarInfo]=React.useState({});
     const handleClickOpen = () => {
-        if(projects.projectId){
+        if(snackbarInfo.open){
+            alert('업로드 과정이 진행중입니다.')
+        }
+        else if(projects.projectId){
             setOpen(true);
         }
         else{
