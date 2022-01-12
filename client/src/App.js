@@ -19,19 +19,35 @@ export default function Page() {
     const [projects, setProjects] = React.useState([]);
     const [presentProject, setPresentProject] = React.useState({projectName: 'Dicom'});
     const [metaData, setMetaData] = React.useState([]);
-
     const getProjects = () => {
         axios.get('api/Project')
             .then(response => {
-                setProjects(response.data);
+                if(response.data.length!==0){
+                    setProjects(response.data);
+                    setPresentProject(response.data[0])
+                }
             }).catch(error => {
                 console.log(error);
             });
     };
+
+    const getMetaData = (projectId) => {
+        const url = `api/MetaData/${projectId}`;
+        axios.get(url)
+            .then(response => {
+                setMetaData(response.data);
+            }).catch(error => {
+                console.log(error);
+            });
+    };
+
     React.useEffect(() => {
         getProjects();
-    });
+    },[open]);
 
+    React.useEffect(() => {
+        getMetaData();
+    }, [projects])
     
 
     const handleDrawerOpen = () => {
@@ -41,7 +57,7 @@ export default function Page() {
     const handleDrawerClose = () => {
         setOpen(false);
     };
-
+    console.log(123)
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -60,7 +76,7 @@ export default function Page() {
             />
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
-                <UpDownloadToolbar />
+                <UpDownloadToolbar projects={presentProject}/>
                 <DicomTable
                     data={metaData}
                     setSelectedPatientId={setSelectedPatientId}

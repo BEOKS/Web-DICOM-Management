@@ -4,10 +4,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import UploadDialog from './UploadDialog/UploadDialog';
 import CircularProgressWithLabel from './UploadDialog/CircularProgressWithLabel';
 
-export default function  UploadButton(){
+export default function  UploadButton({projects}){
     const [open, setOpen] = React.useState(false);
     const [snackbarInfo,setSnackBarInfo]=React.useState({});
-    
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -34,7 +33,8 @@ export default function  UploadButton(){
                 open={open} 
                 setOpen={setOpen}
                 snackbarInfo={snackbarInfo}
-                setSnackBarInfo={setSnackBarInfo} />
+                setSnackBarInfo={setSnackBarInfo}
+                projects={projects} />
             <Snackbar
                 key='DataLoadingMessenger'
                 open={snackbarInfo.open}

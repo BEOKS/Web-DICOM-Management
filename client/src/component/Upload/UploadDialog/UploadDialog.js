@@ -10,16 +10,16 @@ const dialogContentDescrptionText="메타데이터는 csv의 'PatientID' 속성�
 const dicomUploadErrorMsg="업로드한 Dicom 파일을 확인해주세요 "
 
 let fileHandler;
-export default function UploadDialog({open,setOpen,snackbarInfo,setSnackBarInfo}){
-    // console.log('Build UploadDialog Component.')
+export default function UploadDialog({open,setOpen,snackbarInfo,setSnackBarInfo,projects}){
+    console.log('Build UploadDialog Component.')
     const [dicomFiles, setdicomFiles]=useState([]);
     const [csvFile, setCsvFile]=useState();
     const [updatePossibility,setUpdatePossibility]=useState();
     if(fileHandler===undefined){
-        fileHandler=new FileHandler(dicomFiles,csvFile)
+        fileHandler=new FileHandler(dicomFiles,csvFile,projects)
     }
     else{
-        fileHandler.updateFilePath(dicomFiles,csvFile);
+        fileHandler.updateFilePath(dicomFiles,csvFile,projects);
     }
     // console.log('UploadDialog data',fileHandler)
     const haldleOKEvent= ()=>{

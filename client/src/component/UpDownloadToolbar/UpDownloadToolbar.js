@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import { Grid } from '@mui/material';
 import UploadButton from "../Upload/UploadButton";
 
-export default function UpDownloadToolbar() {
+export default function UpDownloadToolbar({projects}) {
     return (
         <Box
             sx={{
@@ -24,7 +24,7 @@ export default function UpDownloadToolbar() {
                 container 
                 justifyContent="flex-end"
             >
-                <UploadButton />
+                <UploadButton projects={projects}/>
             </Grid>
         </Box>
     );

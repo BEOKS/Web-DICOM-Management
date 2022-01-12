@@ -1,19 +1,23 @@
 import axios from "axios";
 export class CsvFileHandler {
-    constructor(csvFile) {
+    constructor(csvFile,projects) {
         this.csvFile=csvFile;
+        this.projects=projects;
     }
-    updateFile(csvFile){
+    updateFile(csvFile,projects){
         this.csvFile=csvFile;
+        this.projects=projects;
     }
     async uploadToServer(...callbackList){
         callbackList[0](0,'Uploading Metadata...')
-        await axios.post('/MetaData',this.csvJson)
+        await axios.post(`api/MetaData/${this.projects.projectId}`,this.csvJson)
         .then(response=>{
             callbackList[0](100,'Finish Uploading Metadata.')
         })
         .catch(error=>{
             console.error(error)
+            alert(error)
+            console.log('this.projects',this.projects)
             callbackList[0](0,'Uploading Metadata error occurred')
         })
     }
