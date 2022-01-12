@@ -9,8 +9,7 @@ import FileHandler from '../Utils/FileHandler';
 const dialogContentDescrptionText="메타데이터는 csv의 'PatientID' 속성에는 업로드하려는 Dicom 파일의 ID가 존재해야 합니다. "
 const dicomUploadErrorMsg="업로드한 Dicom 파일을 확인해주세요 "
 
-let fileHandler;
-export default function UploadDialog({open,setOpen,snackbarInfo,setSnackBarInfo,projects}){
+export default function UploadDialog({open,setOpen,snackbarInfo,setSnackBarInfo,fileHandler,projects}){
     console.log('Build UploadDialog Component.')
     const [dicomFiles, setdicomFiles]=useState([]);
     const [csvFile, setCsvFile]=useState();
@@ -29,7 +28,7 @@ export default function UploadDialog({open,setOpen,snackbarInfo,setSnackBarInfo,
                 const updatePossibility=await fileHandler.checkUpdatePossibility(csvFile,dicomFileList);
                 if( updatePossibility!==undefined && updatePossibility.state==='success'){
                     setSnackBarInfo({...snackbarInfo,'open':true,'message':'Uploading Files ...','progress':23})
-                    fileHandler.uploadFiles((progress,message)=>setSnackBarInfo({'message':message,'open':true,'progress':progress}));
+                    fileHandler.uploadFiles((progress,message,open=true)=>setSnackBarInfo({'message':message,'open':open,'progress':progress}));
                 }   
                 else{
                     setSnackBarInfo({...snackbarInfo,'open':false})

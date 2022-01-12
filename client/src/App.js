@@ -46,8 +46,8 @@ export default function Page() {
     },[open]);
 
     React.useEffect(() => {
-        getMetaData();
-    }, [projects])
+        presentProject.projectId && getMetaData(presentProject.projectId);
+    }, [presentProject])
     
 
     const handleDrawerOpen = () => {

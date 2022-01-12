@@ -2,7 +2,6 @@ import axios from 'axios'
 import dicomParser from 'dicom-parser'
 
 let uploadCount=0
-let fileListLength=0;
 export class DicomFileListHandler {
     constructor(fileList) {
         this.fileList=fileList
@@ -12,9 +11,9 @@ export class DicomFileListHandler {
         // }
         // console.log('dicomFileList',this.dicomFileList)
     }
-    uploadToServer(onloadEachFileCallBack){
-        uploadCount=0;
-        fileListLength=this.fileList.length;
+    async uploadToServer(onloadEachFileCallBack){
+        this.uploadCount=0;
+        this.fileListLength=this.fileList.length;
         const url='/api/dicom'
         console.log('dicom uploadToServer : uploadToServer',this.fileList);
         for(let index=0;index<this.fileList.length;index++){
@@ -27,24 +26,25 @@ export class DicomFileListHandler {
                 }
             }
             console.log('uploadToServer',this.dicomFileList)
-            axios.post(url,formData,config)
+            await axios.post(url,formData,config)
                 .then(response=>{
-                    uploadCount+=1;
-                    console.log('awdsf',uploadCount,fileListLength)
-                    if(uploadCount===fileListLength){
+                    this.uploadCount+=1;
+                    console.log('awdsf',this.uploadCount,this.fileListLength)
+                    if(this.uploadCount===this.fileListLength){
                         onloadEachFileCallBack(100,
                             "Finish Uploading Dicom Files!")
                     }
                     else{
-                        onloadEachFileCallBack((uploadCount/fileListLength)*100,
+                        onloadEachFileCallBack((this.uploadCount/this.fileListLength)*100,
                         "Uploading "+file.name)
                     }
                 })
                 .catch(error=>{
                     console.error(error)
-                    onloadEachFileCallBack((uploadCount/fileListLength)*100,"error")
+                    onloadEachFileCallBack((this.uploadCount/this.fileListLength)*100,"error")
                 })
         }
+        onloadEachFileCallBack(0,'',false);
     }
     updateFileList(fileList){
         this.fileList=fileList
