@@ -8,7 +8,12 @@ export default function  UploadButton({projects}){
     const [open, setOpen] = React.useState(false);
     const [snackbarInfo,setSnackBarInfo]=React.useState({});
     const handleClickOpen = () => {
-        setOpen(true);
+        if(projects.projectId){
+            setOpen(true);
+        }
+        else{
+            alert('프로젝트를 선택해주세요.')
+        }
     };
     const handleClose = () => {
         setSnackBarInfo({...snackbarInfo,'open':false});
