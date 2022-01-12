@@ -27,6 +27,7 @@ export default function Page() {
                     setPresentProject(response.data[0])
                 }
             }).catch(error => {
+                alert('서버가 응답하지 않습니다.')
                 console.log(error);
             });
     };
