@@ -163,7 +163,7 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
                     label="Project name"
                     type="text"
                     fullWidth
-                    onChange={(e)=>setProjectName(e.target.value)}
+                    onChange={(e)=>setProjectName(String(e.target.value))}
                     variant="standard"
                 />
             </DialogContent>
