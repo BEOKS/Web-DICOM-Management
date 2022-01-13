@@ -17,9 +17,12 @@ services:
   middleware:
     build:
       context: ./DSMP/
+      args:
+        - PROFILE=local
       dockerfile: ./Dockerfile
     ports:
       - 8080:8080
+
     networks:
       innerNetwork:
         aliases:

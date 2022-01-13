@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -18,6 +19,8 @@ import java.util.*;
 
 @Controller
 public class DicomController {
+    @Value("${hostLocation}")
+    private String hostLocation;
 
     @GetMapping("/api/dicom/{id}")
     public String downloadDicom(@PathVariable String id){
@@ -26,6 +29,7 @@ public class DicomController {
 
     @GetMapping("/api/patient/{id}/dicom")
     public String downloadPatientDicom(@PathVariable String id, HttpServletResponse httpResponse) throws IOException{
+        System.out.println("host location is "+hostLocation);
 //        String request_URL = "http://localhost:8042/tools/find";
         String request_URL = "http://orthanc:8042/tools/find";
 
@@ -68,6 +72,6 @@ public class DicomController {
         }
         System.out.println(patientId);
 
-        return "redirect:http://localhost:8042/patients/" + patientId + "/archive";
+        return "redirect:http://"+hostLocation+":8042/patients/" + patientId + "/archive";
     }
 }
