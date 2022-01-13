@@ -10,7 +10,7 @@ import TableBody from '@mui/material/TableBody';
 import { useState,useEffect } from 'react';
 import axios from 'axios';
 export default function StudyTable(props) {
-
+    const viewerHost='http://155.230.29.41:3000'
     // Patient ID를 통해 서버에서 Study UID list를 받아왔다고 가정
     const [studyUIDList,setStudyUIDList]=useState([])
     useEffect(()=>{
@@ -44,8 +44,8 @@ export default function StudyTable(props) {
                                         // onClick={() => {뷰어 페이지로 리다이렉션 예정}}
                                         key={index}>
                                         <TableCell component="th" scope="row">
-                                            <a href='https://www.naver.com'>
-                                            {studyRow}
+                                            <a href={`${viewerHost}/viewer/${studyRow}`}>
+                                                {studyRow}
                                             </a>
                                         </TableCell>
                                     </TableRow>
