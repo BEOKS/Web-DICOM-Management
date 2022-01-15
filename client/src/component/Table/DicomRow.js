@@ -34,7 +34,7 @@ export default function DicomRow(props) {
                 key={row[keys[0]]}
                 selected={isItemSelected}
             >
-                <TableCell>
+                <TableCell sx={{width: '34px'}}>
                     <IconButton
                         aria-label="expand row"
                         size="small"
