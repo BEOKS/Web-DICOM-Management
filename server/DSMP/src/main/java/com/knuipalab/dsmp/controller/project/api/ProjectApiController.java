@@ -35,7 +35,7 @@ public class ProjectApiController {
     // projectId를 기반으로 Project 삭제 -> 관련 metadata들을 cascade하게 삭제
     @DeleteMapping("api/Project/{projectId}")
     public void delete(@PathVariable String projectId){
-        projectService.delete(projectId);
+        projectService.deleteById(projectId);
     }
 
 }
