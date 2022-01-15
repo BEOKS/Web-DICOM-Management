@@ -66,7 +66,7 @@ export default function Page() {
                 open={open}
                 handleDrawerClose={handleDrawerClose}
                 projects={projects}
-                others={['ETC']}
+                others={['Non-Reference Dicom']}
                 setPresentProject={setPresentProject}
                 setMetaData={setMetaData}
             />
