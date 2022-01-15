@@ -1,8 +1,9 @@
 package com.knuipalab.dsmp.controller.metadata.api;
 
 
+import com.knuipalab.dsmp.dto.metadata.MetaDataCreateRequestDto;
 import com.knuipalab.dsmp.dto.metadata.MetaDataResponseDto;
-import com.knuipalab.dsmp.dto.metadata.MetaDataRequestDto;
+import com.knuipalab.dsmp.dto.metadata.MetaDataUpdateRequestDto;
 import com.knuipalab.dsmp.service.metadata.MetaDataService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,38 +12,41 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@RestController //json 반환
+@RestController
 public class MetaDataApiController {
 
     @Autowired
     private MetaDataService metaDataService;
 
-    @GetMapping("/MetaData/{id}")
-    public MetaDataResponseDto findById(@PathVariable String id){
-        return metaDataService.findById(id);
+//    @GetMapping("api/MetaData")
+//    public List<MetaDataResponseDto> findAll(){
+//        return metaDataService.findAll();
+//    }
+
+    // projectId가 같은 metadata를 모두 반환
+    @GetMapping("api/MetaData/{projectId}")
+    public List<MetaDataResponseDto> findByProjectId(@PathVariable String projectId){
+        return metaDataService.findByProjectId(projectId);
     }
 
-    @PutMapping("/MetaData/{id}")
-    public void update(@PathVariable String id,@RequestBody String strBody){
-        MetaDataRequestDto metaDataRequestDto = new MetaDataRequestDto(strBody);
-        metaDataService.update(id,metaDataRequestDto);
+    // metatdata를 projectId와 함께 저장
+    @PostMapping("api/MetaData/{projectId}")
+    public void insert(@PathVariable String projectId,@RequestBody String strBody){
+        MetaDataCreateRequestDto metaDataCreateRequestDto = new MetaDataCreateRequestDto(projectId,strBody);
+        metaDataService.insert(metaDataCreateRequestDto);
     }
 
-    @DeleteMapping("/MetaData/{id}")
-    public void deleteById(@PathVariable String id){
-        metaDataService.deleteById(id);
+    // metatdata의 body부분을 수정
+    @PutMapping("api/MetaData/{metadataId}")
+    public void update(@PathVariable String metadataId,@RequestBody String strBody){
+        MetaDataUpdateRequestDto metaDataUpdateRequestDto = new MetaDataUpdateRequestDto(strBody);
+        metaDataService.update(metadataId,metaDataUpdateRequestDto);
     }
 
-    @GetMapping("/MetaData")
-    public List<MetaDataResponseDto> findAll(){
-        return metaDataService.findAll();//Jackson Library를 통해 자바 객체를 json형식으로 반환
-    }
-
-    @PostMapping("/MetaData")
-    public void insert(@RequestBody String strBody){
-        MetaDataRequestDto metaDataRequestDto = new MetaDataRequestDto(strBody);
-        metaDataService.insert(metaDataRequestDto);
-
+    // metadataId를 기반으로 삭제
+    @DeleteMapping("api/MetaData/{metadataId}")
+    public void deleteById(@PathVariable String metadataId){
+        metaDataService.delete(metadataId);
     }
 
 }

@@ -4,13 +4,13 @@ import { DicomFileListHandler } from "./DicomFileListHandler"
  * FileHandler는 Dicom과 메타데이터를 다루기 위한 싱글톤 클래스입니다.
  */
 class FileHandler{
-    constructor(dicomFiles,csvFile){
+    constructor(dicomFiles,csvFile,projects){
         this.dicomFileListHandler=new DicomFileListHandler(dicomFiles)
-        this.csvFileHandler=new CsvFileHandler(csvFile)
+        this.csvFileHandler=new CsvFileHandler(csvFile,projects)
     }
-    updateFilePath(dicomFiles,csvFile){
+    updateFilePath(dicomFiles,csvFile,projects){
         this.dicomFileListHandler.updateFileList(dicomFiles)
-        this.csvFileHandler.updateFile(csvFile)
+        this.csvFileHandler.updateFile(csvFile,projects)
     }
     async loadFile(onloadCallBack,dicomOnLoadAllCallBack=()=>{}){
         await this.csvFileHandler.loadCsv(()=>{});

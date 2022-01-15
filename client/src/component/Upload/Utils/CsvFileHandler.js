@@ -1,21 +1,29 @@
 import axios from "axios";
 export class CsvFileHandler {
-    constructor(csvFile) {
+    constructor(csvFile,projects) {
         this.csvFile=csvFile;
+        this.projects=projects;
     }
-    updateFile(csvFile){
+    updateFile(csvFile,projects){
         this.csvFile=csvFile;
+        this.projects=projects;
     }
     async uploadToServer(...callbackList){
+        console.log('callbackList[0]',callbackList[0])
         callbackList[0](0,'Uploading Metadata...')
-        await axios.post('/MetaData',this.csvJson)
-        .then(response=>{
-            callbackList[0](100,'Finish Uploading Metadata.')
+        this.uploadFileCount=0
+        await this.csvJson.data.map(async (data,index)=>{
+            this.uploadFileCount=0;
+            await axios.post(`api/MetaData/${this.projects.projectId}`,data)
+                .then(response=>{
+                    callbackList[0]((++this.uploadFileCount/this.csvJson.data.length)*100,'Uploading Metadata...')
+                })
+                .catch(error=>{
+                    console.error(error);
+                    callbackList[0](0,'Uploading Metadata error occurred')
+                })
         })
-        .catch(error=>{
-            console.error(error)
-            callbackList[0](0,'Uploading Metadata error occurred')
-        })
+        callbackList[0](0,'',false);
     }
     /**
      *  this.csvJson에 로드한 csv 정보를 json 형태로 저장

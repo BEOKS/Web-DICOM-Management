@@ -7,7 +7,7 @@ spring:
     mongodb:
       host: mongodb  #local에서는 'localhost', docker server에서는 'mongodb'로 설정
       port: 27017
-      database: metadata
+      database: DSMP
       authentication-database: admin
       username: knuipalab
       password: knuipalab418
@@ -22,3 +22,15 @@ spring:
       location:  #임시 저장 경로
       max-file-size: #파일 최대 크기
       max-request-size: #요청 당 최대 파일 크기
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+hostLocation : 155.230.29.41
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+hostLocation : localhost
