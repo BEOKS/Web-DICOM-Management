@@ -15,8 +15,8 @@ public class PatientApiController {
     PatientService patientService;
 
     @GetMapping("api/Patient/nonReferenced")
-    public void findNonReferencedPatients(){
-        patientService.findNonReferencedPatients();
+    public List<String> findNonReferencedPatients(){
+        return patientService.findNonReferencedPatients();
     }
 
 }
