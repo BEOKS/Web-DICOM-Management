@@ -7,12 +7,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import EnhancedTableHead from './EnhancedTableHead'
 import EnhancedTableToolbar from "./EnhancedTableToolbar";
 import { stableSort, getComparator } from './Utils';
+import DicomRow from './DicomRow';
 
 export default function DicomTable(props) {
     const [order, setOrder] = React.useState('asc');
@@ -28,18 +28,10 @@ export default function DicomTable(props) {
         if (rows.length <= 0) {
             return [];
         } else {
-            return Object.keys(rows[0]);
+            return Object.keys(rows[0].body);
         }
     };
     const keys = getKeysFromJSON();
-
-    const createTableCell = (row) => {
-        const elements = [];
-        for (let i = 1; i < keys.length; i++) {
-            elements[i - 1] = <TableCell align="right" key={keys[i]}>{row[keys[i]]}</TableCell>;
-        }
-        return elements;
-    };
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -49,13 +41,15 @@ export default function DicomTable(props) {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = rows.map((n) => n[keys[0]]);
+            const newSelecteds = rows.map((n) => n.body[keys[0]]);
             setSelected(newSelecteds);
-            props.setSelectedRow(rows);
+            props.setSelectedPatientId(newSelecteds.map((patientId) => {
+                return {anonymized_id: patientId};
+            }));
             return;
         }
         setSelected([]);
-        props.setSelectedRow([]);
+        props.setSelectedPatientId([]);
     };
 
     const handleClick = (event, name) => {
@@ -76,8 +70,11 @@ export default function DicomTable(props) {
         }
 
         setSelected(newSelected);
-        const selectedRows = rows.filter((row) => newSelected.includes(row[keys[0]]));
-        props.setSelectedRow(selectedRows);
+
+        const patients = newSelected.map((patientId) => {
+            return {anonymized_id: patientId};
+        });
+        props.setSelectedPatientId(patients);
     };
 
     const handleChangePage = (event, newPage) => {
@@ -125,38 +122,18 @@ export default function DicomTable(props) {
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
-                                    const isItemSelected = isSelected(row[keys[0]]);
+                                    const isItemSelected = isSelected(row.body[keys[0]]);
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
-                                        <TableRow
-                                            hover
-                                            onClick={(event) => handleClick(event, row[keys[0]])}
-                                            role="checkbox"
-                                            aria-checked={isItemSelected}
-                                            tabIndex={-1}
-                                            key={row[keys[0]]}
-                                            selected={isItemSelected}
-                                        >
-                                            <TableCell padding="checkbox">
-                                                <Checkbox
-                                                    color="primary"
-                                                    checked={isItemSelected}
-                                                    inputProps={{
-                                                        'aria-labelledby': labelId,
-                                                    }}
-                                                />
-                                            </TableCell>
-                                            <TableCell
-                                                component="th"
-                                                id={labelId}
-                                                scope="row"
-                                                padding="none"
-                                            >
-                                                {row[keys[0]]}
-                                            </TableCell>
-                                            { createTableCell(row) }
-                                        </TableRow>
+                                        <DicomRow 
+                                            isItemSelected={isItemSelected}
+                                            labelId={labelId}
+                                            handleClick={handleClick}
+                                            row={row.body}
+                                            keys={keys}
+                                            key={row.body[keys[0]]}
+                                        />
                                     );
                                 })}
                             {emptyRows > 0 && (
@@ -165,7 +142,7 @@ export default function DicomTable(props) {
                                         height: (dense ? 33 : 53) * emptyRows,
                                     }}
                                 >
-                                    <TableCell colSpan={ keys.length + 1 } />
+                                    <TableCell colSpan={ keys.length + 2 } />
                                 </TableRow>
                             )}
                         </TableBody>

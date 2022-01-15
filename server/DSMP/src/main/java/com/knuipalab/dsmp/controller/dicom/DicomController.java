@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -20,6 +21,8 @@ import java.util.*;
 
 @Controller
 public class DicomController {
+    @Value("${hostLocation}")
+    private String hostLocation;
 
     OrthancService orthancService = new OrthancService();
 
