@@ -3,6 +3,8 @@ package com.knuipalab.dsmp.controller.dicom;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.knuipalab.dsmp.service.orthanc.OrthancRestClient;
+import com.knuipalab.dsmp.service.orthanc.OrthancService;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,56 +24,17 @@ public class DicomController {
     @Value("${hostLocation}")
     private String hostLocation;
 
+    OrthancService orthancService = new OrthancService();
+
     @GetMapping("/api/dicom/{id}")
     public String downloadDicom(@PathVariable String id){
         return "redirect:http://orthanc:8042/instances/" + id + "/file";
     }
 
     @GetMapping("/api/patient/{id}/dicom")
-    public String downloadPatientDicom(@PathVariable String id, HttpServletResponse httpResponse) throws IOException{
-        System.out.println("host location is "+hostLocation);
-//        String request_URL = "http://localhost:8042/tools/find";
-        String request_URL = "http://orthanc:8042/tools/find";
+    public String downloadPatientDicom(@PathVariable String id) throws IOException{
+        String patientUUID = orthancService.getPatinetUuidByPatientID(id);
 
-        System.out.println("call GET /api/dicom/patient/{id}");
-
-        RestTemplate restTemplate = new RestTemplate();
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        HashMap<String,Object> param = new HashMap<>();
-        JsonNode query = objectMapper.readTree("{\"PatientID\":\"" + id + "\"}");
-        param.put("Expand", true);
-        param.put("Full", true);
-        param.put("Level", "Study");
-        param.put("Query", query);
-
-        // header setting
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        // post api call
-        HttpEntity<Map<String,Object>> requestEntity = new HttpEntity<>(param, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(request_URL, requestEntity, String.class);
-
-        System.out.println("-----------Response Result------------");
-        JsonNode jsonNode;
-        try {
-            jsonNode = objectMapper.readTree(response.getBody());
-        }
-        catch(Exception ex){
-            System.err.println("Error get Response");
-            jsonNode = objectMapper.readTree(response.toString());
-        }
-        System.out.println(response.toString());
-
-        ArrayNode arrayNode = (ArrayNode) jsonNode;
-        Iterator<JsonNode> itr = arrayNode.elements();
-        String patientId = "";
-        while( itr.hasNext() ) {
-            patientId = itr.next().get("ParentPatient").asText();
-        }
-        System.out.println(patientId);
-
-        return "redirect:http://"+hostLocation+":8042/patients/" + patientId + "/archive";
+        return "redirect:http://localhost:8042/patients/" + patientUUID + "/archive";
     }
 }
