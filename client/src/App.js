@@ -12,14 +12,19 @@ export default function Page() {
     const [open, setOpen] = React.useState(false);
     const [selectedPatientId, setSelectedPatientId] = React.useState([]);
     const [projects, setProjects] = React.useState([]);
-    const [presentProject, setPresentProject] = React.useState({projectName: 'Dicom'});
+    const [presentProject, setPresentProject] = React.useState({ projectName: 'Dicom' });
     const [metaData, setMetaData] = React.useState([]);
+    const [checkFirst, setCheckFirst] = React.useState(true);
+
     const getProjects = () => {
         axios.get('api/Project')
             .then(response => {
-                if(response.data.length!==0){
+                if (response.data.length !== 0) {
                     setProjects(response.data);
-                    setPresentProject(response.data[0])
+                    if (checkFirst) {
+                        setPresentProject(response.data[0]);
+                        setCheckFirst(false);
+                    }
                 }
             }).catch(error => {
                 alert('서버가 응답하지 않습니다.')
@@ -39,12 +44,12 @@ export default function Page() {
 
     React.useEffect(() => {
         getProjects();
-    },[open]);
+    }, [open]);
 
     React.useEffect(() => {
         presentProject.projectId && getMetaData(presentProject.projectId);
     }, [presentProject])
-    
+
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -72,7 +77,7 @@ export default function Page() {
             />
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
-                <UpDownloadToolbar projects={presentProject}/>
+                <UpDownloadToolbar projects={presentProject} />
                 <DicomTable
                     data={metaData}
                     setSelectedPatientId={setSelectedPatientId}
