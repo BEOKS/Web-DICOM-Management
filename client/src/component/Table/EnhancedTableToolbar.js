@@ -1,15 +1,27 @@
 import * as React from "react";
 import Toolbar from "@mui/material/Toolbar";
-import {alpha} from "@mui/material/styles";
+import { alpha } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import PropTypes from "prop-types";
+import DeleteRowDialog from "./DeleteRowDialog";
+import { useState } from "react";
+import { Fragment } from "react";
 
 export default function EnhancedTableToolbar(props) {
     const { numSelected } = props;
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     return (
         <Toolbar
@@ -43,11 +55,17 @@ export default function EnhancedTableToolbar(props) {
             )}
 
             {numSelected > 0 ? (
-                <Tooltip title="Delete">
-                    <IconButton>
-                        <DeleteIcon />
-                    </IconButton>
-                </Tooltip>
+                <Fragment>
+                    <Tooltip title="Delete">
+                        <IconButton onClick={handleOpen}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <DeleteRowDialog
+                        open={open}
+                        onClose={handleClose}
+                    />
+                </Fragment>
             ) : (
                 <Tooltip title="Filter list">
                     <IconButton>
