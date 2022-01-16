@@ -5,6 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import Button from '@mui/material/Button';
 
 export const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
@@ -40,9 +41,10 @@ export default function BaseAppBar(props) {
                 >
                     <MenuIcon />
                 </IconButton>
-                <Typography variant="h6" noWrap component="div">
+                <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
                     {props.presentProjectName}
                 </Typography>
+                <Button color="inherit">Login</Button>
             </Toolbar>
         </AppBar>
     );
