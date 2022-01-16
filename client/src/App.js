@@ -8,11 +8,6 @@ import ProjectDrawer from './component/Drawer/ProjectDrawer'
 import BaseAppBar from './component/AppBar/BaseAppBar';
 import axios from 'axios';
 
-// 지금은 우선 로컬에서 메타데이터 불러오기
-// import 후에 자동으로 JSON.parse 함수가 적용된 것처럼 동작함 (JavaScript Object type)
-// import metadata from './metadata.json'
-// import metadata2 from './metadata2.json'
-
 export default function Page() {
     const [open, setOpen] = React.useState(false);
     const [selectedPatientId, setSelectedPatientId] = React.useState([]);
@@ -82,7 +77,6 @@ export default function Page() {
                     data={metaData}
                     setSelectedPatientId={setSelectedPatientId}
                 />
-                {/* {console.log(selectedPatientId)} */}
             </Box>
         </Box>
     );
