@@ -1,6 +1,0 @@
-.dbdata
-.idea
-venv
-server/volumes
-server/*/__pycache__
-# server/DicomServiceApp/__pycache__
