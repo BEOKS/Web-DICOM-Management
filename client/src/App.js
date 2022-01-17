@@ -10,7 +10,6 @@ import axios from 'axios';
 
 export default function Page() {
     const [open, setOpen] = React.useState(false);
-    const [selectedPatientId, setSelectedPatientId] = React.useState([]);
     const [projects, setProjects] = React.useState([]);
     const [presentProject, setPresentProject] = React.useState({ projectName: 'Dicom' });
     const [metaData, setMetaData] = React.useState([]);
@@ -78,10 +77,7 @@ export default function Page() {
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
                 <UpDownloadToolbar projects={presentProject} />
-                <DicomTable
-                    data={metaData}
-                    setSelectedPatientId={setSelectedPatientId}
-                />
+                <DicomTable data={metaData} />
             </Box>
         </Box>
     );

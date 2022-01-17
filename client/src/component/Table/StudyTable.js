@@ -9,10 +9,11 @@ import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
 import { useState,useEffect } from 'react';
 import axios from 'axios';
+
 export default function StudyTable(props) {
     const viewerHost='http://155.230.29.41:3000'
-    // Patient ID를 통해 서버에서 Study UID list를 받아왔다고 가정
     const [studyUIDList,setStudyUIDList]=useState([])
+    
     useEffect(()=>{
         const url=`api/patient/${props.patientId}/study`
         console.log(url)

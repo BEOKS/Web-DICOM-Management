@@ -46,23 +46,19 @@ export default function DicomTable(props) {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = rows.map((n) => n.body[keys[0]]);
+            const newSelecteds = rows.map((n) => n.metadataId);
             setSelected(newSelecteds);
-            props.setSelectedPatientId(newSelecteds.map((patientId) => {
-                return { anonymized_id: patientId };
-            }));
             return;
         }
         setSelected([]);
-        props.setSelectedPatientId([]);
     };
 
-    const handleClick = (event, name) => {
-        const selectedIndex = selected.indexOf(name);
+    const handleClick = (event, metadataId) => {
+        const selectedIndex = selected.indexOf(metadataId);
         let newSelected = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, name);
+            newSelected = newSelected.concat(selected, metadataId);
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selected.slice(1));
         } else if (selectedIndex === selected.length - 1) {
@@ -73,13 +69,7 @@ export default function DicomTable(props) {
                 selected.slice(selectedIndex + 1),
             );
         }
-
         setSelected(newSelected);
-
-        const patients = newSelected.map((patientId) => {
-            return { anonymized_id: patientId };
-        });
-        props.setSelectedPatientId(patients);
     };
 
     const handleChangePage = (event, newPage) => {
@@ -95,7 +85,7 @@ export default function DicomTable(props) {
         setDense(event.target.checked);
     };
 
-    const isSelected = (name) => selected.indexOf(name) !== -1;
+    const isSelected = (metadataId) => selected.indexOf(metadataId) !== -1;
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
@@ -104,7 +94,9 @@ export default function DicomTable(props) {
     return (
         <Box sx={{ width: '100%', px: 3, mt: 3 }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
-                <EnhancedTableToolbar numSelected={selected.length} />
+                <EnhancedTableToolbar 
+                    numSelected={selected.length} 
+                    />
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 750 }}
@@ -127,7 +119,7 @@ export default function DicomTable(props) {
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
-                                    const isItemSelected = isSelected(row.body[keys[0]]);
+                                    const isItemSelected = isSelected(row.metadataId);
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
@@ -135,9 +127,9 @@ export default function DicomTable(props) {
                                             isItemSelected={isItemSelected}
                                             labelId={labelId}
                                             handleClick={handleClick}
-                                            row={row.body}
+                                            row={row}
                                             keys={keys}
-                                            key={row.body[keys[0]]}
+                                            key={row.metadataId}
                                         />
                                     );
                                 })}
