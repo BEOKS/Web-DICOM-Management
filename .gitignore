@@ -1,0 +1,8 @@
+.dbdata
+.idea
+venv
+server/volumes
+server/*/__pycache__
+
+*.DS_Store
+# server/DicomServiceApp/__pycache__
