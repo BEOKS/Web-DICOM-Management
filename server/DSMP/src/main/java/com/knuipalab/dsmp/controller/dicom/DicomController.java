@@ -28,13 +28,13 @@ public class DicomController {
 
     @GetMapping("/api/dicom/{id}")
     public String downloadDicom(@PathVariable String id){
-        return "redirect:http://orthanc:8042/instances/" + id + "/file";
+        return "redirect:http://" + hostLocation + "/dicom/instances/" + id + "/file";
     }
 
     @GetMapping("/api/patient/{id}/dicom")
     public String downloadPatientDicom(@PathVariable String id) throws IOException{
         String patientUUID = orthancService.getPatinetUuidByPatientID(id);
 
-        return "redirect:http://localhost:8042/patients/" + patientUUID + "/archive";
+        return "redirect:http://" + hostLocation + "/dicom/patients/" + patientUUID + "/archive";
     }
 }

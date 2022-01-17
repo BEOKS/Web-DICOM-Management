@@ -38,15 +38,10 @@ public class OrthancRestClient {
             System.err.println("Error get Response");
             jsonNode = objectMapper.readTree(response.toString());
         }
-
-        System.out.println("-----------Response Result------------");
-        System.out.println(response.toString());
-
         return jsonNode;
     }
 
     protected JsonNode getPatientInfo(String patientUUID) throws IOException {
-
         ObjectMapper objectMapper = new ObjectMapper();
 
         HashMap<String,Object> param = new HashMap<>();
