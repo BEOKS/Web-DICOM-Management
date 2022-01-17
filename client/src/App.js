@@ -58,7 +58,7 @@ export default function Page() {
     const handleDrawerClose = () => {
         setOpen(false);
     };
-    console.log(123)
+    
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />

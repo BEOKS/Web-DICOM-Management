@@ -24,6 +24,11 @@ export default function DicomTable(props) {
 
     const rows = [...props.data];
 
+    // 드로어에서 다른 프로젝트 클릭 시 테이블 행 선택을 해제함
+    React.useEffect(() => {
+        setSelected([]);
+    }, [props.data]);
+
     const getKeysFromJSON = () => {
         if (rows.length <= 0) {
             return [];
@@ -44,7 +49,7 @@ export default function DicomTable(props) {
             const newSelecteds = rows.map((n) => n.body[keys[0]]);
             setSelected(newSelecteds);
             props.setSelectedPatientId(newSelecteds.map((patientId) => {
-                return {anonymized_id: patientId};
+                return { anonymized_id: patientId };
             }));
             return;
         }
@@ -72,7 +77,7 @@ export default function DicomTable(props) {
         setSelected(newSelected);
 
         const patients = newSelected.map((patientId) => {
-            return {anonymized_id: patientId};
+            return { anonymized_id: patientId };
         });
         props.setSelectedPatientId(patients);
     };
@@ -126,7 +131,7 @@ export default function DicomTable(props) {
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
-                                        <DicomRow 
+                                        <DicomRow
                                             isItemSelected={isItemSelected}
                                             labelId={labelId}
                                             handleClick={handleClick}
@@ -142,7 +147,7 @@ export default function DicomTable(props) {
                                         height: (dense ? 33 : 53) * emptyRows,
                                     }}
                                 >
-                                    <TableCell colSpan={ keys.length + 2 } />
+                                    <TableCell colSpan={keys.length + 2} />
                                 </TableRow>
                             )}
                         </TableBody>
