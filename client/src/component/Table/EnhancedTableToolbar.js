@@ -12,7 +12,7 @@ import { useState } from "react";
 import { Fragment } from "react";
 
 export default function EnhancedTableToolbar(props) {
-    const { numSelected } = props;
+    const { numSelected, selected, metaDataUpdated, setMetaDataUpdated } = props;
     const [open, setOpen] = useState(false);
 
     const handleOpen = () => {
@@ -64,6 +64,9 @@ export default function EnhancedTableToolbar(props) {
                     <DeleteRowDialog
                         open={open}
                         onClose={handleClose}
+                        selected={selected}
+                        metaDataUpdated={metaDataUpdated}
+                        setMetaDataUpdated={setMetaDataUpdated}
                     />
                 </Fragment>
             ) : (

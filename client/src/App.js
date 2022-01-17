@@ -13,6 +13,7 @@ export default function Page() {
     const [projects, setProjects] = React.useState([]);
     const [presentProject, setPresentProject] = React.useState({ projectName: 'Dicom' });
     const [metaData, setMetaData] = React.useState([]);
+    const [metaDataUpdated, setMetaDataUpdated] = React.useState(false);
     const [checkFirst, setCheckFirst] = React.useState(true);
 
     const getProjects = () => {
@@ -47,7 +48,7 @@ export default function Page() {
 
     React.useEffect(() => {
         presentProject.projectId && getMetaData(presentProject.projectId);
-    }, [presentProject])
+    }, [presentProject, metaDataUpdated])
 
 
     const handleDrawerOpen = () => {
@@ -77,7 +78,11 @@ export default function Page() {
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
                 <UpDownloadToolbar projects={presentProject} />
-                <DicomTable data={metaData} />
+                <DicomTable 
+                    data={metaData} 
+                    metaDataUpdated={metaDataUpdated}
+                    setMetaDataUpdated={setMetaDataUpdated}
+                    />
             </Box>
         </Box>
     );

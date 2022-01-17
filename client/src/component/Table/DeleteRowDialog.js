@@ -10,9 +10,19 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Alert from '@mui/material/Alert';
+import axios from 'axios';
 
 export default function DeleteRowDialog(props) {
-    const { open, onClose } = props;
+    const { open, onClose, selected, metaDataUpdated, setMetaDataUpdated } = props;
+
+    const deleteMetaData = () => {
+        for (let i = 0; i < selected.length; i++) {
+            const url = `api/MetaData/${selected[i]}`;
+            axios.delete(url)
+                .then(response => console.log(response))
+                .catch(error => console.log(error));
+        }
+    };
 
     return (
         <div>
@@ -27,8 +37,8 @@ export default function DeleteRowDialog(props) {
                 </DialogTitle>
                 <DialogContent>
                     <Alert severity="info">메타 데이터만 삭제할 경우, 해당 메타 데이터와 매핑되었던 Dicom 파일은
-                            <br />Non-Reference Dicom 카테고리에서 확인할 수 있습니다.</Alert>
-                    <FormControl component="fieldset" sx={{mt: 3}}>
+                        <br />Non-Reference Dicom 카테고리에서 확인할 수 있습니다.</Alert>
+                    <FormControl component="fieldset" sx={{ mt: 3 }}>
                         <FormLabel component="legend">삭제 옵션을 선택해주세요.</FormLabel>
                         <RadioGroup
                             aria-label="gender"
@@ -36,12 +46,19 @@ export default function DeleteRowDialog(props) {
                             name="radio-buttons-group"
                         >
                             <FormControlLabel value="onlyMetaData" control={<Radio />} label="메타 데이터 삭제" />
-                            <FormControlLabel value="metaDataAndDicom" control={<Radio />} label="메타 데이터와 Dicom 파일 모두 삭제"/>
+                            <FormControlLabel value="metaDataAndDicom" control={<Radio />} label="메타 데이터와 Dicom 파일 모두 삭제" />
                         </RadioGroup>
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={onClose} autoFocus>
+                    <Button 
+                        autoFocus
+                        onClick={()=>{
+                            deleteMetaData();
+                            setMetaDataUpdated(!metaDataUpdated);
+                            onClose();
+                        }} 
+                        >
                         확인
                     </Button>
                     <Button onClick={onClose}>취소</Button>

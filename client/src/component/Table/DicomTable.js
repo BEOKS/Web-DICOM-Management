@@ -95,7 +95,10 @@ export default function DicomTable(props) {
         <Box sx={{ width: '100%', px: 3, mt: 3 }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
                 <EnhancedTableToolbar 
-                    numSelected={selected.length} 
+                    numSelected={selected.length}
+                    selected={selected}
+                    metaDataUpdated={props.metaDataUpdated}
+                    setMetaDataUpdated={props.setMetaDataUpdated}
                     />
                 <TableContainer>
                     <Table
