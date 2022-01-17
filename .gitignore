@@ -4,6 +4,5 @@ venv
 server/volumes
 server/*/__pycache__
 application-oauth.yml
-30c48e7... Feat : add DS_Store to gitignroe
 *.DS_Store
 # server/DicomServiceApp/__pycache__
