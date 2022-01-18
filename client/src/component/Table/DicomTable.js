@@ -21,7 +21,7 @@ export default function DicomTable(props) {
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+    
     const rows = [...props.data];
 
     const getKeysFromJSON = () => {
@@ -99,7 +99,7 @@ export default function DicomTable(props) {
     return (
         <Box sx={{ width: '100%', px: 3, mt: 3 }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
-                <EnhancedTableToolbar numSelected={selected.length} />
+                <EnhancedTableToolbar numSelected={selected.length} selectedPatientIDList={selected} />
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 750 }}

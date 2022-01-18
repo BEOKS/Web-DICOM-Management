@@ -5,12 +5,20 @@ import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import FilterListIcon from "@mui/icons-material/FilterList";
 import PropTypes from "prop-types";
+import axios from "axios";
+import { Stack } from "@mui/material";
 
-export default function EnhancedTableToolbar(props) {
-    const { numSelected } = props;
-
+const hostLocation=process.env.SERVER_HOST ? process.env.SERVER_HOST : 'localhost'
+export default function EnhancedTableToolbar({numSelected, selectedPatientIDList}) {
+    const handleDownloadButtonClick=(selectedPatientID)=>{
+        //download files
+        selectedPatientIDList.forEach(element => {
+            window.location.href=`http://${hostLocation}:8080/api/patient/${element}/dicom`;
+        });
+    }
     return (
         <Toolbar
             sx={{
@@ -43,11 +51,18 @@ export default function EnhancedTableToolbar(props) {
             )}
 
             {numSelected > 0 ? (
-                <Tooltip title="Delete">
-                    <IconButton>
-                        <DeleteIcon />
-                    </IconButton>
-                </Tooltip>
+                <Stack direction="row">
+                    <Tooltip title="Delete">
+                        <IconButton>
+                            <DeleteIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Download">
+                        <IconButton onClick={()=>handleDownloadButtonClick(selectedPatientIDList)}>
+                            <CloudDownloadIcon/>
+                        </IconButton>
+                    </Tooltip>
+                </Stack>
             ) : (
                 <Tooltip title="Filter list">
                     <IconButton>
