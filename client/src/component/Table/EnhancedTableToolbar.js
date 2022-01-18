@@ -1,6 +1,6 @@
 import * as React from "react";
 import Toolbar from "@mui/material/Toolbar";
-import {alpha} from "@mui/material/styles";
+import { alpha } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
@@ -8,17 +8,32 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import FilterListIcon from "@mui/icons-material/FilterList";
 import PropTypes from "prop-types";
-import axios from "axios";
+import DeleteRowDialog from "./DeleteRowDialog";
+import { useState } from "react";
+import { Fragment } from "react";
 import { Stack } from "@mui/material";
 
-const hostLocation=process.env.SERVER_HOST ? process.env.SERVER_HOST : 'localhost'
-export default function EnhancedTableToolbar({numSelected, selectedPatientIDList}) {
-    const handleDownloadButtonClick=(selectedPatientID)=>{
+const hostLocation = process.env.SERVER_HOST ? process.env.SERVER_HOST : 'localhost'
+
+export default function EnhancedTableToolbar(props) {
+    const { numSelected, selected, metaDataUpdated, setMetaDataUpdated, selectedPatientIDList } = props;
+    const [open, setOpen] = useState(false);
+
+    const handleDownloadButtonClick = (selectedPatientID) => {
         //download files
         selectedPatientIDList.forEach(element => {
-            window.location.href=`http://${hostLocation}:8080/api/patient/${element}/dicom`;
+            window.location.href = `http://${hostLocation}:8080/api/patient/${element}/dicom`;
         });
-    }
+    };
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     return (
         <Toolbar
             sx={{
@@ -52,14 +67,23 @@ export default function EnhancedTableToolbar({numSelected, selectedPatientIDList
 
             {numSelected > 0 ? (
                 <Stack direction="row">
-                    <Tooltip title="Delete">
-                        <IconButton>
-                            <DeleteIcon />
-                        </IconButton>
-                    </Tooltip>
+                    <Fragment>
+                        <Tooltip title="Delete">
+                            <IconButton onClick={handleOpen}>
+                                <DeleteIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <DeleteRowDialog
+                            open={open}
+                            onClose={handleClose}
+                            selected={selected}
+                            metaDataUpdated={metaDataUpdated}
+                            setMetaDataUpdated={setMetaDataUpdated}
+                        />
+                    </Fragment>
                     <Tooltip title="Download">
-                        <IconButton onClick={()=>handleDownloadButtonClick(selectedPatientIDList)}>
-                            <CloudDownloadIcon/>
+                        <IconButton onClick={() => handleDownloadButtonClick(selectedPatientIDList)}>
+                            <CloudDownloadIcon />
                         </IconButton>
                     </Tooltip>
                 </Stack>

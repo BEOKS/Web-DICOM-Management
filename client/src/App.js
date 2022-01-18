@@ -8,23 +8,23 @@ import ProjectDrawer from './component/Drawer/ProjectDrawer'
 import BaseAppBar from './component/AppBar/BaseAppBar';
 import axios from 'axios';
 
-// 지금은 우선 로컬에서 메타데이터 불러오기
-// import 후에 자동으로 JSON.parse 함수가 적용된 것처럼 동작함 (JavaScript Object type)
-// import metadata from './metadata.json'
-// import metadata2 from './metadata2.json'
-
 export default function Page() {
     const [open, setOpen] = React.useState(false);
-    const [selectedPatientId, setSelectedPatientId] = React.useState([]);
     const [projects, setProjects] = React.useState([]);
-    const [presentProject, setPresentProject] = React.useState({projectName: 'Dicom'});
+    const [presentProject, setPresentProject] = React.useState({ projectName: 'Dicom' });
     const [metaData, setMetaData] = React.useState([]);
+    const [metaDataUpdated, setMetaDataUpdated] = React.useState(false);
+    const [checkFirst, setCheckFirst] = React.useState(true);
+
     const getProjects = () => {
         axios.get('api/Project')
             .then(response => {
-                if(response.data.length!==0){
+                if (response.data.length !== 0) {
                     setProjects(response.data);
-                    setPresentProject(response.data[0])
+                    if (checkFirst) {
+                        setPresentProject(response.data[0]);
+                        setCheckFirst(false);
+                    }
                 }
             }).catch(error => {
                 alert('서버가 응답하지 않습니다.')
@@ -44,12 +44,12 @@ export default function Page() {
 
     React.useEffect(() => {
         getProjects();
-    },[open]);
+    }, [open]);
 
     React.useEffect(() => {
         presentProject.projectId && getMetaData(presentProject.projectId);
-    }, [presentProject])
-    
+    }, [presentProject, metaDataUpdated])
+
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -58,7 +58,7 @@ export default function Page() {
     const handleDrawerClose = () => {
         setOpen(false);
     };
-    console.log(123)
+    
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -66,7 +66,7 @@ export default function Page() {
                 open={open}
                 handleDrawerClose={handleDrawerClose}
                 projects={projects}
-                others={['ETC']}
+                others={['Non-Reference Dicom']}
                 setPresentProject={setPresentProject}
                 setMetaData={setMetaData}
             />
@@ -77,12 +77,12 @@ export default function Page() {
             />
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
-                <UpDownloadToolbar projects={presentProject}/>
-                <DicomTable
-                    data={metaData}
-                    setSelectedPatientId={setSelectedPatientId}
-                />
-                {/* {console.log(selectedPatientId)} */}
+                <UpDownloadToolbar projects={presentProject} />
+                <DicomTable 
+                    data={metaData} 
+                    metaDataUpdated={metaDataUpdated}
+                    setMetaDataUpdated={setMetaDataUpdated}
+                    />
             </Box>
         </Box>
     );

@@ -9,17 +9,12 @@ import StudyTable from './StudyTable';
 
 export default function DicomRow(props) {
     const [open, setOpen] = React.useState(false);
-    
-    const isItemSelected = props.isItemSelected;
-    const labelId = props.labelId;
-    const handleClick = props.handleClick;
-    const row = props.row;
-    const keys = props.keys;
+    const { isItemSelected, labelId, handleClick, row, keys } = props;
 
-    const createTableCell = (row) => {
+    const createTableCell = (rowBody) => {
         const elements = [];
         for (let i = 1; i < keys.length; i++) {
-            elements[i - 1] = <TableCell align="right" key={keys[i]}>{row[keys[i]]}</TableCell>;
+            elements[i - 1] = <TableCell align="right" key={keys[i]}>{rowBody[keys[i]]}</TableCell>;
         }
         return elements;
     };
@@ -27,22 +22,20 @@ export default function DicomRow(props) {
         <React.Fragment>
             <TableRow
                 hover
-                onClick={(event) => handleClick(event, row[keys[0]])}
+                onClick={(event) => handleClick(event, row.metadataId)}
                 role="checkbox"
                 aria-checked={isItemSelected}
                 tabIndex={-1}
-                key={row[keys[0]]}
                 selected={isItemSelected}
             >
-                <TableCell>
+                <TableCell sx={{ width: '34px' }}>
                     <IconButton
                         aria-label="expand row"
                         size="small"
                         onClick={(event) => {
-                            // 나중에 여기서 row[keys[0]]을 이용해 API 호출하기 (Patient ID)
                             event.stopPropagation();
                             setOpen(!open);
-                            }}
+                        }}
                     >
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
@@ -62,11 +55,11 @@ export default function DicomRow(props) {
                     scope="row"
                     padding="none"
                 >
-                    {row[keys[0]]}
+                    {row.body[keys[0]]}
                 </TableCell>
-                {createTableCell(row)}
+                {createTableCell(row.body)}
             </TableRow>
-            <StudyTable open={open} colSpan={keys.length + 2} patientId={row[keys[0]]}/>
+            <StudyTable open={open} colSpan={keys.length + 2} patientId={row.body[keys[0]]} />
         </React.Fragment>
     );
 }

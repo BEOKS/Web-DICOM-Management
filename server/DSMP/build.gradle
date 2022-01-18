@@ -35,7 +35,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
     implementation 'org.springframework.boot:spring-boot-starter-mustache'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.projectlombok:lombok' //lombok
+    implementation 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     annotationProcessor 'org.projectlombok:lombok'// lombok
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb' // mongoDB
     implementation 'com.fasterxml.jackson.core:jackson-databind' //jackson
@@ -48,6 +49,7 @@ dependencies {
         exclude group: "org.hamcrest", module: "hamcrest-core"
     }
     testImplementation "de.flapdoodle.embed:de.flapdoodle.embed.mongo"// mongoDB for testcode
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' // oauth2
 
 }
 

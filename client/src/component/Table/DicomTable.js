@@ -24,6 +24,11 @@ export default function DicomTable(props) {
     
     const rows = [...props.data];
 
+    // 드로어에서 다른 프로젝트 클릭 시 테이블 행 선택을 해제함
+    React.useEffect(() => {
+        setSelected([]);
+    }, [props.data]);
+
     const getKeysFromJSON = () => {
         if (rows.length <= 0) {
             return [];
@@ -41,23 +46,19 @@ export default function DicomTable(props) {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = rows.map((n) => n.body[keys[0]]);
+            const newSelecteds = rows.map((n) => n.metadataId);
             setSelected(newSelecteds);
-            props.setSelectedPatientId(newSelecteds.map((patientId) => {
-                return {anonymized_id: patientId};
-            }));
             return;
         }
         setSelected([]);
-        props.setSelectedPatientId([]);
     };
 
-    const handleClick = (event, name) => {
-        const selectedIndex = selected.indexOf(name);
+    const handleClick = (event, metadataId) => {
+        const selectedIndex = selected.indexOf(metadataId);
         let newSelected = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, name);
+            newSelected = newSelected.concat(selected, metadataId);
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selected.slice(1));
         } else if (selectedIndex === selected.length - 1) {
@@ -68,13 +69,7 @@ export default function DicomTable(props) {
                 selected.slice(selectedIndex + 1),
             );
         }
-
         setSelected(newSelected);
-
-        const patients = newSelected.map((patientId) => {
-            return {anonymized_id: patientId};
-        });
-        props.setSelectedPatientId(patients);
     };
 
     const handleChangePage = (event, newPage) => {
@@ -90,7 +85,7 @@ export default function DicomTable(props) {
         setDense(event.target.checked);
     };
 
-    const isSelected = (name) => selected.indexOf(name) !== -1;
+    const isSelected = (metadataId) => selected.indexOf(metadataId) !== -1;
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
@@ -99,7 +94,16 @@ export default function DicomTable(props) {
     return (
         <Box sx={{ width: '100%', px: 3, mt: 3 }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
-                <EnhancedTableToolbar numSelected={selected.length} selectedPatientIDList={selected} />
+                <EnhancedTableToolbar 
+                    numSelected={selected.length}
+                    selected={selected}
+                    // merge하면서 일단 고쳐놨는데 나중에 확인 필요
+                    selectedPatientIDList={selected.map((metadataId)=>{
+                        return rows.find(row=>row.metadataId === metadataId).body.anonymized_id;
+                    })}
+                    metaDataUpdated={props.metaDataUpdated}
+                    setMetaDataUpdated={props.setMetaDataUpdated}
+                    />
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 750 }}
@@ -122,17 +126,17 @@ export default function DicomTable(props) {
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
-                                    const isItemSelected = isSelected(row.body[keys[0]]);
+                                    const isItemSelected = isSelected(row.metadataId);
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
-                                        <DicomRow 
+                                        <DicomRow
                                             isItemSelected={isItemSelected}
                                             labelId={labelId}
                                             handleClick={handleClick}
-                                            row={row.body}
+                                            row={row}
                                             keys={keys}
-                                            key={row.body[keys[0]]}
+                                            key={row.metadataId}
                                         />
                                     );
                                 })}
@@ -142,7 +146,7 @@ export default function DicomTable(props) {
                                         height: (dense ? 33 : 53) * emptyRows,
                                     }}
                                 >
-                                    <TableCell colSpan={ keys.length + 2 } />
+                                    <TableCell colSpan={keys.length + 2} />
                                 </TableRow>
                             )}
                         </TableBody>
