@@ -9,6 +9,7 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import FilterListIcon from "@mui/icons-material/FilterList";
 import PropTypes from "prop-types";
 import DeleteRowDialog from "./DeleteRowDialog";
+import DeleteNonReferenceDialog from "./DeleteNonReferenceDialog"
 import { useState } from "react";
 import { Fragment } from "react";
 import { Stack } from "@mui/material";
@@ -16,7 +17,7 @@ import { Stack } from "@mui/material";
 const hostLocation = process.env.SERVER_HOST ? process.env.SERVER_HOST : 'localhost'
 
 export default function EnhancedTableToolbar(props) {
-    const { numSelected, selected, metaDataUpdated, setMetaDataUpdated, selectedPatientIDList } = props;
+    const { numSelected, selected, metaDataUpdated, setMetaDataUpdated, selectedPatientIDList, isNonReferenced } = props;
     const [open, setOpen] = useState(false);
 
     const handleDownloadButtonClick = (selectedPatientID) => {
@@ -26,11 +27,11 @@ export default function EnhancedTableToolbar(props) {
         });
     };
 
-    const handleOpen = () => {
+    const handleDeleteDialogOpen = () => {
         setOpen(true);
     };
 
-    const handleClose = () => {
+    const handleDeleteDialogClose = () => {
         setOpen(false);
     };
 
@@ -69,17 +70,30 @@ export default function EnhancedTableToolbar(props) {
                 <Stack direction="row">
                     <Fragment>
                         <Tooltip title="Delete">
-                            <IconButton onClick={handleOpen}>
+                            <IconButton onClick={handleDeleteDialogOpen}>
                                 <DeleteIcon />
                             </IconButton>
                         </Tooltip>
-                        <DeleteRowDialog
-                            open={open}
-                            onClose={handleClose}
-                            selected={selected}
-                            metaDataUpdated={metaDataUpdated}
-                            setMetaDataUpdated={setMetaDataUpdated}
+                        {isNonReferenced
+                        ? (
+                            <DeleteNonReferenceDialog
+                                open={open}
+                                onClose={handleDeleteDialogClose}
+                                selected={selected}
+                                metaDataUpdated={metaDataUpdated}
+                                setMetaDataUpdated={setMetaDataUpdated}
+                            />
+                        )
+                        : (
+                            <DeleteRowDialog
+                                open={open}
+                                onClose={handleDeleteDialogClose}
+                                selected={selected}
+                                selectedPatientIDList={selectedPatientIDList}
+                                metaDataUpdated={metaDataUpdated}
+                                setMetaDataUpdated={setMetaDataUpdated}
                         />
+                        )}
                     </Fragment>
                     <Tooltip title="Download">
                         <IconButton onClick={() => handleDownloadButtonClick(selectedPatientIDList)}>

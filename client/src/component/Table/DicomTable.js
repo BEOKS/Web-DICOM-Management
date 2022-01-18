@@ -107,6 +107,7 @@ export default function DicomTable(props) {
                             : rows.find(row=>row.metadataId === id).body[keys[0]];
                         return patientId;
                     })}
+                    isNonReferenced={isNonReferenced}
                     metaDataUpdated={props.metaDataUpdated}
                     setMetaDataUpdated={props.setMetaDataUpdated}
                     />

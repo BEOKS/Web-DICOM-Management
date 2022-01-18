@@ -13,15 +13,40 @@ import Alert from '@mui/material/Alert';
 import axios from 'axios';
 
 export default function DeleteRowDialog(props) {
-    const { open, onClose, selected, metaDataUpdated, setMetaDataUpdated } = props;
+    const [value, setValue] = React.useState('');
+    const { open, onClose, selected, selectedPatientIDList, metaDataUpdated, setMetaDataUpdated } = props;
 
     const deleteMetaData = () => {
-        for (let i = 0; i < selected.length; i++) {
-            const url = `api/MetaData/${selected[i]}`;
+        selected.forEach(metadataId => {
+            const url = `api/MetaData/${metadataId}`;
             axios.delete(url)
                 .then(response => console.log(response))
                 .catch(error => console.log(error));
+        });
+    };
+
+    const deleteDicom = () => {
+        selectedPatientIDList.forEach(patientId => {
+            const url = `api/patient/${patientId}`;
+            axios.delete(url)
+                .then(response => console.log(response))
+                .catch(error => console.log(error));
+        })
+    };
+
+    const handleRadioChange = (event) => {
+        setValue(event.target.value);
+    };
+
+    const handleSubmit = (event) => {
+        // event.preventDefault();
+        deleteMetaData();
+
+        if (value === 'metaDataAndDicom') {
+            deleteDicom();
         }
+        setMetaDataUpdated(!metaDataUpdated);
+        onClose();
     };
 
     return (
@@ -44,6 +69,8 @@ export default function DeleteRowDialog(props) {
                             aria-label="gender"
                             defaultValue="onlyMetaData"
                             name="radio-buttons-group"
+                            value={value}
+                            onChange={handleRadioChange}
                         >
                             <FormControlLabel value="onlyMetaData" control={<Radio />} label="메타 데이터 삭제" />
                             <FormControlLabel value="metaDataAndDicom" control={<Radio />} label="메타 데이터와 Dicom 파일 모두 삭제" />
@@ -51,16 +78,14 @@ export default function DeleteRowDialog(props) {
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
-                    <Button 
-                        autoFocus
-                        onClick={()=>{
-                            deleteMetaData();
-                            setMetaDataUpdated(!metaDataUpdated);
-                            onClose();
-                        }} 
+                    <form onSubmit={handleSubmit}>
+                        <Button
+                            autoFocus
+                            type="submit"
                         >
-                        확인
-                    </Button>
+                            확인
+                        </Button>
+                    </form>
                     <Button onClick={onClose}>취소</Button>
                 </DialogActions>
             </Dialog>
