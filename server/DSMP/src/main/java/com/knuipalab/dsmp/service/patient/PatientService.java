@@ -19,13 +19,13 @@ import java.util.Optional;
 public class PatientService {
 
     @Autowired
-    PatientRepository patientRepository;
+    private PatientRepository patientRepository;
 
     @Autowired
-    MongoTemplate mongoTemplate;
+    private MongoTemplate mongoTemplate;
 
     @Autowired
-    HttpSession httpSession;
+    private HttpSession httpSession;
 
     @Transactional(readOnly = true)
     public List<Patient> findByUserId(String userId){
