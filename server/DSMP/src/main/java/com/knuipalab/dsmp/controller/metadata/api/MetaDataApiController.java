@@ -11,17 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
 public class MetaDataApiController {
 
     @Autowired
     private MetaDataService metaDataService;
-
-//    @GetMapping("api/MetaData")
-//    public List<MetaDataResponseDto> findAll(){
-//        return metaDataService.findAll();
-//    }
 
     // projectId가 같은 metadata를 모두 반환
     @GetMapping("api/MetaData/{projectId}")
@@ -46,7 +40,7 @@ public class MetaDataApiController {
     // metadataId를 기반으로 삭제
     @DeleteMapping("api/MetaData/{metadataId}")
     public void deleteById(@PathVariable String metadataId){
-        metaDataService.delete(metadataId);
+        metaDataService.deleteById(metadataId);
     }
 
 }

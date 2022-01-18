@@ -1,0 +1,94 @@
+package com.knuipalab.dsmp.service.patient;
+
+import com.knuipalab.dsmp.domain.patient.Patient;
+import com.knuipalab.dsmp.domain.patient.PatientRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class PatientService {
+
+    @Autowired
+    PatientRepository patientRepository;
+
+    @Autowired
+    MongoTemplate mongoTemplate;
+
+    String userId = "test1234"; // 임시 userId
+
+    @Transactional(readOnly = true)
+    public List<Patient> findByUserId(String userId){
+        List<Patient> patientList = patientRepository.findByUserId(userId);
+        return patientList;
+    }
+
+    @Transactional
+    public void insert(Patient patient){
+        patientRepository.save(patient);
+    }
+
+    @Transactional
+    public void addProjectCount(String patientId){
+        Patient patient = getPatient(patientId);
+        patient.addReferencedCount();
+        insert(patient);
+    }
+
+    @Transactional
+    public void minusProjectCount(String patientId){
+        Patient patient = getPatient(patientId);
+        patient.minusReferencedCount();
+        insert(patient);
+    }
+
+    @Transactional
+    public Optional<Patient> findById(String patientId) {
+        Optional<Patient> patient = patientRepository.findById(patientId);
+        return patient;
+    }
+
+    @Transactional
+    public void deleteById(String patientId){
+        patientRepository.findById(patientId)
+                .orElseThrow(()-> new IllegalArgumentException("해당 patientId값을 가진 환자 정보가 없습니다."));
+        patientRepository.deleteById(patientId);
+    }
+
+    @Transactional
+    public List<String> findNonReferencedPatients(){
+        int zeroCount = 0;
+        Query query = new Query(
+                Criteria.where("userId").is(userId)
+                .and("referencedCount").is(zeroCount));
+        List<Patient> patientList = mongoTemplate.find(query,Patient.class,"patient");
+        List<String> patientIdList = new ArrayList<String>();
+        for(Patient patient : patientList){
+            patientIdList.add(patient.getPatientId());
+        }
+        return patientIdList;
+    }
+
+    //없는 환자이면 객체 생성해서 반환하고, 있으면 projectCount Up 해서 patient 객체 반환
+    public Patient getPatient(String patientId){
+        Patient patient;
+        Optional<Patient> optionalPatient = findById(patientId);
+        if(optionalPatient.isPresent()){
+            patient = optionalPatient.get();
+        } else {
+            patient = new Patient().builder()
+                    .patientId(patientId)
+                    .userId(userId)
+                    .build();
+        }
+        return patient;
+    }
+
+}

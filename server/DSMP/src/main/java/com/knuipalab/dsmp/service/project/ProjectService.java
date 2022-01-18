@@ -4,8 +4,11 @@ import com.knuipalab.dsmp.domain.metadata.MetaData;
 import com.knuipalab.dsmp.domain.metadata.MetaDataRepository;
 import com.knuipalab.dsmp.domain.project.Project;
 import com.knuipalab.dsmp.domain.project.ProjectRepository;
+import com.knuipalab.dsmp.dto.metadata.MetaDataResponseDto;
 import com.knuipalab.dsmp.dto.project.ProjectRequestDto;
 import com.knuipalab.dsmp.dto.project.ProjectResponseDto;
+import com.knuipalab.dsmp.service.metadata.MetaDataService;
+import com.knuipalab.dsmp.service.patient.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +23,7 @@ public class ProjectService {
     private ProjectRepository projectRepository;
 
     @Autowired
-    private MetaDataRepository metaDataRepository;
+    private MetaDataService metaDataService;
 
     @Transactional (readOnly = true)
     public List<ProjectResponseDto> findAll(){
@@ -39,7 +42,7 @@ public class ProjectService {
     public ProjectResponseDto findById(String projectId){
 
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(()->new IllegalArgumentException("해당 Id값을 가진 프로젝트 정보가 없습니다."));
+                .orElseThrow(()->new IllegalArgumentException("해당 projectId 값을 가진 프로젝트 정보가 없습니다."));
 
         return new ProjectResponseDto(project);
     }
@@ -58,7 +61,7 @@ public class ProjectService {
     public void update(String projectId,ProjectRequestDto projectRequestDto){
 
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(()->new IllegalArgumentException("해당 Id값을 가진 프로젝트 정보가 없습니다."));
+                .orElseThrow(()->new IllegalArgumentException("해당 projectId 값을 가진 프로젝트 정보가 없습니다."));
 
         project.update(projectRequestDto.getProjectName());
 
@@ -66,14 +69,16 @@ public class ProjectService {
     }
 
     @Transactional
-    public void delete(String projectId){
-
-        List<MetaData> metaDataList = metaDataRepository.findByProjectId(projectId);
-
-        metaDataRepository.deleteAll(metaDataList);
+    public void deleteById(String projectId){
 
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(()->new IllegalArgumentException("해당 Id값을 가진 프로젝트 정보가 없습니다."));
+                .orElseThrow(()->new IllegalArgumentException("해당 projectId 값을 가진 프로젝트 정보가 없습니다."));
+
+        List<MetaDataResponseDto> metaDataList = metaDataService.findByProjectId(projectId);
+
+        for(MetaDataResponseDto metaData : metaDataList){
+             metaDataService.deleteById(metaData.getMetadataId());
+        }
 
         projectRepository.delete(project);
     }
