@@ -56,7 +56,7 @@ export default function EnhancedTableHead(props) {
                         key={headCell.id}
                         // align={headCell.numeric ? 'right' : 'left'}
                         // align={'right'}
-                        align={headCell.id === 'anonymized_id' ? 'left' : 'right'}
+                        align={headCell.id === 'anonymized_id'||'patientId' ? 'left' : 'right'}
                         padding={headCell.disablePadding ? 'none' : 'normal'}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >

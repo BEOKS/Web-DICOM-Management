@@ -99,8 +99,6 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
         axios.get(url)
             .then(response => {
                 setMetaData(response.data);
-                // patientId 리스트를 바로 보내는 거라면 객체의 body 안에 넣는 걸로 다시 map해서 setMetaData 해야됨.
-                console.log(response.data);
             }).catch(error => {
                 console.log(error);
             });
@@ -139,17 +137,6 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
                         key={text}
                         onClick={()=>{
                             setPresentProject({projectName: 'Non-Reference Dicom'});
-                            // 여기에서 참조 받지 않는 Dicom의 Patient ID List를 API에 요청할 예정
-                            // 백엔드에서 API를 만들기 전이므로 지금은 하드코딩
-                            // setMetaData(
-                            //     [
-                            //         {body: {anonymized_id: 1000}},
-                            //         {body: {anonymized_id: 2000}},
-                            //         {body: {anonymized_id: 3000}},
-                            //         {body: {anonymized_id: 4000}},
-                            //         {body: {anonymized_id: 5000}},
-                            //         {body: {anonymized_id: 6000}}
-                            //     ]);
                             getNonReferenced();
                         }}
                         >

@@ -23,6 +23,7 @@ export default function DicomTable(props) {
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     
     const rows = [...props.data];
+    const isNonReferenced = props.isNonReferenced;
 
     // 드로어에서 다른 프로젝트 클릭 시 테이블 행 선택을 해제함
     React.useEffect(() => {
@@ -46,19 +47,21 @@ export default function DicomTable(props) {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = rows.map((n) => n.metadataId);
+            const newSelecteds = isNonReferenced
+                ? rows.map(n => n.body.patientId)
+                : rows.map(n => n.metadataId);
             setSelected(newSelecteds);
             return;
         }
         setSelected([]);
     };
 
-    const handleClick = (event, metadataId) => {
-        const selectedIndex = selected.indexOf(metadataId);
+    const handleClick = (event, id) => {
+        const selectedIndex = selected.indexOf(id);
         let newSelected = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, metadataId);
+            newSelected = newSelected.concat(selected, id);
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selected.slice(1));
         } else if (selectedIndex === selected.length - 1) {
@@ -85,7 +88,7 @@ export default function DicomTable(props) {
         setDense(event.target.checked);
     };
 
-    const isSelected = (metadataId) => selected.indexOf(metadataId) !== -1;
+    const isSelected = (id) => selected.indexOf(id) !== -1;
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
@@ -98,8 +101,11 @@ export default function DicomTable(props) {
                     numSelected={selected.length}
                     selected={selected}
                     // merge하면서 일단 고쳐놨는데 나중에 확인 필요
-                    selectedPatientIDList={selected.map((metadataId)=>{
-                        return rows.find(row=>row.metadataId === metadataId).body.anonymized_id;
+                    selectedPatientIDList={selected.map(id => {
+                        const patientId = isNonReferenced 
+                            ? id 
+                            : rows.find(row=>row.metadataId === id).body[keys[0]];
+                        return patientId;
                     })}
                     metaDataUpdated={props.metaDataUpdated}
                     setMetaDataUpdated={props.setMetaDataUpdated}
@@ -126,7 +132,8 @@ export default function DicomTable(props) {
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
-                                    const isItemSelected = isSelected(row.metadataId);
+                                    const id = isNonReferenced ? row.body.patientId : row.metadataId;
+                                    const isItemSelected = isSelected(id);
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
@@ -134,9 +141,10 @@ export default function DicomTable(props) {
                                             isItemSelected={isItemSelected}
                                             labelId={labelId}
                                             handleClick={handleClick}
+                                            isNonReferenced={isNonReferenced}
                                             row={row}
                                             keys={keys}
-                                            key={row.metadataId}
+                                            key={id}
                                         />
                                     );
                                 })}

@@ -9,7 +9,7 @@ import StudyTable from './StudyTable';
 
 export default function DicomRow(props) {
     const [open, setOpen] = React.useState(false);
-    const { isItemSelected, labelId, handleClick, row, keys } = props;
+    const { isItemSelected, labelId, handleClick, row, keys, isNonReferenced } = props;
 
     const createTableCell = (rowBody) => {
         const elements = [];
@@ -22,7 +22,10 @@ export default function DicomRow(props) {
         <React.Fragment>
             <TableRow
                 hover
-                onClick={(event) => handleClick(event, row.metadataId)}
+                onClick={(event) => {
+                    const id = isNonReferenced ? row.body.patientId : row.metadataId;
+                    handleClick(event, id);
+                    }}
                 role="checkbox"
                 aria-checked={isItemSelected}
                 tabIndex={-1}
@@ -59,7 +62,10 @@ export default function DicomRow(props) {
                 </TableCell>
                 {createTableCell(row.body)}
             </TableRow>
-            <StudyTable open={open} colSpan={keys.length + 2} patientId={row.body[keys[0]]} />
+            <StudyTable 
+                open={open} 
+                colSpan={keys.length + 2} 
+                patientId={row.body[keys[0]]} />
         </React.Fragment>
     );
 }
