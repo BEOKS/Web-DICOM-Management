@@ -1,4 +1,4 @@
-package util.bson;
+package com.knuipalab.dsmp.util.bson;
 
 import org.bson.BsonValue;
 
