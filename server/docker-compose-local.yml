@@ -31,7 +31,7 @@ services:
       - mongodb
       - orthanc
   mongodb: 
-    image : mongo
+    image : mongo:4.4-rc
     volumes:
       # Making the mongo database persistent
       - ./mongoDB/db:/data/db
