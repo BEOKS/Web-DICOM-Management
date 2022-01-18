@@ -13,6 +13,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.24.0",
+    "cross-env": "^7.0.3",
     "dicom-parser": "^1.8.11",
     "http-proxy-middleware": "^2.0.1",
     "react": "^17.0.2",
@@ -21,7 +22,9 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start --max_old_space_size=8192",
+    "start": "cross-env SERVER_HOST=localhost react-scripts start --max_old_space_size=8192",
+    "start:local" : "cross-env SERVER_HOST=localhost react-scripts start --max_old_space_size=8192",
+    "start:prod" : "cross-env SERVER_HOST=155.230.29.41 react-scripts start --max_old_space_size=8192",
     "build": "react-scripts build --max_old_space_size=4096",
     "test": "react-scripts test --max_old_space_size=4096",
     "eject": "react-scripts eject --max_old_space_size=4096"
