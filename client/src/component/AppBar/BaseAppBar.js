@@ -44,7 +44,12 @@ export default function BaseAppBar(props) {
                 <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
                     {props.presentProjectName}
                 </Typography>
-                <Button color="inherit">Login</Button>
+                <Button
+                    color="inherit"
+                    href="oauth2/authorization/google"
+                >
+                    Login
+                </Button>
             </Toolbar>
         </AppBar>
     );
