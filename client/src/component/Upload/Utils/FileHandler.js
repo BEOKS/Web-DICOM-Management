@@ -26,7 +26,7 @@ class FileHandler{
     async checkUpdatePossibility(csvFile,dicomFileList){
         if(dicomFileList.length===0){
             console.log('dicomFileList empty')
-            return {'state':'warning', 'errorDicomPathList':[]};
+            return {'state':'success', 'errorDicomPathList':[]}; //메타데이터만 업로드 하도록 허용
         }
         const dicomFilePatientIdsList=dicomFileList.map( file =>
             DicomFileListHandler.getPatientIDof(file)
