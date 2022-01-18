@@ -1,7 +1,9 @@
 package com.knuipalab.dsmp.service.patient;
 
+import com.knuipalab.dsmp.configuration.auth.dto.SessionUser;
 import com.knuipalab.dsmp.domain.patient.Patient;
 import com.knuipalab.dsmp.domain.patient.PatientRepository;
+import com.knuipalab.dsmp.dto.patient.PatientResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -9,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,12 +20,13 @@ import java.util.Optional;
 public class PatientService {
 
     @Autowired
-    PatientRepository patientRepository;
+    private PatientRepository patientRepository;
 
     @Autowired
-    MongoTemplate mongoTemplate;
+    private MongoTemplate mongoTemplate;
 
-    String userId = "test1234"; // 임시 userId
+    @Autowired
+    private HttpSession httpSession;
 
     @Transactional(readOnly = true)
     public List<Patient> findByUserId(String userId){
@@ -63,21 +67,23 @@ public class PatientService {
     }
 
     @Transactional
-    public List<String> findNonReferencedPatients(){
+    public List<PatientResponseDto> findNonReferencedPatients(){
         int zeroCount = 0;
+        SessionUser sessionUser = (SessionUser)httpSession.getAttribute("user");
         Query query = new Query(
-                Criteria.where("userId").is(userId)
+                Criteria.where("userId").is(sessionUser.getUserId())
                 .and("referencedCount").is(zeroCount));
         List<Patient> patientList = mongoTemplate.find(query,Patient.class,"patient");
-        List<String> patientIdList = new ArrayList<String>();
+        List<PatientResponseDto> patientResponseDtoList = new ArrayList<PatientResponseDto>();
         for(Patient patient : patientList){
-            patientIdList.add(patient.getPatientId());
+            patientResponseDtoList.add(new PatientResponseDto(patient));
         }
-        return patientIdList;
+        return patientResponseDtoList;
     }
 
     //없는 환자이면 객체 생성해서 반환하고, 있으면 projectCount Up 해서 patient 객체 반환
     public Patient getPatient(String patientId){
+        SessionUser sessionUser = (SessionUser)httpSession.getAttribute("user");
         Patient patient;
         Optional<Patient> optionalPatient = findById(patientId);
         if(optionalPatient.isPresent()){
@@ -85,7 +91,7 @@ public class PatientService {
         } else {
             patient = new Patient().builder()
                     .patientId(patientId)
-                    .userId(userId)
+                    .userId(sessionUser.getUserId())
                     .build();
         }
         return patient;

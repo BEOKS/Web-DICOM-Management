@@ -16,8 +16,8 @@ public class ProjectApiController {
 
     // DB에 존재하는 모든 프로젝트 종류를 반환
     @GetMapping("api/Project")
-    public List<ProjectResponseDto> findAll(){
-        return projectService.findAll();
+    public List<ProjectResponseDto> findByUserId(){
+        return projectService.findByUserId();
     }
 
     // Project 생성

@@ -1,5 +1,6 @@
 package com.knuipalab.dsmp.service.project;
 
+import com.knuipalab.dsmp.configuration.auth.dto.SessionUser;
 import com.knuipalab.dsmp.domain.metadata.MetaData;
 import com.knuipalab.dsmp.domain.metadata.MetaDataRepository;
 import com.knuipalab.dsmp.domain.project.Project;
@@ -13,11 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ProjectService {
+
+    @Autowired
+    private HttpSession httpSession;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -26,10 +31,12 @@ public class ProjectService {
     private MetaDataService metaDataService;
 
     @Transactional (readOnly = true)
-    public List<ProjectResponseDto> findAll(){
+    public List<ProjectResponseDto> findByUserId(){
+
+        SessionUser sessionUser = (SessionUser)httpSession.getAttribute("user");
 
         List <ProjectResponseDto> projectResponseDtoList = new ArrayList<ProjectResponseDto>();
-        List <Project> projectList = projectRepository.findAll();
+        List <Project> projectList = projectRepository.findByUserId(sessionUser.getUserId());
 
         for(Project project: projectList){
             projectResponseDtoList.add(new ProjectResponseDto(project));
@@ -50,8 +57,10 @@ public class ProjectService {
     @Transactional
     public void insert(ProjectRequestDto projectRequestDto){
 
+        SessionUser sessionUser = (SessionUser)httpSession.getAttribute("user");
         Project project = new Project().builder()
                 .projectName(projectRequestDto.getProjectName())
+                .userId(sessionUser.getUserId())
                 .build();
 
         projectRepository.save(project);

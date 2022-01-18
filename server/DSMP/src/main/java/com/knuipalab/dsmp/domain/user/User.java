@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter //lombok , 모든 field 값의 getter 매소드를 자동 생성
 @NoArgsConstructor // lombok , 기본 생성자 자동추가
-@Document(collection = "User") //DB에 저장될 document의 이름은 @Documemt 애노테이션을 통하여 지정
+@Document(collection = "user") //DB에 저장될 document의 이름은 @Documemt 애노테이션을 통하여 지정
 public class User {
 
     @Id

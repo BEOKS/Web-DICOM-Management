@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import org.bson.conversions.Bson;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import util.bson.BsonUtils;
+import com.knuipalab.dsmp.util.bson.BsonUtils;
 
 @Getter //lombok , 모든 field 값의 getter 매소드를 자동 생성
 @NoArgsConstructor // lombok , 기본 생성자 자동추가
