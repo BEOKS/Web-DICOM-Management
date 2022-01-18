@@ -5,6 +5,7 @@ import com.knuipalab.dsmp.dto.metadata.MetaDataResponseDto;
 import com.knuipalab.dsmp.dto.metadata.MetaDataCreateRequestDto;
 
 import com.knuipalab.dsmp.dto.metadata.MetaDataUpdateRequestDto;
+import com.knuipalab.dsmp.service.patient.PatientService;
 import com.knuipalab.dsmp.service.project.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,18 +23,8 @@ public class MetaDataService {
     @Autowired
     private ProjectService projectService;
 
-//    @Transactional (readOnly = true)
-//    public List<MetaDataResponseDto> findAll(){
-//
-//        List <MetaDataResponseDto> metaResponseDtoList = new ArrayList<MetaDataResponseDto>();
-//        List <MetaData> metaDataList = metaDataRepository.findAll();
-//
-//        for(MetaData metaData: metaDataList){ // metaDataRepository로 MeataData 정보 받아와서 Dto로 전환 -> 접근성 제한 목적
-//            metaResponseDtoList.add(new MetaDataResponseDto(metaData));
-//        }
-//
-//        return metaResponseDtoList;
-//    }
+    @Autowired
+    private PatientService patientService;
 
     @Transactional (readOnly = true)
     public List<MetaDataResponseDto> findByProjectId(String projectId) {
@@ -53,14 +44,15 @@ public class MetaDataService {
     @Transactional
     public void insert(MetaDataCreateRequestDto metaDataCreateRequestDto){
 
-
-        projectService.findById(metaDataCreateRequestDto.getProjectId());
+        projectService.findById(metaDataCreateRequestDto.getProjectId()); // 존재하는 프로젝트 id인지 확인.
 
         MetaData metaData = new MetaData().builder()
                 .projectId(metaDataCreateRequestDto.getProjectId())
                 .body(metaDataCreateRequestDto.getBody()).build();
 
-        metaDataRepository.save(metaData);
+        patientService.addProjectCount(metaData.getPatientIdFromBody()); // patient 처리.
+
+        metaDataRepository.save(metaData); // 저장
     }
 
     @Transactional
@@ -75,9 +67,12 @@ public class MetaDataService {
     }
 
     @Transactional
-    public void delete(String metadataId){
+    public void deleteById(String metadataId){
+
         MetaData metaData = metaDataRepository.findById(metadataId)
                 .orElseThrow(()-> new IllegalArgumentException("해당 metadataId 값을 가진 메타데이터 정보가 없습니다."));
+
+        patientService.minusProjectCount(metaData.getPatientIdFromBody()); // patient 처리.
 
         metaDataRepository.delete(metaData);
     }

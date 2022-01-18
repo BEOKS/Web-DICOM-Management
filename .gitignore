@@ -4,5 +4,7 @@ venv
 server/volumes
 server/*/__pycache__
 
+application-oauth.yml #보안목적
+
 *.DS_Store
 # server/DicomServiceApp/__pycache__
