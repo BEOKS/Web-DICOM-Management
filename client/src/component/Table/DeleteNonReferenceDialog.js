@@ -7,10 +7,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios';
 
 export default function DeleteNonReferenceDialog(props) {
-    const { open, onClose, selected, metaDataUpdated, setMetaDataUpdated } = props;
+    const { open, onClose, selectedPatientIDList, metaDataUpdated, setMetaDataUpdated } = props;
 
     const deleteNonReferencedDicom = () => {
-        selected.forEach(patientId => {
+        selectedPatientIDList.forEach(patientId => {
             const url = `api/Patient/nonReferenced/${patientId}`;
             axios.delete(url)
                 .then(response => console.log(response))

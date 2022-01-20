@@ -18,6 +18,7 @@ export default function DicomTable(props) {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('id');
     const [selected, setSelected] = React.useState([]);
+    const [selectedPatientIDList, setSelectedPatientIDList] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -51,9 +52,11 @@ export default function DicomTable(props) {
                 ? rows.map(n => n.body.patientId)
                 : rows.map(n => n.metadataId);
             setSelected(newSelecteds);
+            setSelectedPatientIDList(rows.map(n => n.body.patientId));
             return;
         }
         setSelected([]);
+        setSelectedPatientIDList([]);
     };
 
     const handleClick = (event, id) => {
@@ -73,6 +76,12 @@ export default function DicomTable(props) {
             );
         }
         setSelected(newSelected);
+        setSelectedPatientIDList(newSelected.map(id => {
+            const patientId = isNonReferenced 
+                ? id 
+                : rows.find(row=>row.metadataId === id).body[keys[0]];
+            return patientId;
+        }));
     };
 
     const handleChangePage = (event, newPage) => {
@@ -100,13 +109,7 @@ export default function DicomTable(props) {
                 <EnhancedTableToolbar 
                     numSelected={selected.length}
                     selected={selected}
-                    // merge하면서 일단 고쳐놨는데 나중에 확인 필요
-                    selectedPatientIDList={selected.map(id => {
-                        const patientId = isNonReferenced 
-                            ? id 
-                            : rows.find(row=>row.metadataId === id).body[keys[0]];
-                        return patientId;
-                    })}
+                    selectedPatientIDList={selectedPatientIDList}
                     isNonReferenced={isNonReferenced}
                     metaDataUpdated={props.metaDataUpdated}
                     setMetaDataUpdated={props.setMetaDataUpdated}

@@ -79,7 +79,7 @@ export default function EnhancedTableToolbar(props) {
                             <DeleteNonReferenceDialog
                                 open={open}
                                 onClose={handleDeleteDialogClose}
-                                selected={selected}
+                                selectedPatientIDList={selectedPatientIDList}
                                 metaDataUpdated={metaDataUpdated}
                                 setMetaDataUpdated={setMetaDataUpdated}
                             />
