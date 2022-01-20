@@ -35,7 +35,9 @@ export default function DicomTable(props) {
         if (rows.length <= 0) {
             return [];
         } else {
-            return Object.keys(rows[0].body);
+            return isNonReferenced
+                ? ['patientId']
+                : Object.keys(rows[0].body);
         }
     };
     const keys = getKeysFromJSON();
