@@ -16,7 +16,7 @@ import { Grid } from '@mui/material';
 import { Dialog,DialogTitle,DialogContent,DialogContentText,DialogActions,TextField,Button } from '@mui/material';
 import { useState } from 'react';
 import { createProject } from './Utils/ProjectUtils';
-import axios from 'axios';
+
 const SUCCESS=1,FAIL=0;
 
 export const drawerWidth = 270;
@@ -69,7 +69,6 @@ export const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 
 );
 
 
-
 export default function ProjectDrawer({open,handleDrawerClose,projects,others,setPresentProject,setMetaData}) {
     const theme = useTheme();
     const [dialogOpen,setDialogOpen]=useState(false);
@@ -83,26 +82,6 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
             setDialogOpen(false)
         }
     }
-
-    const getMetaData = (projectId) => {
-        const url = `api/MetaData/${projectId}`;
-        axios.get(url)
-            .then(response => {
-                setMetaData(response.data);
-            }).catch(error => {
-                console.log(error);
-            });
-    };
-
-    const getNonReferenced = () => {
-        const url = 'api/Patient/nonReferenced'
-        axios.get(url)
-            .then(response => {
-                setMetaData(response.data);
-            }).catch(error => {
-                console.log(error);
-            });
-    };
 
     return (
         <div>
@@ -118,10 +97,7 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
                     <ListItem 
                     button 
                     key={project.projectName}
-                    onClick={()=>{
-                        setPresentProject(project);
-                        getMetaData(project.projectId);
-                        }}>
+                    onClick={()=>setPresentProject(project)}>
                         <ListItemIcon>
                             <FolderOpenIcon />
                         </ListItemIcon>
@@ -135,10 +111,7 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
                     <ListItem 
                         button 
                         key={text}
-                        onClick={()=>{
-                            setPresentProject({projectName: 'Non-Reference Dicom'});
-                            getNonReferenced();
-                        }}
+                        onClick={()=>setPresentProject({projectName: 'Non-Reference Dicom'})}
                         >
                         <ListItemIcon>
                             <MoreIcon />
