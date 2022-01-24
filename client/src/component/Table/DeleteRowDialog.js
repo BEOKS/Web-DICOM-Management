@@ -78,14 +78,13 @@ export default function DeleteRowDialog(props) {
                     </FormControl>
                 </DialogContent>
                 <DialogActions>
-                    <form onSubmit={handleSubmit}>
-                        <Button
-                            autoFocus
-                            type="submit"
-                        >
-                            확인
-                        </Button>
-                    </form>
+                    <Button
+                        autoFocus
+                        type="submit"
+                        onClick={handleSubmit}
+                    >
+                        확인
+                    </Button>
                     <Button onClick={onClose}>취소</Button>
                 </DialogActions>
             </Dialog>
