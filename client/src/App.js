@@ -8,6 +8,7 @@ import ProjectDrawer from './component/Drawer/ProjectDrawer'
 import BaseAppBar from './component/AppBar/BaseAppBar';
 import axios from 'axios';
 
+axios.defaults.maxRedirects=0;
 export default function Page() {
     const [open, setOpen] = React.useState(false);
     const [projects, setProjects] = React.useState([]);
@@ -17,7 +18,7 @@ export default function Page() {
     const [checkFirst, setCheckFirst] = React.useState(true);
 
     const getProjects = () => {
-        axios.get('api/Project')
+        axios.get('api/Project',{maxRedirects:0})
             .then(response => {
                 if (response.data.length !== 0) {
                     setProjects(response.data);
