@@ -17,10 +17,13 @@ public class Project {
 
     private String projectName;
 
+    private String userId;
+
     @Builder
-    public Project(String projectId,String projectName){
+    public Project(String projectId,String projectName, String userId){
         this.projectId = projectId;
         this.projectName = projectName;
+        this.userId = userId;
     }
 
     @Override
@@ -28,6 +31,7 @@ public class Project {
         return "Project{" +
                 "projectId='" + projectId + '\'' +
                 ", projectName='" + projectName + '\'' +
+                ", userId='" + userId + '\'' +
                 '}';
     }
 

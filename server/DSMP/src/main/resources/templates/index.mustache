@@ -5,11 +5,20 @@
 </head>
 
 <body>
-
+    <div>
+        {{#userName}}
+        Logged in as: <span id="user">{{userName}}</span>
+        <a href="/logout" class="btn btn-info active" role="button">Logout</a>
+        {{/userName}}
+        {{^userName}}
+        <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
+        {{/userName}}
+    <div/>
 <form action="/api/patient/00000003/dicom" method="get">
     <button type="submit">Patient ID로 다운로드</button>
 </form>
 
+<a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
 <br>
 
 <form action="/api/patient/00000003/study" method="GET" enctype="text/plain">

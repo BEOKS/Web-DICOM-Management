@@ -10,14 +10,14 @@ import PropTypes from "prop-types";
 
 export default function EnhancedTableHead(props) {
     let headCells = [];
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
+    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, rows, keys } =
         props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
 
     const createHeadCell = (id, numeric, disablePadding, label) => {
-        if (!isNaN(props.rows[0].body[id])) {
+        if (!isNaN(rows[0].body[id])) {
             numeric = true;
         }
 
@@ -30,8 +30,8 @@ export default function EnhancedTableHead(props) {
     };
 
     const pushHeadCells = () => {
-        for (let i = 0; i < props.keys.length; i++) {
-            headCells[i] = createHeadCell(props.keys[i], false, false, props.keys[i]);
+        for (let i = 0; i < keys.length; i++) {
+            headCells[i] = createHeadCell(keys[i], false, false, keys[i]);
         }
     };
     pushHeadCells();
@@ -55,8 +55,7 @@ export default function EnhancedTableHead(props) {
                     <TableCell
                         key={headCell.id}
                         // align={headCell.numeric ? 'right' : 'left'}
-                        // align={'right'}
-                        align={headCell.id === 'anonymized_id' ? 'left' : 'right'}
+                        align={headCell.id === 'anonymized_id' || headCell.id === 'patientId' ? 'left' : 'right'}
                         padding={headCell.disablePadding ? 'none' : 'normal'}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >

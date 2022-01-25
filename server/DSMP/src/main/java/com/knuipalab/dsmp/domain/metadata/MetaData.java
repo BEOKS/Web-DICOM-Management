@@ -3,12 +3,10 @@ package com.knuipalab.dsmp.domain.metadata;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.bson.conversions.Bson;
-import org.bson.json.JsonObject;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
+import com.knuipalab.dsmp.util.bson.BsonUtils;
 
 @Getter //lombok , 모든 field 값의 getter 매소드를 자동 생성
 @NoArgsConstructor // lombok , 기본 생성자 자동추가
@@ -41,4 +39,12 @@ public class MetaData {
     public void update(Bson newBody){
         this.body = newBody;
     }
+
+    public String getPatientIdFromBody(){
+        Bson body = this.body;
+        BsonUtils bsonUtils = new BsonUtils();
+        String patientId = bsonUtils.toJavaType(body.toBsonDocument().get("anonymized_id")).toString();
+        return patientId;
+    }
+
 }

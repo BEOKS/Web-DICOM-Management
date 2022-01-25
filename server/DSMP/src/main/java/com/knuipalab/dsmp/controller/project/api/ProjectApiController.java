@@ -16,8 +16,8 @@ public class ProjectApiController {
 
     // DB에 존재하는 모든 프로젝트 종류를 반환
     @GetMapping("api/Project")
-    public List<ProjectResponseDto> findAll(){
-        return projectService.findAll();
+    public List<ProjectResponseDto> findByUserId(){
+        return projectService.findByUserId();
     }
 
     // Project 생성
@@ -35,7 +35,7 @@ public class ProjectApiController {
     // projectId를 기반으로 Project 삭제 -> 관련 metadata들을 cascade하게 삭제
     @DeleteMapping("api/Project/{projectId}")
     public void delete(@PathVariable String projectId){
-        projectService.delete(projectId);
+        projectService.deleteById(projectId);
     }
 
 }
