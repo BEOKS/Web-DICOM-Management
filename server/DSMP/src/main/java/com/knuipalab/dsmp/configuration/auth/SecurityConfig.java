@@ -31,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().logoutSuccessUrl("/") // 로그아웃에 대해서 성공하면 "/"로 이동
             .and()
                 .oauth2Login()
-                .defaultSuccessUrl("/") // oauth2 로그인 성공 시 "/"로 이동
+                .defaultSuccessUrl("/redirectToMainPage") // oauth2 로그인 성공 시 "/"로 이동
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService); // oauth2 로그인에 성공하면, 유저 데이터를 가지고 우리가 생성한 customOAuth2UserService에서 처리를 하겠다. 그 후 "/"로 이동.
     }
