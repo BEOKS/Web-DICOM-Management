@@ -15,4 +15,4 @@ jar xf ${jar_path}
 # 4. Run docker
 cd ../../..
 docker-compose -f ./docker-compose-$1.yml build --no-cache
-docker-compose -f ./docker-compose-$1.yml up
+docker-compose -f ./docker-compose-$1.yml up --detach
