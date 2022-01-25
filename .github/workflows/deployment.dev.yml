@@ -29,7 +29,8 @@ jobs:
         password: ${{ secrets.PASSWORD }} 
         script: |
           cd DicomProject
-          git pull
+          git fetch -all
+          git reset --hard origin/dev
           cd client
           yarn install
           yarn start:prod
