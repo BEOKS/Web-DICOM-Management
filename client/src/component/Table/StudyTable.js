@@ -10,8 +10,10 @@ import TableBody from '@mui/material/TableBody';
 import { useState,useEffect } from 'react';
 import axios from 'axios';
 
+const hostLocation=process.env.SERVER_HOST
+const viewerHost=`http://${hostLocation}:3000`
 export default function StudyTable(props) {
-    const viewerHost='http://155.230.29.41:3000'
+    
     const [studyUIDList,setStudyUIDList]=useState([])
     
     useEffect(()=>{
