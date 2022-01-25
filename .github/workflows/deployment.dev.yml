@@ -28,6 +28,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }} 
         script: |
+          cd DicomProject
           git pull
           cd client
           yarn install
