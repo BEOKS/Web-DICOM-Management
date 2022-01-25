@@ -35,6 +35,5 @@ jobs:
           yarn install
           yarn start:prod
           cd ../server
-          echo ${{ secrets.PASSWORD }}  | sudo -S
-          sudo sh run_docker.sh local
+          echo ${{ secrets.PASSWORD }}  | sudo -S sh run_docker.sh local
           
