@@ -105,7 +105,7 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
                     </ListItem>
                 ))}
             </List>
-            <Divider />
+            {/* <Divider />
             <List>
                 {others.map((text) => (
                     <ListItem 
@@ -119,7 +119,7 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
                         <ListItemText primary={text} />
                     </ListItem>
                 ))}
-            </List>
+            </List> */}
             <Grid
                 container
                 height='100%'
