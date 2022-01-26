@@ -2,13 +2,8 @@ import * as React from 'react';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import StudyTable from './StudyTable';
 
 export default function DicomRow(props) {
-    const [open, setOpen] = React.useState(false);
     const { isItemSelected, labelId, handleClick, row, keys, isNonReferenced } = props;
 
     const createTableCell = (rowBody) => {
@@ -31,18 +26,6 @@ export default function DicomRow(props) {
                 tabIndex={-1}
                 selected={isItemSelected}
             >
-                <TableCell sx={{ width: '34px' }}>
-                    <IconButton
-                        aria-label="expand row"
-                        size="small"
-                        onClick={(event) => {
-                            event.stopPropagation();
-                            setOpen(!open);
-                        }}
-                    >
-                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                    </IconButton>
-                </TableCell>
                 <TableCell padding="checkbox">
                     <Checkbox
                         color="primary"
@@ -62,10 +45,6 @@ export default function DicomRow(props) {
                 </TableCell>
                 {createTableCell(row.body)}
             </TableRow>
-            <StudyTable 
-                open={open} 
-                colSpan={keys.length + 2} 
-                patientId={row.body[keys[0]]} />
         </React.Fragment>
     );
 }
