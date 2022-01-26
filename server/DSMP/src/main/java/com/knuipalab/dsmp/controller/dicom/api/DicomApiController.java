@@ -26,14 +26,29 @@ public class DicomApiController {
 
     @DeleteMapping("/api/patient/{id}")
     public ResponseEntity deletePatientByPatientID(@PathVariable String id) throws IOException {
-
         String patientUUID = orthancService.getPatinetUuidByPatientID(id);
 
         if( patientUUID == "-1" ){
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-        ResponseEntity response = orthancService.deletePatientbyPatientUUID(patientUUID);
+        ResponseEntity response = orthancService.deletePatientByPatientUUID(patientUUID);
         return response;
+    }
+
+    @DeleteMapping("/api/study/{id}")
+    public ResponseEntity deleteStudyByStudyID(@PathVariable String id) throws IOException {
+        String studyUUID = orthancService.getStudyUuidByStudyID(id);
+
+        if( studyUUID == "-1" ){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        ResponseEntity response = orthancService.deleteStudyByStudyUUID(studyUUID);
+        return response;
+    }
+
+    @GetMapping("/api/study")
+    public JsonNode getStudy() throws IOException {
+        return orthancService.getStudies();
     }
 
     @GetMapping("/api")

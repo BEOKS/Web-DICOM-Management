@@ -32,6 +32,22 @@ public class OrthancService {
         return patientUUID;
     }
 
+    public String getStudyUuidByStudyID(String id) throws IOException {
+        // get patient info
+        JsonNode response = orthancRestClient.getStudyInfo(id);
+
+        // parsing the response
+        ArrayNode arrayNode = (ArrayNode) response;
+        Iterator<JsonNode> itr = arrayNode.elements();
+        String studyUUID = "-1";
+        while( itr.hasNext() ) {
+            studyUUID = itr.next().get("ID").asText();
+            break;
+        }
+        System.out.println(studyUUID);
+        return studyUUID;
+    }
+
     public JsonNode uploadDicom(MultipartFile file) throws IOException{
         return orthancRestClient.uploadDicom(file);
     }
@@ -57,8 +73,15 @@ public class OrthancService {
         }
         return objectMapper.valueToTree(list);
     }
+    public JsonNode getStudies() throws IOException{
+        return orthancRestClient.getStudies();
+    }
 
-    public ResponseEntity deletePatientbyPatientUUID(String id) throws IOException{
+    public ResponseEntity deleteStudyByStudyUUID(String id) throws IOException{
+        return orthancRestClient.deleteStudy(id);
+    }
+
+    public ResponseEntity deletePatientByPatientUUID(String id) throws IOException{
         return orthancRestClient.deletePatient(id);
     }
 
