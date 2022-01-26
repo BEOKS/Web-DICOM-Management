@@ -17,10 +17,6 @@ export default function DicomRow(props) {
         <React.Fragment>
             <TableRow
                 hover
-                onClick={(event) => {
-                    const id = isNonReferenced ? row.body.patientId : row.metadataId;
-                    handleClick(event, id);
-                    }}
                 role="checkbox"
                 aria-checked={isItemSelected}
                 tabIndex={-1}
@@ -32,6 +28,10 @@ export default function DicomRow(props) {
                         checked={isItemSelected}
                         inputProps={{
                             'aria-labelledby': labelId,
+                        }}
+                        onClick={(event) => {
+                            const id = isNonReferenced ? row.body.patientId : row.metadataId;
+                            handleClick(event, id);
                         }}
                     />
                 </TableCell>
