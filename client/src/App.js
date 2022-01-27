@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import DicomTable from "./component/Table/DicomTable";
-import UpDownloadToolbar from "./component/UpDownloadToolbar/UpDownloadToolbar";
+import UpDownloadToolbar from "./component/Toolbar/UpDownloadToolbar";
 import { DrawerHeader } from './component/Drawer/ProjectDrawer';
 import ProjectDrawer from './component/Drawer/ProjectDrawer'
 import BaseAppBar from './component/AppBar/BaseAppBar';
