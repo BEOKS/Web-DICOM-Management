@@ -7,7 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios';
 
 export default function DeleteRowDialog(props) {
-    const { open, onClose, selected, selectedPatientIDList, metaDataUpdated, setMetaDataUpdated } = props;
+    const { open, onClose, selected, selectedStudyUIDList, metaDataUpdated, setMetaDataUpdated } = props;
 
     const deleteMetaData = () => {
         selected.forEach(metadataId => {
@@ -19,8 +19,8 @@ export default function DeleteRowDialog(props) {
     };
 
     const deleteDicom = () => {
-        selectedPatientIDList.forEach(patientId => {
-            const url = `api/patient/${patientId}`;
+        selectedStudyUIDList.forEach(studyUID => {
+            const url = `api/study/${studyUID}`;
             axios.delete(url)
                 .then(response => console.log(response))
                 .catch(error => console.log(error));
