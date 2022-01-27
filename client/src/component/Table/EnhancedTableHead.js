@@ -31,7 +31,8 @@ export default function EnhancedTableHead(props) {
 
     const pushHeadCells = () => {
         for (let i = 0; i < keys.length; i++) {
-            headCells[i] = createHeadCell(keys[i], false, false, keys[i]);
+            const disablePadding = i === 0 ? true : false;
+            headCells[i] = createHeadCell(keys[i], false, disablePadding, keys[i]);
         }
     };
     pushHeadCells();
