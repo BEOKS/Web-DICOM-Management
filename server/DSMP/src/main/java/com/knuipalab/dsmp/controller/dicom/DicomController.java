@@ -37,4 +37,10 @@ public class DicomController {
 
         return "redirect:http://" + hostLocation + "/dicom/patients/" + patientUUID + "/archive";
     }
+
+    @GetMapping("/api/study/{id}/dicom")
+    public String downloadStudyDicom(@PathVariable String id) throws IOException{
+        String studyUUID = orthancService.getStudyUuidByStudyID(id);
+        return "redirect:http://" + hostLocation + "/dicom/studies/" + studyUUID + "/archive";
+    }
 }
