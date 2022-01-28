@@ -1,6 +1,6 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
-const hostLocation=process.env.SERVER_HOST
+const hostLocation=process.env.REACT_APP_SERVER_HOST
 module.exports = function (app) {
     app.use(
         createProxyMiddleware('/MetaData', {
