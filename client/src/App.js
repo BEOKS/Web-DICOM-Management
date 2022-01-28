@@ -13,8 +13,12 @@ export default function App(){
     }
     else if(loginStatus===false){
         window.location.href='/oauth2/authorization/google'
+        return(<div></div>)
+    }
+    else if(loginStatus){
+        return(<Page/>)
     }
     else{
-        return(<Page/>)
+        alert("로그인 확인 중 오류가 발생했습니다.")
     }
 }
