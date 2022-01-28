@@ -20,4 +20,10 @@ module.exports = function (app) {
             changeOrigin: true
         })
     )
+    app.use(
+        createProxyMiddleware('/logout', {
+            target: `http://${hostLocation}:8080`,
+            changeOrigin: true
+        })
+    )
 };
