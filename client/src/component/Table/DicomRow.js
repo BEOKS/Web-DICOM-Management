@@ -6,6 +6,9 @@ import Checkbox from '@mui/material/Checkbox';
 export default function DicomRow(props) {
     const { isItemSelected, labelId, handleClick, row, keys, isNonReferenced } = props;
 
+    // 메타 데이터 형식 변경으로 인한 임시 키
+    const STUDY_KEY_NAME = "StudyInstanceUID";
+
     const createTableCell = (rowBody) => {
         const elements = [];
         for (let i = 1; i < keys.length; i++) {
@@ -13,6 +16,14 @@ export default function DicomRow(props) {
         }
         return elements;
     };
+
+    const redirectViewer = () => {
+        const viewerHost = 'http://155.230.29.41:3000';
+        const studyUID = row.body[STUDY_KEY_NAME];
+
+        window.location.href = `${viewerHost}/viewer/${studyUID}`;
+    };
+
     return (
         <React.Fragment>
             <TableRow
@@ -21,6 +32,7 @@ export default function DicomRow(props) {
                 aria-checked={isItemSelected}
                 tabIndex={-1}
                 selected={isItemSelected}
+                onClick={redirectViewer}
             >
                 <TableCell padding="checkbox">
                     <Checkbox
@@ -31,6 +43,7 @@ export default function DicomRow(props) {
                         }}
                         onClick={(event) => {
                             const id = isNonReferenced ? row.body.patientId : row.metadataId;
+                            event.stopPropagation();
                             handleClick(event, id);
                         }}
                     />
