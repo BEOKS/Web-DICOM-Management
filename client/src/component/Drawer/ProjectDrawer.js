@@ -8,7 +8,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import MoreIcon from '@mui/icons-material/More';
+// import MoreIcon from '@mui/icons-material/More';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import IconButton from '@mui/material/IconButton';
 import { useTheme } from '@mui/material/styles';
@@ -105,7 +105,7 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
                     </ListItem>
                 ))}
             </List>
-            <Divider />
+            {/* <Divider />
             <List>
                 {others.map((text) => (
                     <ListItem 
@@ -119,7 +119,7 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
                         <ListItemText primary={text} />
                     </ListItem>
                 ))}
-            </List>
+            </List> */}
             <Grid
                 container
                 height='100%'
