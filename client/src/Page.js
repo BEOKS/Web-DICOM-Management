@@ -56,11 +56,12 @@ export default function Page() {
     React.useEffect(() => {
         getProjects();
     }, [open]);
-
+    
     React.useEffect(() => {
         presentProject.projectId 
         ? getMetaData(presentProject.projectId)
-        : getNonReferenced();
+        //: getNonReferenced();
+        : undefined;
     }, [presentProject, metaDataUpdated]);
 
 
@@ -71,7 +72,6 @@ export default function Page() {
     const handleDrawerClose = () => {
         setOpen(false);
     };
-    
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
