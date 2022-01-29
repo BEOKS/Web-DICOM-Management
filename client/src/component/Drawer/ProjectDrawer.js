@@ -69,12 +69,11 @@ export const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 
 );
 
 
-export default function ProjectDrawer({open,handleDrawerClose,projects,others,setPresentProject,setMetaData,openCreateProjectDialog}) {
+export default function ProjectDrawer({open,setOpen,projects,others,presentProject,setPresentProject,setMetaData,openCreateProjectDialog}) {
     const theme = useTheme();
     const [dialogOpen,setDialogOpen]=useState(openCreateProjectDialog);
     const [projectName,setProjectName]=useState();
     React.useEffect(()=>{
-        console.log(openCreateProjectDialog)
         setDialogOpen(openCreateProjectDialog)
     },[openCreateProjectDialog])
     const handleProjectCreateRequset=(status,message='')=>{
@@ -83,6 +82,8 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
         }
         if(status===SUCCESS){
             setDialogOpen(false)
+            setOpen(false)
+            setOpen(true)
         }
     }
 
@@ -90,7 +91,7 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
         <div>
             <Drawer variant="permanent" open={open}>
             <DrawerHeader>
-                <IconButton onClick={handleDrawerClose}>
+                <IconButton onClick={()=>setOpen(false)}>
                     {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                 </IconButton>
             </DrawerHeader>
@@ -98,6 +99,7 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
             <List>
                 {projects.map((project) => (
                     <ListItem 
+                    selected={presentProject===project}
                     button 
                     key={project.projectName}
                     onClick={()=>setPresentProject(project)}>

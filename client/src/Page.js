@@ -83,9 +83,10 @@ export default function Page() {
             <CssBaseline />
             <ProjectDrawer
                 open={open}
-                handleDrawerClose={handleDrawerClose}
+                setOpen={setOpen}
                 projects={projects}
                 others={['Non-Reference Dicom']}
+                presentProject={presentProject}
                 setPresentProject={setPresentProject}
                 setMetaData={setMetaData}
                 openCreateProjectDialog={presentProject.projectName==='현재 선택된 프로젝트가 없습니다.'}
