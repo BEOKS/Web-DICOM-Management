@@ -6,6 +6,7 @@ import UpDownloadToolbar from "./component/Toolbar/UpDownloadToolbar";
 import { DrawerHeader } from './component/Drawer/ProjectDrawer';
 import ProjectDrawer from './component/Drawer/ProjectDrawer'
 import BaseAppBar from './component/AppBar/BaseAppBar';
+import LoadingPage from './component/Login/Loading';
 import axios from 'axios';
 
 axios.defaults.maxRedirects=0;
@@ -16,6 +17,7 @@ export default function Page() {
     const [metaData, setMetaData] = React.useState([]);
     const [metaDataUpdated, setMetaDataUpdated] = React.useState(false);
     const [checkFirst, setCheckFirst] = React.useState(true);
+    const [loading,setLoading] =React.useState(true);
 
     const getProjects = () => {
         axios.get('api/Project',{maxRedirects:0})
@@ -27,6 +29,7 @@ export default function Page() {
                         setCheckFirst(false);
                     }
                 }
+                setLoading(false)
             }).catch(error => {
                 alert('서버가 응답하지 않습니다.')
                 console.log(error);
@@ -72,6 +75,9 @@ export default function Page() {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+    if(loading){
+        return <LoadingPage message={'사용자 정보를 가져오는 중입니다.'}/>
+    }
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -82,7 +88,7 @@ export default function Page() {
                 others={['Non-Reference Dicom']}
                 setPresentProject={setPresentProject}
                 setMetaData={setMetaData}
-                openCreateProjectDialog={presentProject.projectId===undefined}
+                openCreateProjectDialog={presentProject.projectName==='현재 선택된 프로젝트가 없습니다.'}
             />
             <BaseAppBar
                 open={open}

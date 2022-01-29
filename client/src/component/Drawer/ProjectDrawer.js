@@ -14,7 +14,7 @@ import IconButton from '@mui/material/IconButton';
 import { useTheme } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 import { Dialog,DialogTitle,DialogContent,DialogContentText,DialogActions,TextField,Button } from '@mui/material';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { createProject } from './Utils/ProjectUtils';
 
 const SUCCESS=1,FAIL=0;
@@ -73,7 +73,10 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
     const theme = useTheme();
     const [dialogOpen,setDialogOpen]=useState(openCreateProjectDialog);
     const [projectName,setProjectName]=useState();
-
+    React.useEffect(()=>{
+        console.log(openCreateProjectDialog)
+        setDialogOpen(openCreateProjectDialog)
+    },[openCreateProjectDialog])
     const handleProjectCreateRequset=(status,message='')=>{
         if(status===FAIL){
             alert(message)
@@ -142,7 +145,7 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
             </Grid>
         </Drawer>
         <Dialog open={dialogOpen} onClose={()=>setDialogOpen(false)}>
-            <DialogTitle>Subscribe</DialogTitle>
+            <DialogTitle>Create Project</DialogTitle>
             <DialogContent>
                 <DialogContentText>
                     프로젝트 이름을 입력해주세요

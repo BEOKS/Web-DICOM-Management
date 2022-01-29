@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {useState} from 'react';
 import Page from './Page'
-import LoadingPage from './component/Login/loading';
+import LoadingPage from './component/Login/Loading';
 import { chcekLoginStatusAsync } from './component/Login/Login';
 export default function App(){ 
     const [loginStatus,setLoginStatus]=useState();
