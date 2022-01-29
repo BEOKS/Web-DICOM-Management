@@ -58,10 +58,10 @@ export default function Page() {
     }, [open]);
     
     React.useEffect(() => {
-        presentProject.projectId 
-        ? getMetaData(presentProject.projectId)
+        if(presentProject.projectId ){
+            getMetaData(presentProject.projectId)
+        }
         //: getNonReferenced();
-        : undefined;
     }, [presentProject, metaDataUpdated]);
 
 
