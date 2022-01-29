@@ -43,15 +43,15 @@ export default function Page() {
             });
     };
 
-    const getNonReferenced = () => {
-        const url = 'api/Patient/nonReferenced'
-        axios.get(url)
-            .then(response => {
-                setMetaData(response.data);
-            }).catch(error => {
-                console.log(error);
-            });
-    };
+    // const getNonReferenced = () => {
+    //     const url = 'api/Patient/nonReferenced'
+    //     axios.get(url)
+    //         .then(response => {
+    //             setMetaData(response.data);
+    //         }).catch(error => {
+    //             console.log(error);
+    //         });
+    // };
 
     React.useEffect(() => {
         getProjects();
