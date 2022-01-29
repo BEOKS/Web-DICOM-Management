@@ -12,7 +12,7 @@ axios.defaults.maxRedirects=0;
 export default function Page() {
     const [open, setOpen] = React.useState(false);
     const [projects, setProjects] = React.useState([]);
-    const [presentProject, setPresentProject] = React.useState({ projectName: 'Dicom' });
+    const [presentProject, setPresentProject] = React.useState({ projectName: '현재 선택된 프로젝트가 없습니다.' });
     const [metaData, setMetaData] = React.useState([]);
     const [metaDataUpdated, setMetaDataUpdated] = React.useState(false);
     const [checkFirst, setCheckFirst] = React.useState(true);
@@ -82,6 +82,7 @@ export default function Page() {
                 others={['Non-Reference Dicom']}
                 setPresentProject={setPresentProject}
                 setMetaData={setMetaData}
+                openCreateProjectDialog={presentProject.projectId===undefined}
             />
             <BaseAppBar
                 open={open}
@@ -89,14 +90,21 @@ export default function Page() {
                 presentProjectName={presentProject.projectName}
             />
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                <DrawerHeader />
-                <UpDownloadToolbar projects={presentProject} />
-                <DicomTable 
-                    data={metaData} 
-                    metaDataUpdated={metaDataUpdated}
-                    setMetaDataUpdated={setMetaDataUpdated}
-                    isNonReferenced={presentProject.projectName === 'Non-Reference Dicom' ? true : false}
-                    />
+                <DrawerHeader/>
+                
+                {
+                    presentProject.projectId ?
+                    <div>
+                        <UpDownloadToolbar projects={presentProject} />
+                        <DicomTable 
+                        data={metaData} 
+                        metaDataUpdated={metaDataUpdated}
+                        setMetaDataUpdated={setMetaDataUpdated}
+                        isNonReferenced={presentProject.projectName === 'Non-Reference Dicom' ? true : false}
+                        />
+                    </div>
+                    :<div></div>
+                }
             </Box>
         </Box>
     );

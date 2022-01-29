@@ -69,9 +69,9 @@ export const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 
 );
 
 
-export default function ProjectDrawer({open,handleDrawerClose,projects,others,setPresentProject,setMetaData}) {
+export default function ProjectDrawer({open,handleDrawerClose,projects,others,setPresentProject,setMetaData,openCreateProjectDialog}) {
     const theme = useTheme();
-    const [dialogOpen,setDialogOpen]=useState(false);
+    const [dialogOpen,setDialogOpen]=useState(openCreateProjectDialog);
     const [projectName,setProjectName]=useState();
 
     const handleProjectCreateRequset=(status,message='')=>{
