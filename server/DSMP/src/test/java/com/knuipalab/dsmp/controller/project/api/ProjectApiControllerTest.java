@@ -1,6 +1,7 @@
 package com.knuipalab.dsmp.controller.project.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.knuipalab.dsmp.configuration.auth.CustomOAuth2UserService;
 import com.knuipalab.dsmp.configuration.auth.SecurityConfig;
 import com.knuipalab.dsmp.controller.metadata.api.MetaDataApiController;
 import com.knuipalab.dsmp.domain.project.Project;
@@ -39,14 +40,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = ProjectApiController.class,
-        excludeFilters = {
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
-        })
+@WebMvcTest(controllers = ProjectApiController.class)
 public class ProjectApiControllerTest {
 
     @Autowired
     private WebApplicationContext context;
+
+    @MockBean
+    private CustomOAuth2UserService customOAuth2UserService;
 
     private MockMvc mockMvc;
 
