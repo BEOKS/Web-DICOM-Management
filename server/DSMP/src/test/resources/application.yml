@@ -12,3 +12,15 @@ spring:
             client-secret: test
             scope: email, profile
 
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+hostLocation : 155.230.29.41
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+hostLocation : localhost
