@@ -1,5 +1,6 @@
 package com.knuipalab.dsmp.controller.metadata.api;
 
+import com.knuipalab.dsmp.configuration.auth.CustomOAuth2UserService;
 import com.knuipalab.dsmp.configuration.auth.SecurityConfig;
 import com.knuipalab.dsmp.domain.metadata.MetaData;
 import com.knuipalab.dsmp.dto.metadata.MetaDataResponseDto;
@@ -38,13 +39,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @ExtendWith(SpringExtension.class)
-//@WebMvcTest(controllers = MetaDataApiController.class,
-//        excludeFilters = {
-//                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
-//        })
-@ActiveProfiles("local")
-@SpringBootTest
+@WebMvcTest(controllers = MetaDataApiController.class)
 class MetaDataApiControllerTest {
+
+    @MockBean
+    private CustomOAuth2UserService customOAuth2UserService;
 
     @Autowired
     private WebApplicationContext context;
