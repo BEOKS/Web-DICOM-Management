@@ -1,5 +1,14 @@
 spring:
   main:
     allow-bean-definition-overriding: true
-
+  session:
+    store-type: jdbc
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: test
+            client-secret: test
+            scope: email, profile
 

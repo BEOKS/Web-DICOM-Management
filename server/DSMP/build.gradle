@@ -50,6 +50,7 @@ dependencies {
     }
     testImplementation "de.flapdoodle.embed:de.flapdoodle.embed.mongo"// mongoDB for testcode
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' // oauth2
+    testImplementation 'org.springframework.security:spring-security-test' //oauth2 test
 
 }
 
