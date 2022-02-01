@@ -1,4 +1,5 @@
 import axios from "axios";
+import { parse } from 'csv-parse/lib/sync';
 export class CsvFileHandler {
     constructor(csvFile,projects) {
         this.csvFile=csvFile;
@@ -37,32 +38,17 @@ export class CsvFileHandler {
                 fileReader.onload = (e) => resolve(fileReader.result);
                 fileReader.readAsText(this.csvFile);
             });
-            this.csvJson=this.csvJSON(result) 
+            this.csvJson=this.csv2json(result) 
+            console.log('this.csvJson',this.csvJson)
             onloadCallBack(this.csvJson)
         }
     }
-    csvJSON(csv){
-        var lines=csv.split("\n");
-      
-        var result = {data:[]};
-
-        var headers=lines[0].split(",");
-      
-        for(var i=1;i<lines.length;i++){
-      
-            var obj = {};
-            var currentline=lines[i].split(",");
-      
-            for(var j=0;j<headers.length;j++){
-                obj[headers[j]] = currentline[j];
-            }
-      
-            result.data.push(obj);
-      
-        }
-      
-        //return result; //JavaScript object
-        return result; //JSON
+    csv2json(csv){
+        const data= parse (csv,{
+            columns: true,
+            skip_empty_lines: true
+          });
+        return {'data':data}
       }
     getContentOfColumn(columnName){
         
