@@ -1,6 +1,6 @@
 # Usage
 > 이 클라이언트는 Viewer 클라이언트를 참조하기 때문에 우선 Viewer클라이언트를 실행해야한다.
-0. Node.js 가 설치되어 있지 않다면 [최신버전](https://nodejs.org/ko/download/)으로 설치해야 합니다.
+0. Node.js 가 설치되어 있지 않다면 v16.6.1버전으로 ode.js를 설치해야 합니다.
 1. 클라이언트 시작 전 [server/README.md](../server/README.md)를 참조하여 서버를 실행합니다.
 2. Viewer 서브 모듈을 업데이트 합니다.
 ``` 
