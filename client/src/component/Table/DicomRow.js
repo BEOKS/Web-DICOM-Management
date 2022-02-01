@@ -12,7 +12,7 @@ export default function DicomRow(props) {
     const createTableCell = (rowBody) => {
         const elements = [];
         for (let i = 1; i < keys.length; i++) {
-            elements[i - 1] = <TableCell align="right" key={keys[i]}>{rowBody[keys[i]]}</TableCell>;
+            elements[i - 1] = <TableCell style={{whiteSpace: 'pre-wrap'}} key={keys[i]}>{rowBody[keys[i]]}</TableCell>;
         }
         return elements;
     };
