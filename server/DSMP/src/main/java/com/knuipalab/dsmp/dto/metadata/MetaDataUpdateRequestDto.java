@@ -11,7 +11,7 @@ import org.bson.conversions.Bson;
 @NoArgsConstructor
 public class MetaDataUpdateRequestDto {
 
-    private Bson body;
+    private Document body;
 
     public MetaDataUpdateRequestDto(String strBody){
         Document body = Document.parse(strBody);
