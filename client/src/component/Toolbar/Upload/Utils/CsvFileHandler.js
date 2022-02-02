@@ -13,17 +13,13 @@ export class CsvFileHandler {
         console.log('callbackList[0]',callbackList[0])
         callbackList[0](0,'Uploading Metadata...')
         this.uploadFileCount=0
-        await this.csvJson.data.map(async (data,index)=>{
-            this.uploadFileCount=0;
-            await axios.post(`api/MetaData/${this.projects.projectId}`,data)
-                .then(response=>{
-                    callbackList[0]((++this.uploadFileCount/this.csvJson.data.length)*100,'Uploading Metadata...')
-                })
-                .catch(error=>{
-                    console.error(error);
-                    callbackList[0](0,'Uploading Metadata error occurred')
-                })
-        })
+        await axios.post(`api/MetaDataList/${this.projects.projectId}`,this.csvJson.data)
+            .then(response=>{
+                callbackList[0](0,'Uploading Complete!')
+            })
+            .catch(error=>{
+                alert(`update fail ${error}`)
+            })
         callbackList[0](0,'',false);
     }
     /**
