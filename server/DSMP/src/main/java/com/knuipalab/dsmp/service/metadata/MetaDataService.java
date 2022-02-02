@@ -1,12 +1,14 @@
 package com.knuipalab.dsmp.service.metadata;
 import com.knuipalab.dsmp.domain.metadata.MetaData;
 import com.knuipalab.dsmp.domain.metadata.MetaDataRepository;
+import com.knuipalab.dsmp.dto.metadata.MetaDataCreateAllRequestDto;
 import com.knuipalab.dsmp.dto.metadata.MetaDataResponseDto;
 import com.knuipalab.dsmp.dto.metadata.MetaDataCreateRequestDto;
 
 import com.knuipalab.dsmp.dto.metadata.MetaDataUpdateRequestDto;
 import com.knuipalab.dsmp.service.patient.PatientService;
 import com.knuipalab.dsmp.service.project.ProjectService;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,10 +51,24 @@ public class MetaDataService {
         MetaData metaData = new MetaData().builder()
                 .projectId(metaDataCreateRequestDto.getProjectId())
                 .body(metaDataCreateRequestDto.getBody()).build();
-
         patientService.addProjectCount(metaData.getPatientIdFromBody()); // patient 처리.
-
         metaDataRepository.save(metaData); // 저장
+    }
+
+    @Transactional
+    public void insertAll(MetaDataCreateAllRequestDto metaDataCreateAllRequestDto){
+        projectService.findById(metaDataCreateAllRequestDto.getProjectId()); // 존재하는 프로젝트 id인지 확인.
+        if(metaDataCreateAllRequestDto.getBodyList() != null){
+            List<Document>bodyList = metaDataCreateAllRequestDto.getBodyList();
+            String projectId = metaDataCreateAllRequestDto.getProjectId();
+            for(Document body : bodyList){
+                MetaData metaData = new MetaData().builder()
+                        .projectId(projectId)
+                        .body(body).build();
+                patientService.addProjectCount(metaData.getPatientIdFromBody());
+                metaDataRepository.save(metaData);
+            }
+        }
     }
 
     @Transactional
