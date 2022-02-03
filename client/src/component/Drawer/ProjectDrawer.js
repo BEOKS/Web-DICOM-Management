@@ -8,13 +8,13 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import MoreIcon from '@mui/icons-material/More';
+// import MoreIcon from '@mui/icons-material/More';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import IconButton from '@mui/material/IconButton';
 import { useTheme } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 import { Dialog,DialogTitle,DialogContent,DialogContentText,DialogActions,TextField,Button } from '@mui/material';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { createProject } from './Utils/ProjectUtils';
 
 const SUCCESS=1,FAIL=0;
@@ -69,17 +69,21 @@ export const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 
 );
 
 
-export default function ProjectDrawer({open,handleDrawerClose,projects,others,setPresentProject,setMetaData}) {
+export default function ProjectDrawer({open,setOpen,projects,others,presentProject,setPresentProject,setMetaData,openCreateProjectDialog}) {
     const theme = useTheme();
-    const [dialogOpen,setDialogOpen]=useState(false);
+    const [dialogOpen,setDialogOpen]=useState(openCreateProjectDialog);
     const [projectName,setProjectName]=useState();
-
+    React.useEffect(()=>{
+        setDialogOpen(openCreateProjectDialog)
+    },[openCreateProjectDialog])
     const handleProjectCreateRequset=(status,message='')=>{
         if(status===FAIL){
             alert(message)
         }
         if(status===SUCCESS){
             setDialogOpen(false)
+            setOpen(false)
+            setOpen(true)
         }
     }
 
@@ -87,7 +91,7 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
         <div>
             <Drawer variant="permanent" open={open}>
             <DrawerHeader>
-                <IconButton onClick={handleDrawerClose}>
+                <IconButton onClick={()=>setOpen(false)}>
                     {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                 </IconButton>
             </DrawerHeader>
@@ -95,6 +99,7 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
             <List>
                 {projects.map((project) => (
                     <ListItem 
+                    selected={presentProject===project}
                     button 
                     key={project.projectName}
                     onClick={()=>setPresentProject(project)}>
@@ -105,7 +110,7 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
                     </ListItem>
                 ))}
             </List>
-            <Divider />
+            {/* <Divider />
             <List>
                 {others.map((text) => (
                     <ListItem 
@@ -119,7 +124,7 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
                         <ListItemText primary={text} />
                     </ListItem>
                 ))}
-            </List>
+            </List> */}
             <Grid
                 container
                 height='100%'
@@ -142,7 +147,7 @@ export default function ProjectDrawer({open,handleDrawerClose,projects,others,se
             </Grid>
         </Drawer>
         <Dialog open={dialogOpen} onClose={()=>setDialogOpen(false)}>
-            <DialogTitle>Subscribe</DialogTitle>
+            <DialogTitle>Create Project</DialogTitle>
             <DialogContent>
                 <DialogContentText>
                     프로젝트 이름을 입력해주세요

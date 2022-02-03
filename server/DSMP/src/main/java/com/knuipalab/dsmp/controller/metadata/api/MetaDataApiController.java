@@ -1,6 +1,6 @@
 package com.knuipalab.dsmp.controller.metadata.api;
 
-
+import com.knuipalab.dsmp.dto.metadata.MetaDataCreateAllRequestDto;
 import com.knuipalab.dsmp.dto.metadata.MetaDataCreateRequestDto;
 import com.knuipalab.dsmp.dto.metadata.MetaDataResponseDto;
 import com.knuipalab.dsmp.dto.metadata.MetaDataUpdateRequestDto;
@@ -29,6 +29,14 @@ public class MetaDataApiController {
         MetaDataCreateRequestDto metaDataCreateRequestDto = new MetaDataCreateRequestDto(projectId,strBody);
         metaDataService.insert(metaDataCreateRequestDto);
     }
+
+    // 다수개의 metadata를 projectId와 함께 저장
+    @PostMapping("api/MetaDataList/{projectId}")
+    public void insertAll(@PathVariable String projectId,@RequestBody String strBody){
+        MetaDataCreateAllRequestDto metaDataCreateAllRequestDto = new MetaDataCreateAllRequestDto(projectId,strBody);
+        metaDataService.insertAll(metaDataCreateAllRequestDto);
+    }
+
 
     // metatdata의 body부분을 수정
     @PutMapping("api/MetaData/{metadataId}")

@@ -27,7 +27,7 @@ spring:
   config:
     activate:
       on-profile: prod
-hostLocation : 155.230.29.41
+hostLocation : imdc.hopto.org
 ---
 spring:
   config:

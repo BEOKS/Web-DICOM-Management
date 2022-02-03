@@ -26,13 +26,17 @@ export default function UploadDialog({open,setOpen,snackbarInfo,setSnackBarInfo,
             async (csvFile,dicomFileList)=>{
                 const updatePossibility=await fileHandler.checkUpdatePossibility(csvFile,dicomFileList);
                 setUpdatePossibility(updatePossibility);
-                console.log('updatePossibility1232',updatePossibility)
+                
                 if( updatePossibility!==undefined && updatePossibility.state==='success'){
                     setOpen(false);
                     setSnackBarInfo({...snackbarInfo,'open':true,'message':'Uploading Files ...','progress':23})
                     fileHandler.uploadFiles((progress,message,open=true)=>setSnackBarInfo({'message':message,'open':open,'progress':progress}));
                     handleClearEvent();
                 }   
+                else if(updatePossibility.state=FileHandler.CSV_NOT_CONTAIN_PATIENT_ID){
+                    setSnackBarInfo({...snackbarInfo,'open':true,'message':FileHandler.CSV_NOT_CONTAIN_PATIENT_ID,
+                    'progress':false,'closeButtonOpen':true})
+                }
                 else{
                     setSnackBarInfo({...snackbarInfo,'open':false})
                 }

@@ -24,8 +24,10 @@ export default function  UploadButton({projects}){
       };
     const action = (
     <React.Fragment>
-        {snackbarInfo.progress ? <CircularProgressWithLabel value={snackbarInfo.progress}/> : <CircularProgress/>}
-        {snackbarInfo.progress===100 && <IconButton
+        {snackbarInfo.progress ? 
+            <CircularProgressWithLabel value={snackbarInfo.progress}/> 
+            : snackbarInfo.progress===false ? <div/> :<CircularProgress/>}
+        {(snackbarInfo.progress===100 || snackbarInfo.closeButtonOpen) && <IconButton
         size="small"
         aria-label="close"
         color="inherit"

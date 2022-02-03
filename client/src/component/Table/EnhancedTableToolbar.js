@@ -17,13 +17,13 @@ import { Stack } from "@mui/material";
 const hostLocation = process.env.SERVER_HOST ? process.env.SERVER_HOST : 'localhost'
 
 export default function EnhancedTableToolbar(props) {
-    const { numSelected, selected, metaDataUpdated, setMetaDataUpdated, selectedPatientIDList, isNonReferenced } = props;
+    const { numSelected, selected, metaDataUpdated, setMetaDataUpdated, selectedStudyUIDList, selectedPatientIDList, isNonReferenced } = props;
     const [open, setOpen] = useState(false);
 
-    const handleDownloadButtonClick = (selectedPatientID) => {
+    const handleDownloadButtonClick = () => {
         //download files
-        selectedPatientIDList.forEach(element => {
-            window.location.href = `http://${hostLocation}:8080/api/patient/${element}/dicom`;
+        selectedStudyUIDList.forEach(studyUID => {
+            window.location.href = `http://${hostLocation}:8080/api/study/${studyUID}/dicom`;
         });
     };
 
@@ -89,14 +89,14 @@ export default function EnhancedTableToolbar(props) {
                                 open={open}
                                 onClose={handleDeleteDialogClose}
                                 selected={selected}
-                                selectedPatientIDList={selectedPatientIDList}
+                                selectedStudyUIDList={selectedStudyUIDList}
                                 metaDataUpdated={metaDataUpdated}
                                 setMetaDataUpdated={setMetaDataUpdated}
                         />
                         )}
                     </Fragment>
                     <Tooltip title="Download">
-                        <IconButton onClick={() => handleDownloadButtonClick(selectedPatientIDList)}>
+                        <IconButton onClick={() => handleDownloadButtonClick()}>
                             <CloudDownloadIcon />
                         </IconButton>
                     </Tooltip>

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Box from "@mui/material/Box";
 import { Grid } from '@mui/material';
-import UploadButton from "../Upload/UploadButton";
-
+import UploadButton from "./Upload/UploadButton";
+import DeleteProjectButton from './DeleteProject/DeleteButton';
 export default function UpDownloadToolbar({projects}) {
     return (
         <Box
@@ -25,6 +25,7 @@ export default function UpDownloadToolbar({projects}) {
                 justifyContent="flex-end"
             >
                 <UploadButton projects={projects}/>
+                <DeleteProjectButton projectID={projects.projectId}/>
             </Grid>
         </Box>
     );
