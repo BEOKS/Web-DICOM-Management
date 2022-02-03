@@ -1,6 +1,11 @@
 import axios from "axios";
 import { parse } from 'csv-parse/lib/sync';
+/**
+ * CSV 파일을 관리하기 위한 클래스입니다.
+ * Json 변환, 파일 로드, 서버 업로드 등의 메서드가 포함되어 있습니다.
+ */
 export class CsvFileHandler {
+    static ANONYMIZED_ID='anonymized_id'
     constructor(csvFile,projects) {
         this.csvFile=csvFile;
         this.projects=projects;
@@ -34,8 +39,7 @@ export class CsvFileHandler {
                 fileReader.onload = (e) => resolve(fileReader.result);
                 fileReader.readAsText(this.csvFile);
             });
-            this.csvJson=this.csv2json(result) 
-            console.log('this.csvJson',this.csvJson)
+            this.csvJson=this.csv2json(result)           
             onloadCallBack(this.csvJson)
         }
     }
@@ -45,14 +49,8 @@ export class CsvFileHandler {
             skip_empty_lines: true
           });
         return {'data':data}
-      }
-    getContentOfColumn(columnName){
-        
     }
     getPatientIDList(){
         return this.csvJson.map( json => json.anonymized_id)
-    }
-    uploadFile(){
-        
     }
 }

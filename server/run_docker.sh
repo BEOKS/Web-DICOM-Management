@@ -15,4 +15,9 @@ jar xf ${jar_path}
 # 4. Run docker
 cd ../../..
 docker-compose -f ./docker-compose-$1.yml build --no-cache
-docker-compose -f ./docker-compose-$1.yml up --detach
+if [[ "$1" == "local" ]];
+then
+    docker-compose -f ./docker-compose-$1.yml up 
+else
+    docker-compose -f ./docker-compose-$1.yml up --detach
+fi
