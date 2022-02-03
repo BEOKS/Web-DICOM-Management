@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
+import { CircularProgress,Stack,Typography } from '@mui/material';
 import DicomTable from "./component/Table/DicomTable";
 import UpDownloadToolbar from "./component/Toolbar/UpDownloadToolbar";
 import { DrawerHeader } from './component/Drawer/ProjectDrawer';
@@ -8,7 +9,6 @@ import ProjectDrawer from './component/Drawer/ProjectDrawer'
 import BaseAppBar from './component/AppBar/BaseAppBar';
 import LoadingPage from './component/Login/Loading';
 import axios from 'axios';
-
 axios.defaults.maxRedirects=0;
 export default function Page() {
     const [open, setOpen] = React.useState(false);
@@ -38,6 +38,7 @@ export default function Page() {
 
     const getMetaData = (projectId) => {
         const url = `api/MetaData/${projectId}`;
+        setMetaData('loading')
         axios.get(url)
             .then(response => {
                 setMetaData(response.data);
@@ -103,12 +104,21 @@ export default function Page() {
                     presentProject.projectId ?
                     <div>
                         <UpDownloadToolbar projects={presentProject} />
-                        <DicomTable 
-                        data={metaData} 
-                        metaDataUpdated={metaDataUpdated}
-                        setMetaDataUpdated={setMetaDataUpdated}
-                        isNonReferenced={presentProject.projectName === 'Non-Reference Dicom' ? true : false}
-                        />
+                        {
+                            metaData==='loading'?
+                            <Stack alignItems="center" marginTop={2}>
+                                <CircularProgress margin={2}/>
+                                <Typography margin={2}>
+                                    {'Loading Metadata...'}
+                                </Typography>
+                            </Stack>
+                            :<DicomTable 
+                                data={metaData} 
+                                metaDataUpdated={metaDataUpdated}
+                                setMetaDataUpdated={setMetaDataUpdated}
+                                isNonReferenced={presentProject.projectName === 'Non-Reference Dicom' ? true : false}
+                            />
+                        }
                     </div>
                     :<div></div>
                 }
