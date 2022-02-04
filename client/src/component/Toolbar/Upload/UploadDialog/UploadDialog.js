@@ -30,7 +30,7 @@ export default function UploadDialog({open,setOpen,snackbarInfo,setSnackBarInfo,
                 if( updatePossibility!==undefined && updatePossibility.state==='success'){
                     setOpen(false);
                     setSnackBarInfo({...snackbarInfo,'open':true,'message':'Uploading Files ...','progress':23})
-                    fileHandler.uploadFiles((progress,message,open=true)=>setSnackBarInfo({'message':message,'open':open,'progress':progress}));
+                    await fileHandler.uploadFiles((progress,message,open=true)=>setSnackBarInfo({'message':message,'open':open,'progress':progress}));
                     getMetaData();
                     handleClearEvent();
                 }   
