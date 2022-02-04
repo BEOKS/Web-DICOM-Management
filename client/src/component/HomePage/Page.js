@@ -2,12 +2,12 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import { CircularProgress,Stack,Typography } from '@mui/material';
-import DicomTable from "./component/Table/DicomTable";
-import UpDownloadToolbar from "./component/Toolbar/UpDownloadToolbar";
-import { DrawerHeader } from './component/Drawer/ProjectDrawer';
-import ProjectDrawer from './component/Drawer/ProjectDrawer'
-import BaseAppBar from './component/AppBar/BaseAppBar';
-import LoadingPage from './component/Login/Loading';
+import DicomTable from "../Table/DicomTable";
+import UpDownloadToolbar from "../Toolbar/UpDownloadToolbar";
+import { DrawerHeader } from '../Drawer/ProjectDrawer';
+import ProjectDrawer from '../Drawer/ProjectDrawer'
+import BaseAppBar from '../AppBar/BaseAppBar';
+import LoadingPage from '../Login/Loading';
 import axios from 'axios';
 axios.defaults.maxRedirects=0;
 export default function Page() {
