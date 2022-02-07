@@ -92,5 +92,9 @@ public class MetaDataService {
 
         metaDataRepository.delete(metaData);
     }
+    @Transactional
+    public Long deleteAllByProjectId(String projectId){
+        return metaDataRepository.deleteAllByProjectId(projectId);
+    }
 
 }
