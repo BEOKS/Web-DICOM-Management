@@ -57,6 +57,8 @@ public class MetaDataService {
 
     @Transactional
     public void insertAll(MetaDataCreateAllRequestDto metaDataCreateAllRequestDto){
+        List<MetaData> metaDataList=new ArrayList<MetaData>();
+
         projectService.findById(metaDataCreateAllRequestDto.getProjectId()); // 존재하는 프로젝트 id인지 확인.
         if(metaDataCreateAllRequestDto.getBodyList() != null){
             List<Document>bodyList = metaDataCreateAllRequestDto.getBodyList();
@@ -65,9 +67,11 @@ public class MetaDataService {
                 MetaData metaData = new MetaData().builder()
                         .projectId(projectId)
                         .body(body).build();
+                metaDataList.add(metaData);
                 patientService.addProjectCount(metaData.getPatientIdFromBody());
-                metaDataRepository.save(metaData);
+                //metaDataRepository.save(metaData);
             }
+            metaDataRepository.insert(metaDataList);
         }
     }
 
@@ -91,6 +95,10 @@ public class MetaDataService {
         patientService.minusProjectCount(metaData.getPatientIdFromBody()); // patient 처리.
 
         metaDataRepository.delete(metaData);
+    }
+    @Transactional
+    public Long deleteAllByProjectId(String projectId){
+        return metaDataRepository.deleteAllByProjectId(projectId);
     }
 
 }
