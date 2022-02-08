@@ -4,7 +4,10 @@ import { DicomFileListHandler } from "./DicomFileListHandler"
  * FileHandler는 Dicom과 메타데이터를 다루기 위한 싱글톤 클래스입니다.
  */
 class FileHandler{
-    static CSV_NOT_CONTAIN_PATIENT_ID=`메타데이터 CSV파일에 ${CsvFileHandler.ANONYMIZED_ID}행이 포함되어 있지 않습니다.`
+    static CSV_NOT_CONTAIN_PATIENT_ID=`메타데이터 CSV파일에 ${CsvFileHandler.ANONYMIZED_ID}속성이 포함되어 있지 않습니다.`
+    static CSV_NOT_CONTAIN_STUDY_ID=`메타데이터 CSV파일에 ${CsvFileHandler.STUDY_UID}속성이 포함되어 있지 않습니다.`
+    static CSV_HEADER_INCONSISTENTY=`CSV 파일 속성이 일치하지 않습니다.`
+
     constructor(dicomFiles,csvFile,projects){
         this.dicomFileListHandler=new DicomFileListHandler(dicomFiles)
         this.csvFileHandler=new CsvFileHandler(csvFile,projects)
@@ -24,9 +27,15 @@ class FileHandler{
      *  errorDicomPathList : 메타 데이터의 PatientID 속성에 포함되어 있지 않은 dicom 파일의 리스트입니다.
      * }
      */
-    async checkUpdatePossibility(csvFile,dicomFileList){
+    async checkUpdatePossibility(csvFile,dicomFileList,metaData){
         if(!csvFile.data[0].hasOwnProperty(CsvFileHandler.ANONYMIZED_ID)){
             return {'state':FileHandler.CSV_NOT_CONTAIN_PATIENT_ID,'errorDicomPathList':[]}
+        }
+        if(!csvFile.data[0].hasOwnProperty(CsvFileHandler.STUDY_UID)){
+            return {'state':FileHandler.CSV_NOT_CONTAIN_STUDY_ID,'errorDicomPathList':[]}
+        }
+        if(Array.isArray(metaData)&& metaData.length!==0 && Object.keys(metaData[0].body).join('')!==Object.keys(csvFile.data[0]).join('')){
+            return {'state': FileHandler.CSV_HEADER_INCONSISTENTY,'errorDicomPathList':[]}
         }
         if(dicomFileList.length===0){
             console.log('dicomFileList empty')

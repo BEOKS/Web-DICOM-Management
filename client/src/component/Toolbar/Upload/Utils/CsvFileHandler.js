@@ -6,6 +6,7 @@ import { parse } from 'csv-parse/lib/sync';
  */
 export class CsvFileHandler {
     static ANONYMIZED_ID='anonymized_id'
+    static STUDY_UID='StudyInstanceUID'
     constructor(csvFile,projects) {
         this.csvFile=csvFile;
         this.projects=projects;
