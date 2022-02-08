@@ -103,7 +103,7 @@ export default function Page() {
                 {
                     presentProject.projectId ?
                     <div>
-                        <UpDownloadToolbar projects={presentProject} getMetaData={getMetaData} />
+                        <UpDownloadToolbar projects={presentProject} getMetaData={getMetaData} metaData={metaData} />
                         {
                             metaData==='loading'?
                             <Stack alignItems="center" marginTop={2}>
