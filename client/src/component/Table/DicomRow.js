@@ -21,7 +21,7 @@ export default function DicomRow(props) {
         const viewerHost = 'http://155.230.29.41:3000';
         const studyUID = row.body[STUDY_KEY_NAME];
 
-        window.location.href = `${viewerHost}/viewer/${studyUID}`;
+        window.open(`${viewerHost}/viewer/${studyUID}`, '_blank').focus();
     };
 
     return (

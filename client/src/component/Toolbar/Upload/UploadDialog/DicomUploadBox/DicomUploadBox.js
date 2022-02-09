@@ -24,7 +24,8 @@ const DicomUploadBox=({csvFile,dicomFiles,setdicomFiles,updatePossibility})=>{
     if(csvFile===undefined){
         return(
             <div>
-                <Stack margin borderRadius="5px" style={{alignItems: "center", backgroundColor:'#f5f5f5'}}>
+                <Stack borderRadius="5px" style={{alignItems: "center", backgroundColor:'#f5f5f5'}}
+                    sx={{marginTop: '8px'}}>
                     <Typography color='#808080' margin>
                         Dicom 파일을 업로드 하기전 메타데이터를 업로드 해야 합니다.
                     </Typography>
@@ -33,7 +34,7 @@ const DicomUploadBox=({csvFile,dicomFiles,setdicomFiles,updatePossibility})=>{
         )
     }
     return(
-        <Stack margin >
+        <Stack sx={{marginTop: '8px'}}>
             <Stack borderRadius="5px" style={{alignItems: "center", backgroundColor:'#f5f5f5'}}>
                 {Array.isArray(dicomFiles) && dicomFiles.map((path,index)=> (
                     <UploadBoxRow 
