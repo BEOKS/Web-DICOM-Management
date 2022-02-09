@@ -117,6 +117,7 @@ export default function Page() {
                                 metaDataUpdated={metaDataUpdated}
                                 setMetaDataUpdated={setMetaDataUpdated}
                                 isNonReferenced={presentProject.projectName === 'Non-Reference Dicom' ? true : false}
+                                projectName={presentProject.projectName}
                             />
                         }
                     </div>
