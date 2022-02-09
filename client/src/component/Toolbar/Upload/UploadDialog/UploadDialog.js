@@ -64,7 +64,7 @@ export default function UploadDialog({open,setOpen,snackbarInfo,setSnackBarInfo,
         <Dialog open={open}>
             <DialogTitle>Dicom 파일 업로드</DialogTitle>
             <DialogContent>
-                <Alert severity="info" > 
+                <Alert severity="info" sx={{marginTop: '0px'}}> 
                     {dialogContentDescrptionText}
                 </Alert>
                 {
