@@ -76,7 +76,7 @@ class OrthancRestClient {
     @Throws(IOException::class)
     fun deleteStudy(studyID: String?): ResponseEntity<*>{
         studyID ?: return ResponseEntity<Any?>(HttpStatus.BAD_REQUEST);
-        restTemplate.delete(URL.DELETE_PATIENT_ENDPOINT.LINK, mapOf<String,String>("id" to studyID))
+        restTemplate.delete(URL.DELETE_STUDY_ENDPOINT.LINK, mapOf<String,String>("id" to studyID))
         return ResponseEntity<Any?>(HttpStatus.OK)
     }
 }
