@@ -9,9 +9,11 @@ import org.springframework.web.client.postForEntity
 import org.springframework.web.multipart.MultipartFile
 import java.io.IOException
 
-private val restTemplate = RestTemplate()
-private val objectMapper=ObjectMapper()
+/**
+ *
+ */
 private fun ResponseEntity<String>.parse2Json(): JsonNode{
+    val objectMapper=ObjectMapper()
     return try {
         objectMapper.readTree(this.body);
     } catch (e: Exception){
@@ -20,7 +22,9 @@ private fun ResponseEntity<String>.parse2Json(): JsonNode{
     }
 }
 
-fun requestFindToOrthancWithQuery(idType : String, query : String): JsonNode{
+fun requestFindToOrthancWithQuery(idType : String, query : String,link : String=OrthancRestClient.URL.GET_TOOLS_ENDPOINT.LINK): JsonNode{
+    val objectMapper=ObjectMapper()
+    val restTemplate = RestTemplate()
     val param= mapOf<String,Any>(
         "Expand" to true,
         "Full" to true,
@@ -29,11 +33,11 @@ fun requestFindToOrthancWithQuery(idType : String, query : String): JsonNode{
     )
     val header=HttpHeaders()
     header.contentType = MediaType.APPLICATION_JSON
-    return restTemplate.postForEntity<String>(OrthancRestClient.URL.GET_TOOLS_ENDPOINT.LINK,HttpEntity(param,header)).parse2Json();
+    return restTemplate.postForEntity<String>(link,HttpEntity(param,header)).parse2Json();
 }
 
 class OrthancRestClient {
-
+    private val restTemplate = RestTemplate()
     enum class URL(val LINK: String){
         GET_TOOLS_ENDPOINT("http://orthanc:8042/tools/find"),
         DELETE_PATIENT_ENDPOINT("http://orthanc:8042/patients/{id}"),
@@ -48,7 +52,8 @@ class OrthancRestClient {
         val headers = HttpHeaders()
         headers["Content-Type"] = "application/dicom"
         val requestEntity = HttpEntity(file.bytes, headers)
-        return restTemplate.postForEntity<String>(URL.UPLOAD_DICOM_ENDPOINT.LINK, requestEntity).parse2Json()
+        return restTemplate.postForEntity<String>(URL.UPLOAD_DICOM_ENDPOINT.LINK, requestEntity)
+                .parse2Json()
     }
 
     @Throws(IOException::class)
@@ -63,7 +68,8 @@ class OrthancRestClient {
 
     @Throws(IOException::class)
     fun getStudies(): JsonNode{
-        return restTemplate.getForEntity<String>(URL.GET_STUDY_ENDPOINT.LINK,String::class.java).parse2Json();
+        return restTemplate.getForEntity<String>(URL.GET_STUDY_ENDPOINT.LINK,String::class.java)
+                .parse2Json();
     }
 
     @Throws(IOException::class)
