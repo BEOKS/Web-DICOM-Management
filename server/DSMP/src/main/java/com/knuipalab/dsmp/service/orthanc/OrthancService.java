@@ -13,7 +13,7 @@ import java.util.List;
 
 public class OrthancService {
 
-    OrthancRestClientJava orthancRestClient = new OrthancRestClientJava();
+    OrthancRestClient orthancRestClient = new OrthancRestClient();
     ObjectMapper objectMapper = new ObjectMapper();
 
     public String getPatinetUuidByPatientID(String id) throws IOException {
