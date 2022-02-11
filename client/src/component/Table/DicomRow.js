@@ -47,7 +47,7 @@ export default function DicomRow(props) {
                         inputProps={{
                             'aria-labelledby': labelId,
                         }}
-                        onClick={(event) => {
+                        onMouseDown={(event) => {
                             const id = isNonReferenced ? row.body.patientId : row.metadataId;
                             event.stopPropagation();
                             handleClick(event, id);
