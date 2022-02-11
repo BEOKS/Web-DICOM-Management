@@ -18,7 +18,8 @@ export default function DicomRow(props) {
     };
 
     const redirectViewer = () => {
-        const viewerHost = 'http://155.230.29.41:3000';
+        const hostLocation=process.env.REACT_APP_SERVER_HOST
+        const viewerHost = `http://${hostLocation}:3000`;
         const studyUID = row.body[STUDY_KEY_NAME];
 
         window.location.href = `${viewerHost}/viewer/${studyUID}`;
