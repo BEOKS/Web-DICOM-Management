@@ -36,8 +36,8 @@ export default function Page() {
             });
     };
 
-    const getMetaData = (projectId) => {
-        const url = `api/MetaData/${projectId}`;
+    const getMetaData = () => {
+        const url = `api/MetaData/${presentProject.projectId}`;
         setMetaData('loading')
         axios.get(url)
             .then(response => {
@@ -63,7 +63,7 @@ export default function Page() {
     
     React.useEffect(() => {
         if(presentProject.projectId ){
-            getMetaData(presentProject.projectId)
+            getMetaData()
         }
         //: getNonReferenced();
     }, [presentProject, metaDataUpdated]);
@@ -103,7 +103,7 @@ export default function Page() {
                 {
                     presentProject.projectId ?
                     <div>
-                        <UpDownloadToolbar projects={presentProject} />
+                        <UpDownloadToolbar projects={presentProject} getMetaData={getMetaData} metaData={metaData} />
                         {
                             metaData==='loading'?
                             <Stack alignItems="center" marginTop={2}>
@@ -117,6 +117,7 @@ export default function Page() {
                                 metaDataUpdated={metaDataUpdated}
                                 setMetaDataUpdated={setMetaDataUpdated}
                                 isNonReferenced={presentProject.projectName === 'Non-Reference Dicom' ? true : false}
+                                projectName={presentProject.projectName}
                             />
                         }
                     </div>

@@ -129,6 +129,8 @@ export default function DicomTable(props) {
                     isNonReferenced={isNonReferenced}
                     metaDataUpdated={props.metaDataUpdated}
                     setMetaDataUpdated={props.setMetaDataUpdated}
+                    metadata={rows}
+                    projectName={props.projectName}
                     />
                 <TableContainer>
                     <Table

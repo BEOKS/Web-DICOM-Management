@@ -46,7 +46,8 @@ const MetaUploadBox=({csvFile,setCsvFile,setdicomFiles})=>{
         }
     }
     return(
-        <Stack margin borderRadius='5px' style={{alignItems: "center", backgroundColor:'#f5f5f5'}}  width="100%">
+        <Stack borderRadius='5px' style={{alignItems: "center", backgroundColor:'#f5f5f5'}} width="100%"
+            sx={{marginTop: '8px'}}>
             <MetaUploadBoxContent  width="100%"/>
         </Stack>
     )

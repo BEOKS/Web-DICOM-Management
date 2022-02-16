@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface MetaDataRepository extends MongoRepository<MetaData, String> {
     List<MetaData> findByProjectId(String projectId);
+    Long deleteAllByProjectId(String projectId);
 }

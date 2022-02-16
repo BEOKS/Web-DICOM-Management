@@ -82,13 +82,7 @@ public class ProjectService {
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(()->new IllegalArgumentException("해당 projectId 값을 가진 프로젝트 정보가 없습니다."));
-
-        List<MetaDataResponseDto> metaDataList = metaDataService.findByProjectId(projectId);
-
-        for(MetaDataResponseDto metaData : metaDataList){
-             metaDataService.deleteById(metaData.getMetadataId());
-        }
-
+        metaDataService.deleteAllByProjectId(projectId);
         projectRepository.delete(project);
     }
 
