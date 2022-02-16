@@ -17,10 +17,11 @@ Dicom 의료 영상 데이터를 저장, 관리하며 시각화 기능과 머신
 ```sh 
 #clone all project with submodules
 git clone --recurse-submodules https://github.com/BEOKS/DicomProject.git
+cd DicomProject
 ```
 #### Window
 ```sh
-install_project.sh
+.\install_project.sh
 ```
 #### Mac, Linux
 ```sh
