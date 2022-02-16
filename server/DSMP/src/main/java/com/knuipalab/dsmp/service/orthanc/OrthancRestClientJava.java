@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OrthancRestClient {
+public class OrthancRestClientJava {
 
     private static final String GET_TOOLS_ENDPOINT_URL = "http://orthanc:8042/tools/find";
     private static final String DELETE_PATIENT_ENDPOINT_URL = "http://orthanc:8042/patients/{id}";
