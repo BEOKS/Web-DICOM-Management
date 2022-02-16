@@ -3,6 +3,6 @@
 cd client
 yarn install
 # 2. install dicom viewer
-cd ../Viewer
+cd ../Viewers
 yarn config set workspaces-experimental true 
 yarn install
