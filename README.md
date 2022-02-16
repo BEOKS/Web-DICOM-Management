@@ -3,6 +3,41 @@
 Dicom 의료 영상 데이터를 저장, 관리하며 시각화 기능과 머신러닝 개발을 지원하는 SW개발
 ## :bar_chart: Success metrics
 의료데이터 관리 및 시각화 지원 기능을 구현하여 v1.0 배포를 목표로 한다.(option 제외)
+## Usage
+### Prerequirement
+1. 최신 버전의 도커를 설치해주세요. (docker-compose는 v2 버전으로 설치되어야 합니다, 리눅스의 경우 간혹 v1으로 설치되므로 업데이트가 필요합니다.)
+2. java SDK (version. 17.0.1)을 설치합니다. (설치하지 않을 경우 spring 프로젝트 파일이 정상적으로 실행되지 않습니다.)
+3. Node.js 가 설치되어 있지 않다면 v16.6.1버전으로 설치해야 합니다.
+4. 최신 버전의 [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable)을 설치해주세요.
+
+### Install Project
+설치의 경우 프로젝트를 다운로드 한 후, 한번만 실행하면 됩니다. 프로젝트 코드가 갱신될 경우, 코드를 반영하기 위해서 다시 실행해야 합니다.
+#### Common
+```sh 
+#clone all project with submodules
+git clone --recurse-submodules https://github.com/BEOKS/DicomProject.git
+```
+#### Window
+```sh
+install_project.sh
+```
+#### Mac, Linux
+```sh
+sudo sh install_project.sh
+```
+### Run Project
+#### Window
+```sh
+run_project.sh local # run project for development
+#localhost:3000에서 서비스 이용가능
+run_project.sh prod # run project for deploy
+```
+#### Mac, Linux
+```sh
+sudo sh run_project.sh local # run project for development
+#localhost:3000에서 서비스 이용가능
+sudo sh run_project.sh prod # run project for deploy
+```
 ## 📓 Requirements
 ### 1. 의료 데이터 관리
 Requirement | User Story | Notes | Priority
