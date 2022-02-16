@@ -14,11 +14,13 @@ Dicom 의료 영상 데이터를 저장, 관리하며 시각화 기능과 머신
 ### Install Project
 설치의 경우 프로젝트를 다운로드 한 후, 한번만 실행하면 됩니다. 프로젝트 코드가 갱신될 경우, 코드를 반영하기 위해서 다시 실행해야 합니다.
 #### Common
+1. 코드 다운로드
 ```sh 
 #clone all project with submodules
 git clone --recurse-submodules https://github.com/BEOKS/DicomProject.git
 cd DicomProject
 ```
+2. 현재 프로젝트는 구글 로그인을 사용하고 있으므로 구글 API clientId와 secrect id가 필요합니다. 이를 발급받아 [application-oauth.yml.example](https://github.com/BEOKS/DicomProject/blob/main/server/DSMP/src/main/resources/application-oauth.yml.example)과 같은 형식을 작성하여 같은 파일 위치에 application-oauth.yml 파일을 생성해야 합니다.
 #### Window
 ```sh
 .\install_project.sh
