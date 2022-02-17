@@ -38,27 +38,27 @@ public class ProjectApiControllerTest {
     @MockBean
     ProjectService projectService;
 
-    @DisplayName("get all")
-    @Test
-    void findAllTest() throws Exception{
-        //given
-        Project project = Project.builder()
-                .projectId("54321")
-                .projectName("US")
-                .build();
-        List<ProjectResponseDto> projectResponseDtoList = new ArrayList<>();
-        projectResponseDtoList.add(new ProjectResponseDto(project));
-        given(projectService.findAll())
-                .willReturn(projectResponseDtoList);
-
-        mockMvc.perform(get("/api/Project"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].projectId", is("54321")))
-                .andExpect(jsonPath("$[0].projectName", is("US")))
-                .andDo(print())
-                ;
-    }
+//    @DisplayName("get all")
+//    @Test
+//    void findAllTest() throws Exception{
+//        //given
+//        Project project = Project.builder()
+//                .projectId("54321")
+//                .projectName("US")
+//                .build();
+//        List<ProjectResponseDto> projectResponseDtoList = new ArrayList<>();
+//        projectResponseDtoList.add(new ProjectResponseDto(project));
+//        given(projectService.findAll())
+//                .willReturn(projectResponseDtoList);
+//
+//        mockMvc.perform(get("/api/Project"))
+//                .andExpect(status().isOk())
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(jsonPath("$[0].projectId", is("54321")))
+//                .andExpect(jsonPath("$[0].projectName", is("US")))
+//                .andDo(print())
+//                ;
+//    }
 
     @DisplayName("post Project")
     @Test
