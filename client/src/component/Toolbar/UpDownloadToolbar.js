@@ -26,7 +26,7 @@ export default function UpDownloadToolbar({projects,getMetaData,metaData}) {
                 }}
             >
                 <Grid item xs='auto'>
-                    <InviteButton projectID={projects.projectId} />
+                    <InviteButton projectID={projects.projectId} project={projects}/>
                 </Grid>
                 <Grid item xs='auto'>
                     <DeleteButton />

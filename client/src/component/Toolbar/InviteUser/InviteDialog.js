@@ -6,11 +6,12 @@ import './InviteDialog.css';
 import axios from 'axios'
 
 export default function InviteDialog(props) {
-    const { open, setOpen, projectID } = props;
+    const { open, setOpen, projectID, project } = props;
     const [email, setEmail] = useState('');
     const [emailArray, setEmailArray] = useState([]);
     const [isEmail, setIsEmail] = useState(true);
-    const [alreadyExist, setAlreadyExist] = useState(false);
+    const [alreadyAdded, setAlreadyAdded] = useState(false);
+    const [alreadyInvited, setAlreadyInvited] = useState(false);
 
     const checkEmail = (email) => {
         const emailRegex =
@@ -20,14 +21,20 @@ export default function InviteDialog(props) {
         return result;
     };
 
-    const checkAlreadyExist = (email) => {
-        const exist = emailArray.some(i => i === email);
-        setAlreadyExist(exist);
-        return exist;
+    const checkAlreadyAdded = (email) => {
+        const added = emailArray.some(i => i === email);
+        setAlreadyAdded(added);
+        return added;
+    };
+
+    const checkAlreadyInvited = (email) => {
+        const invited = project.visitor.some(visitor => visitor.email === email);
+        setAlreadyInvited(invited);
+        return invited;
     };
 
     const handleAddClick = () => {
-        if (checkEmail(email) && !checkAlreadyExist(email)) {
+        if (checkEmail(email) && !checkAlreadyAdded(email) && !checkAlreadyInvited(email)) {
             const newEmailArray = emailArray.concat(email);
             setEmailArray(newEmailArray);
             setEmail('');
@@ -48,7 +55,8 @@ export default function InviteDialog(props) {
         setEmailArray([]);
         setEmail('');
         setIsEmail(true);
-        setAlreadyExist(false);
+        setAlreadyAdded(false);
+        setAlreadyInvited(false);
         setOpen(false);
     };
 
@@ -56,7 +64,8 @@ export default function InviteDialog(props) {
         setEmailArray([]);
         setEmail('');
         setIsEmail(true);
-        setAlreadyExist(false);
+        setAlreadyAdded(false);
+        setAlreadyInvited(false);
         setOpen(false);
     };
 
@@ -74,8 +83,9 @@ export default function InviteDialog(props) {
                             size="small"
                             onChange={e => { setEmail(e.target.value) }}
                             value={email}
-                            error={(!isEmail && true) || (alreadyExist && true)}
-                            helperText={(!isEmail && "올바른 이메일 형식이 아닙니다.") || (alreadyExist && "이미 추가한 계정입니다.")}
+                            error={(!isEmail && true) || (alreadyAdded && true) || (alreadyInvited && true)}
+                            helperText={(!isEmail && "올바른 이메일 형식이 아닙니다.") || (alreadyAdded && "이미 추가한 계정입니다.")
+                                        || (alreadyInvited && "이미 초대한 계정입니다.")}
                         />
                     </Grid>
                     <Grid item xs='auto'>
