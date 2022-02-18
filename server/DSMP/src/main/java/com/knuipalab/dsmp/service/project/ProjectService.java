@@ -134,7 +134,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public void oust(String projectId, ProjectOustRequestDto projectOustRequestDto) {
+    public void oustByEmailList(String projectId, ProjectOustRequestDto projectOustRequestDto) {
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(()->new IllegalArgumentException("해당 projectId 값을 가진 프로젝트 정보가 없습니다."));
@@ -144,4 +144,19 @@ public class ProjectService {
         projectRepository.save(project);
 
     }
+
+    @Transactional
+    public void oust(String projectId) {
+
+        SessionUser sessionUser = (SessionUser)httpSession.getAttribute("user");
+
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(()->new IllegalArgumentException("해당 projectId 값을 가진 프로젝트 정보가 없습니다."));
+
+        project.oust(sessionUser.getEmail());
+
+        projectRepository.save(project);
+
+    }
+
 }

@@ -51,10 +51,17 @@ public class ProjectApiController {
         projectService.invite(projectId,projectInviteRequestDto);
     }
 
-    //poject 방문자 삭제
-    @PutMapping ("api/Project/{projectId}/oust")
+    //poject 방문자 삭제 리스트
+    @PutMapping ("api/Project/{projectId}/oust/list")
     public void oust(@PathVariable String projectId ,@RequestBody ProjectOustRequestDto projectOustRequestDto){
-        projectService.oust(projectId,projectOustRequestDto);
+        projectService.oustByEmailList(projectId,projectOustRequestDto);
     }
+
+    //poject 방문자에서 본인 삭제
+    @PutMapping ("api/Project/{projectId}/oust")
+    public void oust(@PathVariable String projectId){
+        projectService.oust(projectId);
+    }
+
 
 }
