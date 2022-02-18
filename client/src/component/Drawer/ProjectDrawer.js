@@ -13,9 +13,10 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import IconButton from '@mui/material/IconButton';
 import { useTheme } from '@mui/material/styles';
 import { Grid } from '@mui/material';
-import { Dialog,DialogTitle,DialogContent,DialogContentText,DialogActions,TextField,Button } from '@mui/material';
+import { Dialog,DialogTitle,DialogContent,DialogContentText,DialogActions,TextField,Button,Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { createProject } from './Utils/ProjectUtils';
+import './ProjectDrawer.css';
 
 const SUCCESS=1,FAIL=0;
 
@@ -96,7 +97,11 @@ export default function ProjectDrawer({open,setOpen,projects,invitedProjects,oth
                 </IconButton>
             </DrawerHeader>
             <Divider />
-            <List>
+            {open && projects.length > 0 && (
+            <Typography className="category" variant="subtitle2" component="div">Created Projects</Typography>
+            )}
+            
+            <List sx={{py: 0}}>
                 {projects.map((project) => (
                     <ListItem 
                     selected={presentProject===project}
@@ -111,7 +116,10 @@ export default function ProjectDrawer({open,setOpen,projects,invitedProjects,oth
                 ))}
             </List>
             <Divider />
-            <List>
+            {open && invitedProjects.length > 0 && (
+            <Typography className="category" variant="subtitle2" component="div">Invited Projects</Typography>
+            )}
+            <List sx={{py: 0}}>
                 {invitedProjects.map((project) => (
                     <ListItem 
                     selected={presentProject===project}
