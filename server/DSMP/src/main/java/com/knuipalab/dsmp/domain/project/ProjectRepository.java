@@ -10,4 +10,7 @@ public interface ProjectRepository extends MongoRepository<Project,String> {
 
     @Query("{'creator._id' : ?0}")
     List<Project> findByCreator(ObjectId creatorId);
+
+    @Query("{'visitor' : { $elemMatch: { _id : ?0 } }}")
+    List<Project> findInvisitedProject(ObjectId userId);
 }

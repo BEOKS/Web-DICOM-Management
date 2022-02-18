@@ -22,7 +22,10 @@ public class ProjectApiController {
         return projectService.findByCreator();
     }
 
-
+    @GetMapping("api/Project/invited")
+    public List<ProjectResponseDto> findInvisitedProject(){
+        return projectService.findInvitedProject();
+    }
 
     // Project 생성
     @PostMapping("api/Project")

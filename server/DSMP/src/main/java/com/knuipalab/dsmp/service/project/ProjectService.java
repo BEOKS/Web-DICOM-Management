@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,17 +44,27 @@ public class ProjectService {
 
         SessionUser sessionUser = (SessionUser)httpSession.getAttribute("user");
 
-        List <ProjectResponseDto> projectResponseDtoList = new ArrayList<ProjectResponseDto>();
-
         ObjectId creatorId = new ObjectId(sessionUser.getUserId());
 
         List <Project> projectList = projectRepository.findByCreator(creatorId);
 
-        for(Project project: projectList){
-            projectResponseDtoList.add(new ProjectResponseDto(project));
-        }
+        return projectList.stream()
+                .map( project -> new ProjectResponseDto(project))
+                .collect(Collectors.toList());
+    }
 
-        return projectResponseDtoList;
+    @Transactional (readOnly = true)
+    public List<ProjectResponseDto> findInvitedProject(){
+
+        SessionUser sessionUser = (SessionUser)httpSession.getAttribute("user");
+
+        ObjectId userId = new ObjectId(sessionUser.getUserId());
+
+        List <Project> projectList = projectRepository.findInvisitedProject(userId);
+
+        return projectList.stream()
+                .map( project -> new ProjectResponseDto(project))
+                .collect(Collectors.toList());
     }
 
     @Transactional (readOnly = true)
@@ -127,14 +136,8 @@ public class ProjectService {
     @Transactional
     public void oust(String projectId, ProjectOustRequestDto projectOustRequestDto) {
 
-        SessionUser sessionUser = (SessionUser)httpSession.getAttribute("user");
-
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(()->new IllegalArgumentException("해당 projectId 값을 가진 프로젝트 정보가 없습니다."));
-
-        if(!sessionUser.getUserId().equals(project.getCreator().getUserId())){
-            throw new IllegalArgumentException("프로젝트 생성자만이 방문자 삭제를 진행할 수 있습니다.");
-        }
 
         project.oust(projectOustRequestDto.getEmailList());
 
