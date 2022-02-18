@@ -50,4 +50,10 @@ public class Project {
                 .collect(Collectors.toList());
     }
 
+    public void oust(String email){
+        this.visitor = this.visitor.stream()
+                .filter(visitor -> !visitor.getEmail().contains(email) )
+                .collect(Collectors.toList());
+    }
+
 }
