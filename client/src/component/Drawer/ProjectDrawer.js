@@ -69,7 +69,7 @@ export const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 
 );
 
 
-export default function ProjectDrawer({open,setOpen,projects,others,presentProject,setPresentProject,setMetaData,openCreateProjectDialog}) {
+export default function ProjectDrawer({open,setOpen,projects,invitedProjects,others,presentProject,setPresentProject,setMetaData,openCreateProjectDialog}) {
     const theme = useTheme();
     const [dialogOpen,setDialogOpen]=useState(openCreateProjectDialog);
     const [projectName,setProjectName]=useState();
@@ -98,6 +98,21 @@ export default function ProjectDrawer({open,setOpen,projects,others,presentProje
             <Divider />
             <List>
                 {projects.map((project) => (
+                    <ListItem 
+                    selected={presentProject===project}
+                    button 
+                    key={project.projectName}
+                    onClick={()=>setPresentProject(project)}>
+                        <ListItemIcon>
+                            <FolderOpenIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={project.projectName} />
+                    </ListItem>
+                ))}
+            </List>
+            <Divider />
+            <List>
+                {invitedProjects.map((project) => (
                     <ListItem 
                     selected={presentProject===project}
                     button 
