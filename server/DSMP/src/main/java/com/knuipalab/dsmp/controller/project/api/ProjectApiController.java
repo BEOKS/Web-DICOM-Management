@@ -1,6 +1,7 @@
 package com.knuipalab.dsmp.controller.project.api;
 
 import com.knuipalab.dsmp.dto.project.ProjectInviteRequestDto;
+import com.knuipalab.dsmp.dto.project.ProjectOustRequestDto;
 import com.knuipalab.dsmp.dto.project.ProjectRequestDto;
 import com.knuipalab.dsmp.dto.project.ProjectResponseDto;
 import com.knuipalab.dsmp.service.project.ProjectService;
@@ -21,6 +22,8 @@ public class ProjectApiController {
         return projectService.findByCreator();
     }
 
+
+
     // Project 생성
     @PostMapping("api/Project")
     public void insert(@RequestBody ProjectRequestDto projectRequestDto){
@@ -40,9 +43,15 @@ public class ProjectApiController {
     }
 
     //poject 초대
-    @PostMapping("api/Project/{projectId}/invite")
+    @PutMapping("api/Project/{projectId}/invite")
     public void invite(@PathVariable String projectId ,@RequestBody ProjectInviteRequestDto projectInviteRequestDto){
         projectService.invite(projectId,projectInviteRequestDto);
+    }
+
+    //poject 방문자 삭제
+    @PutMapping ("api/Project/{projectId}/oust")
+    public void oust(@PathVariable String projectId ,@RequestBody ProjectOustRequestDto projectOustRequestDto){
+        projectService.oust(projectId,projectOustRequestDto);
     }
 
 }

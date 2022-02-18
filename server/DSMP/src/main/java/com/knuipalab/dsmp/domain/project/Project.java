@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,6 +41,12 @@ public class Project {
     public void invite(List<User> userList){
         this.visitor = Stream.of(this.visitor,userList)
                 .flatMap( visitor -> visitor.stream())
+                .collect(Collectors.toList());
+    }
+
+    public void oust(List<String> emailList){
+        this.visitor = this.visitor.stream()
+                .filter(visitor -> !emailList.contains(visitor.getEmail()))
                 .collect(Collectors.toList());
     }
 

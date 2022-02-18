@@ -6,6 +6,7 @@ import com.knuipalab.dsmp.domain.project.ProjectRepository;
 import com.knuipalab.dsmp.domain.user.User;
 import com.knuipalab.dsmp.domain.user.UserRepository;
 import com.knuipalab.dsmp.dto.project.ProjectInviteRequestDto;
+import com.knuipalab.dsmp.dto.project.ProjectOustRequestDto;
 import com.knuipalab.dsmp.dto.project.ProjectRequestDto;
 import com.knuipalab.dsmp.dto.project.ProjectResponseDto;
 import com.knuipalab.dsmp.service.metadata.MetaDataService;
@@ -95,11 +96,13 @@ public class ProjectService {
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(()->new IllegalArgumentException("해당 projectId 값을 가진 프로젝트 정보가 없습니다."));
+
         metaDataService.deleteAllByProjectId(projectId);
+
         projectRepository.delete(project);
     }
 
-
+    @Transactional
     public void invite(String projectId,ProjectInviteRequestDto projectInviteRequestDto) {
 
         SessionUser sessionUser = (SessionUser)httpSession.getAttribute("user");
@@ -116,6 +119,24 @@ public class ProjectService {
                 .collect(Collectors.toList());
 
         project.invite(userList);
+
+        projectRepository.save(project);
+
+    }
+
+    @Transactional
+    public void oust(String projectId, ProjectOustRequestDto projectOustRequestDto) {
+
+        SessionUser sessionUser = (SessionUser)httpSession.getAttribute("user");
+
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(()->new IllegalArgumentException("해당 projectId 값을 가진 프로젝트 정보가 없습니다."));
+
+        if(!sessionUser.getUserId().equals(project.getCreator().getUserId())){
+            throw new IllegalArgumentException("프로젝트 생성자만이 방문자 삭제를 진행할 수 있습니다.");
+        }
+
+        project.oust(projectOustRequestDto.getEmailList());
 
         projectRepository.save(project);
 
