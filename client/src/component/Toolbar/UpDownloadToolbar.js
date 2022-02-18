@@ -3,7 +3,8 @@ import Box from "@mui/material/Box";
 import { Grid } from '@mui/material';
 import UploadButton from "./Upload/UploadButton";
 import DeleteProjectButton from './DeleteProject/DeleteButton';
-import InviteButton from './Invite/InviteButton';
+import InviteButton from './InviteUser/InviteButton';
+import DeleteButton from './DeleteUser/DeleteButton';
 
 export default function UpDownloadToolbar({projects,getMetaData,metaData}) {
     return (
@@ -26,6 +27,9 @@ export default function UpDownloadToolbar({projects,getMetaData,metaData}) {
             >
                 <Grid item xs='auto'>
                     <InviteButton />
+                </Grid>
+                <Grid item xs='auto'>
+                    <DeleteButton />
                 </Grid>
                 <Grid item xs></Grid>
                 <Grid item xs='auto'>

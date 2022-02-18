@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { Button } from '@mui/material';
-import InviteDialog from './InviteDialog'
 import { useState } from 'react';
-import AddIcon from '@mui/icons-material/Add';
+import PersonRemoveAlt1Icon from '@mui/icons-material/PersonRemoveAlt1';
 
 export default function InviteButton() {
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -10,8 +9,8 @@ export default function InviteButton() {
 
     return (
         <div>
-            <Button onClick={handleOnClick} variant="contained" startIcon={<AddIcon/>}>Invite</Button>
-            <InviteDialog open={dialogOpen} setOpen={setDialogOpen} />
+            <Button onClick={handleOnClick} variant="contained" startIcon={<PersonRemoveAlt1Icon/>} sx={{ml: 1}}>Delete</Button>
+            {/* 여기 다이얼로그 추가 예정 */}
         </div>
     );
 }
