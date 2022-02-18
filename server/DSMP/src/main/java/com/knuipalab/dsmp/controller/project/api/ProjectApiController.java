@@ -1,5 +1,7 @@
 package com.knuipalab.dsmp.controller.project.api;
 
+import com.knuipalab.dsmp.dto.project.ProjectInviteRequestDto;
+import com.knuipalab.dsmp.dto.project.ProjectOustRequestDto;
 import com.knuipalab.dsmp.dto.project.ProjectRequestDto;
 import com.knuipalab.dsmp.dto.project.ProjectResponseDto;
 import com.knuipalab.dsmp.service.project.ProjectService;
@@ -16,8 +18,13 @@ public class ProjectApiController {
 
     // DB에 존재하는 모든 프로젝트 종류를 반환
     @GetMapping("api/Project")
-    public List<ProjectResponseDto> findByUserId(){
-        return projectService.findByUserId();
+    public List<ProjectResponseDto> findByCreator(){
+        return projectService.findByCreator();
+    }
+
+    @GetMapping("api/Project/invited")
+    public List<ProjectResponseDto> findInvisitedProject(){
+        return projectService.findInvitedProject();
     }
 
     // Project 생성
@@ -36,6 +43,18 @@ public class ProjectApiController {
     @DeleteMapping("api/Project/{projectId}")
     public void delete(@PathVariable String projectId){
         projectService.deleteById(projectId);
+    }
+
+    //poject 초대
+    @PutMapping("api/Project/{projectId}/invite")
+    public void invite(@PathVariable String projectId ,@RequestBody ProjectInviteRequestDto projectInviteRequestDto){
+        projectService.invite(projectId,projectInviteRequestDto);
+    }
+
+    //poject 방문자 삭제
+    @PutMapping ("api/Project/{projectId}/oust")
+    public void oust(@PathVariable String projectId ,@RequestBody ProjectOustRequestDto projectOustRequestDto){
+        projectService.oust(projectId,projectOustRequestDto);
     }
 
 }
