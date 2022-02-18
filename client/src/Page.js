@@ -13,6 +13,7 @@ axios.defaults.maxRedirects=0;
 export default function Page() {
     const [open, setOpen] = React.useState(false);
     const [projects, setProjects] = React.useState([]);
+    const [invitedProjects, setInvitedProjects] = React.useState([]);
     const [presentProject, setPresentProject] = React.useState({ projectName: '현재 선택된 프로젝트가 없습니다.' });
     const [metaData, setMetaData] = React.useState([]);
     const [metaDataUpdated, setMetaDataUpdated] = React.useState(false);
@@ -28,6 +29,19 @@ export default function Page() {
                         setPresentProject(response.data[0]);
                         setCheckFirst(false);
                     }
+                }
+                setLoading(false)
+            }).catch(error => {
+                alert('서버가 응답하지 않습니다.')
+                console.log(error);
+            });
+    };
+
+    const getInvitedProjects = () => {
+        axios.get('api/Project/invited',{maxRedirects:0})
+            .then(response => {
+                if (response.data.length !== 0) {
+                    setInvitedProjects(response.data);
                 }
                 setLoading(false)
             }).catch(error => {
@@ -59,6 +73,7 @@ export default function Page() {
 
     React.useEffect(() => {
         getProjects();
+        getInvitedProjects();
     }, [open]);
     
     React.useEffect(() => {
@@ -86,6 +101,7 @@ export default function Page() {
                 open={open}
                 setOpen={setOpen}
                 projects={projects}
+                invitedProjects={invitedProjects}
                 others={['Non-Reference Dicom']}
                 presentProject={presentProject}
                 setPresentProject={setPresentProject}

@@ -1,0 +1,9 @@
+.category {
+    padding: 8px 16px;
+    background-color:rgb(134, 154, 172);
+    color: rgb(249, 251, 253);
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none
+}
