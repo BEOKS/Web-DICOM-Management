@@ -3,9 +3,10 @@ import { Dialog, DialogContent, DialogActions, Button, Grid, TextField, Stack, T
 import { useState } from 'react';
 import EmailListRow from './EmailListRow';
 import './InviteDialog.css';
+import axios from 'axios'
 
 export default function InviteDialog(props) {
-    const { open, setOpen } = props;
+    const { open, setOpen, projectID } = props;
     const [email, setEmail] = useState('');
     const [emailArray, setEmailArray] = useState([]);
     const [isEmail, setIsEmail] = useState(true);
@@ -34,6 +35,16 @@ export default function InviteDialog(props) {
     };
 
     const handleInviteClick = () => {
+        const data = {emailList: emailArray};
+        const url=`api/Project/${projectID}/invite`;
+
+        axios.put(url, data)
+            .then(response => {
+                console.log(response);
+            }).catch(error => {
+                console.log(`user invitation fail ${error}`);
+            });
+
         setEmailArray([]);
         setEmail('');
         setIsEmail(true);
