@@ -26,6 +26,7 @@
     "react-router": "^6.2.1",
     "react-router-dom": "^6.2.1",
     "react-scripts": "4.0.3",
+    "uuid-by-string": "^3.0.6",
     "web-vitals": "^1.0.1"
   },
   "scripts": {

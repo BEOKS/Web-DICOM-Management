@@ -1,5 +1,6 @@
 import { CsvFileHandler } from "./CsvFileHandler"
 import { DicomFileListHandler } from "./DicomFileListHandler"
+import getUuid from 'uuid-by-string';
 /**
  * FileHandler는 Dicom과 메타데이터를 다루기 위한 싱글톤 클래스입니다.
  */
@@ -28,6 +29,7 @@ class FileHandler{
      * }
      */
     async checkUpdatePossibility(csvFile,dicomFileList,metaData){
+        this.anonymizeData();
         if(!csvFile.data[0].hasOwnProperty(CsvFileHandler.ANONYMIZED_ID)){
             return {'state':FileHandler.CSV_NOT_CONTAIN_PATIENT_ID,'errorDicomPathList':[]}
         }
@@ -48,13 +50,25 @@ class FileHandler{
         const errorDicomPathList=dicomFilePatientIdsList.map(id => 
             csvFilePatientIdsList.includes(id))
         const state= errorDicomPathList.includes(false)? 'error':'success';
-        console.log('checkUpdatePossibility',{'state': state, 'errorDicomPathList':errorDicomPathList})
         return {'state': state, 'errorDicomPathList':errorDicomPathList};
     }
     async uploadFiles(onloadEachFileCallBack){
         await this.csvFileHandler.uploadToServer(onloadEachFileCallBack);
         this.dicomFileListHandler.uploadToServer(onloadEachFileCallBack);
         //this.dicomFileListHandler.uploadToServer(onloadEachFileCallBack)
+    }
+    anonymizeData(){
+        const anonymizedIdList=this.anonymizePatientID(this.csvFileHandler.getPatientIDList());
+        this.csvFileHandler.csvJson.data=this.csvFileHandler.csvJson.data.map((json,index)=>{
+            return {...json , 'anonymized_id' : anonymizedIdList[index]};
+        })
+
+    }
+    anonymizePatientID(patientIdList){
+        return patientIdList.map(id => {
+            const APP_UUID=process.env.REACT_APP_APP_UUID;
+            return getUuid(id+APP_UUID)
+        });
     }
     
 }
