@@ -1,10 +1,21 @@
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import * as React from 'react';
+import axios from 'axios';
 
 export default function ExitDialog(props) {
-    const { open, setOpen } = props;
+    const { open, setOpen, project } = props;
     const handleClickExit = () => {
-        setOpen(false);
+        const url = `api/Project/${project.projectId}/oust`;
+
+        axios.put(url)
+            .then(response => {
+                console.log(response);
+            }).catch(error => {
+                console.log(`exit project fail ${error}`);
+            }).finally(() => {
+                setOpen(false);
+                window.location.reload();
+            });
     };
 
     const handleClickCancel = () => {

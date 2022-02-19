@@ -16,7 +16,7 @@ export default function InviteButton(props) {
                 {isInvitedProject ? "Exit" : "Delete"}
             </Button>
             {isInvitedProject ? (
-                <ExitDialog open={dialogOpen} setOpen={setDialogOpen} />
+                <ExitDialog open={dialogOpen} setOpen={setDialogOpen} project={project} />
             ) : (
                 <DeleteDialog open={dialogOpen} setOpen={setDialogOpen} project={project} />
             )}
