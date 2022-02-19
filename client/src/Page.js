@@ -14,6 +14,7 @@ export default function Page() {
     const [open, setOpen] = React.useState(false);
     const [projects, setProjects] = React.useState([]);
     const [invitedProjects, setInvitedProjects] = React.useState([]);
+    const [isInvitedProject, setIsInvitedProject] = React.useState(false);
     const [presentProject, setPresentProject] = React.useState({ projectName: '현재 선택된 프로젝트가 없습니다.' });
     const [metaData, setMetaData] = React.useState([]);
     const [metaDataUpdated, setMetaDataUpdated] = React.useState(false);
@@ -102,6 +103,7 @@ export default function Page() {
                 setOpen={setOpen}
                 projects={projects}
                 invitedProjects={invitedProjects}
+                setIsInvitedProject={setIsInvitedProject}
                 others={['Non-Reference Dicom']}
                 presentProject={presentProject}
                 setPresentProject={setPresentProject}
@@ -119,7 +121,7 @@ export default function Page() {
                 {
                     presentProject.projectId ?
                     <div>
-                        <UpDownloadToolbar projects={presentProject} getMetaData={getMetaData} metaData={metaData} />
+                        <UpDownloadToolbar projects={presentProject} getMetaData={getMetaData} metaData={metaData} isInvitedProject={isInvitedProject}/>
                         {
                             metaData==='loading'?
                             <Stack alignItems="center" marginTop={2}>

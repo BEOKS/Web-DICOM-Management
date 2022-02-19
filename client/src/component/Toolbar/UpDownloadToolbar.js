@@ -3,7 +3,10 @@ import Box from "@mui/material/Box";
 import { Grid } from '@mui/material';
 import UploadButton from "./Upload/UploadButton";
 import DeleteProjectButton from './DeleteProject/DeleteButton';
-export default function UpDownloadToolbar({projects,getMetaData,metaData}) {
+import InviteButton from './InviteUser/InviteButton';
+import DeleteButton from './DeleteUser/DeleteButton';
+
+export default function UpDownloadToolbar({ projects, getMetaData, metaData, isInvitedProject }) {
     return (
         <Box
             sx={{
@@ -14,18 +17,29 @@ export default function UpDownloadToolbar({projects,getMetaData,metaData}) {
             }}
         >
             <Grid
+                container
                 sx={{
                     width: '100%',
                     border: 'solid 1px #cfcfcf',
                     borderRadius: '4px',
-                    px: 3,
-                    py: 1,
+                    padding: 1
                 }}
-                container 
-                justifyContent="flex-end"
             >
-                <UploadButton projects={projects} getMetaData={getMetaData} metaData={metaData}/>
-                <DeleteProjectButton projectID={projects.projectId}/>
+                {!isInvitedProject && (
+                    <Grid item xs='auto'>
+                        <InviteButton projectID={projects.projectId} project={projects} />
+                    </Grid>
+                )}
+                <Grid item xs='auto'>
+                    <DeleteButton project={projects} isInvitedProject={isInvitedProject} />
+                </Grid>
+                <Grid item xs></Grid>
+                <Grid item xs='auto'>
+                    <UploadButton projects={projects} getMetaData={getMetaData} metaData={metaData} />
+                </Grid>
+                <Grid item xs='auto'>
+                    <DeleteProjectButton projectID={projects.projectId} />
+                </Grid>
             </Grid>
         </Box>
     );
