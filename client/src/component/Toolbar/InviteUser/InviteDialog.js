@@ -42,22 +42,23 @@ export default function InviteDialog(props) {
     };
 
     const handleInviteClick = () => {
-        const data = {emailList: emailArray};
-        const url=`api/Project/${projectID}/invite`;
+        const data = { emailList: emailArray };
+        const url = `api/Project/${projectID}/invite`;
 
         axios.put(url, data)
             .then(response => {
                 console.log(response);
             }).catch(error => {
                 console.log(`user invitation fail ${error}`);
+            }).finally(() => {
+                setEmailArray([]);
+                setEmail('');
+                setIsEmail(true);
+                setAlreadyAdded(false);
+                setAlreadyInvited(false);
+                setOpen(false);
+                window.location.reload();
             });
-
-        setEmailArray([]);
-        setEmail('');
-        setIsEmail(true);
-        setAlreadyAdded(false);
-        setAlreadyInvited(false);
-        setOpen(false);
     };
 
     const handleCancelClick = () => {
@@ -85,7 +86,7 @@ export default function InviteDialog(props) {
                             value={email}
                             error={(!isEmail && true) || (alreadyAdded && true) || (alreadyInvited && true)}
                             helperText={(!isEmail && "올바른 이메일 형식이 아닙니다.") || (alreadyAdded && "이미 추가한 계정입니다.")
-                                        || (alreadyInvited && "이미 초대한 계정입니다.")}
+                                || (alreadyInvited && "이미 초대한 계정입니다.")}
                         />
                     </Grid>
                     <Grid item xs='auto'>
@@ -106,7 +107,7 @@ export default function InviteDialog(props) {
                 </Stack>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleInviteClick}>초대</Button>
+                <Button onClick={handleInviteClick} disabled={emailArray.length === 0}>초대</Button>
                 <Button onClick={handleCancelClick}>취소</Button>
             </DialogActions>
         </Dialog>

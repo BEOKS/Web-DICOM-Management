@@ -1,14 +1,25 @@
 import * as React from 'react';
-import { Dialog, DialogActions, DialogContent, Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Checkbox, Typography } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Checkbox, Typography, Alert } from '@mui/material';
 import '../UpDownloadToolbar.css';
+import axios from 'axios';
 
 export default function DeleteDialog(props) {
     const { open, setOpen, project } = props;
     const [checked, setChecked] = React.useState([]);
 
     const handleDeleteClick = () => {
-        // axios delete
-        setOpen(false);
+        const data = { emailList: checked };
+        const url = `api/Project/${project.projectId}/oust/list`;
+
+        axios.put(url, data)
+            .then(response => {
+                console.log(response);
+            }).catch(error => {
+                console.log(`user deletion fail ${error}`);
+            }).finally(() => {
+                setOpen(false);
+                window.location.reload();
+            });
     };
 
     const handleCancelClick = () => {
@@ -26,7 +37,6 @@ export default function DeleteDialog(props) {
         }
 
         setChecked(newChecked);
-        console.log(newChecked);
     };
 
     return (
@@ -35,8 +45,10 @@ export default function DeleteDialog(props) {
                 <Typography variant="subtitle2" gutterBottom component="div" color="#014361">
                     <span className="divider" />현재 프로젝트에 초대된 계정
                 </Typography>
+                {project && project.visitor.length === 0 && (
+                    <Alert severity="warning">프로젝트에 초대된 사용자가 존재하지 않습니다.</Alert>
+                )}
                 <List className="invitedEmailList" sx={{ py: 0 }}>
-                    {console.log(project)}
                     {project && project.visitor.map((visitor, index) => {
                         const labelId = `checkbox-list-label-${visitor.email}`;
 
@@ -64,7 +76,7 @@ export default function DeleteDialog(props) {
                 </List>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleDeleteClick}>삭제</Button>
+                <Button onClick={handleDeleteClick} disabled={project && project.visitor.length === 0}>삭제</Button>
                 <Button onClick={handleCancelClick}>취소</Button>
             </DialogActions>
         </Dialog>
