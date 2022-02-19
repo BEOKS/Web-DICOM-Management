@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Dialog, DialogContent, DialogActions, Button, Grid, TextField, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 import EmailListRow from './EmailListRow';
-import './InviteDialog.css';
+import '../UpDownloadToolbar.css';
 import axios from 'axios'
 
 export default function InviteDialog(props) {
