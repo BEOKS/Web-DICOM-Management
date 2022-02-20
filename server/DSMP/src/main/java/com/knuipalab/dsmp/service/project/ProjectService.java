@@ -9,6 +9,10 @@ import com.knuipalab.dsmp.dto.project.ProjectInviteRequestDto;
 import com.knuipalab.dsmp.dto.project.ProjectOustRequestDto;
 import com.knuipalab.dsmp.dto.project.ProjectRequestDto;
 import com.knuipalab.dsmp.dto.project.ProjectResponseDto;
+import com.knuipalab.dsmp.httpResponse.error.ErrorCode;
+import com.knuipalab.dsmp.httpResponse.error.handler.exception.ProjectNotFoundException;
+import com.knuipalab.dsmp.httpResponse.error.handler.exception.UnAuthorizedAccessException;
+import com.knuipalab.dsmp.httpResponse.error.handler.exception.UserNotFoundException;
 import com.knuipalab.dsmp.service.metadata.MetaDataService;
 import com.knuipalab.dsmp.service.user.UserService;
 import org.bson.types.ObjectId;
@@ -71,7 +75,7 @@ public class ProjectService {
     public ProjectResponseDto findById(String projectId){
 
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(()->new IllegalArgumentException("해당 projectId 값을 가진 프로젝트 정보가 없습니다."));
+                .orElseThrow(()->new ProjectNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
 
         return new ProjectResponseDto(project);
     }
@@ -80,20 +84,23 @@ public class ProjectService {
     public void insert(ProjectRequestDto projectRequestDto){
 
         SessionUser sessionUser = (SessionUser)httpSession.getAttribute("user");
+
         String userId = sessionUser.getUserId();
+
         Project project = new Project().builder()
                 .projectName(projectRequestDto.getProjectName())
-                .creator(userRepository.findById(userId).orElseThrow(()-> new IllegalArgumentException("해당 userId 값을 가진 사용자 정보가 없습니다.")))
+                .creator(userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException(ErrorCode.USER_NOT_FOUND)))
                 .build();
 
         projectRepository.save(project);
+
     }
 
     @Transactional
     public void update(String projectId,ProjectRequestDto projectRequestDto){
 
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(()->new IllegalArgumentException("해당 projectId 값을 가진 프로젝트 정보가 없습니다."));
+                .orElseThrow(()->new ProjectNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
 
         project.update(projectRequestDto.getProjectName());
 
@@ -104,7 +111,7 @@ public class ProjectService {
     public void deleteById(String projectId){
 
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(()->new IllegalArgumentException("해당 projectId 값을 가진 프로젝트 정보가 없습니다."));
+                .orElseThrow(()->new ProjectNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
 
         metaDataService.deleteAllByProjectId(projectId);
 
@@ -117,10 +124,10 @@ public class ProjectService {
         SessionUser sessionUser = (SessionUser)httpSession.getAttribute("user");
 
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(()->new IllegalArgumentException("해당 projectId 값을 가진 프로젝트 정보가 없습니다."));
+                .orElseThrow(()->new ProjectNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
 
         if(!sessionUser.getUserId().equals(project.getCreator().getUserId())){
-            throw new IllegalArgumentException("프로젝트 생성자만이 초대를 진행할 수 있습니다.");
+            throw new UnAuthorizedAccessException(ErrorCode.UNAUTHORIZED_ACCESS); // 프로젝트 생성자가 아니면 접근 권한 에러
         }
 
         List<User> userList = projectInviteRequestDto.getEmailList().stream()
@@ -137,7 +144,7 @@ public class ProjectService {
     public void oustByEmailList(String projectId, ProjectOustRequestDto projectOustRequestDto) {
 
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(()->new IllegalArgumentException("해당 projectId 값을 가진 프로젝트 정보가 없습니다."));
+                .orElseThrow(()->new ProjectNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
 
         project.oust(projectOustRequestDto.getEmailList());
 
@@ -151,7 +158,7 @@ public class ProjectService {
         SessionUser sessionUser = (SessionUser)httpSession.getAttribute("user");
 
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(()->new IllegalArgumentException("해당 projectId 값을 가진 프로젝트 정보가 없습니다."));
+                .orElseThrow(()->new ProjectNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
 
         project.oust(sessionUser.getEmail());
 
