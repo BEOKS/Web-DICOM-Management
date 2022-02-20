@@ -17,12 +17,14 @@ export default function DeleteDialog(props) {
             }).catch(error => {
                 console.log(`user deletion fail ${error}`);
             }).finally(() => {
+                setChecked([]);
                 setOpen(false);
                 window.location.reload();
             });
     };
 
     const handleCancelClick = () => {
+        setChecked([]);
         setOpen(false);
     };
 
