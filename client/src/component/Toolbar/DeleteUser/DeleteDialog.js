@@ -76,7 +76,7 @@ export default function DeleteDialog(props) {
                 </List>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleDeleteClick} disabled={project && project.visitor.length === 0}>삭제</Button>
+                <Button onClick={handleDeleteClick} disabled={project && (project.visitor.length === 0 || checked.length === 0)}>삭제</Button>
                 <Button onClick={handleCancelClick}>취소</Button>
             </DialogActions>
         </Dialog>
