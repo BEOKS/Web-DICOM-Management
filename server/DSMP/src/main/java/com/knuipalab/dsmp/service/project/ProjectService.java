@@ -5,13 +5,11 @@ import com.knuipalab.dsmp.domain.project.Project;
 import com.knuipalab.dsmp.domain.project.ProjectRepository;
 import com.knuipalab.dsmp.domain.user.User;
 import com.knuipalab.dsmp.domain.user.UserRepository;
-import com.knuipalab.dsmp.dto.project.ProjectInviteRequestDto;
-import com.knuipalab.dsmp.dto.project.ProjectOustRequestDto;
-import com.knuipalab.dsmp.dto.project.ProjectRequestDto;
-import com.knuipalab.dsmp.dto.project.ProjectResponseDto;
+import com.knuipalab.dsmp.dto.project.*;
 import com.knuipalab.dsmp.httpResponse.error.ErrorCode;
 import com.knuipalab.dsmp.httpResponse.error.handler.exception.ProjectNotFoundException;
 import com.knuipalab.dsmp.httpResponse.error.handler.exception.UnAuthorizedAccessException;
+import com.knuipalab.dsmp.httpResponse.error.handler.exception.UserEmailBadRequestException;
 import com.knuipalab.dsmp.httpResponse.error.handler.exception.UserNotFoundException;
 import com.knuipalab.dsmp.service.metadata.MetaDataService;
 import com.knuipalab.dsmp.service.user.UserService;
@@ -21,7 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -119,7 +119,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public void invite(String projectId,ProjectInviteRequestDto projectInviteRequestDto) {
+    public void invite(String projectId, ProjectInviteRequestDto projectInviteRequestDto) {
 
         SessionUser sessionUser = (SessionUser)httpSession.getAttribute("user");
 
@@ -130,13 +130,29 @@ public class ProjectService {
             throw new UnAuthorizedAccessException(ErrorCode.UNAUTHORIZED_ACCESS); // 프로젝트 생성자가 아니면 접근 권한 에러
         }
 
-        List<User> userList = projectInviteRequestDto.getEmailList().stream()
-                .map( email -> userService.findUserByEmail(email))
+        List<User> userList = new ArrayList<>();
+        List<String> notExistUserEmailList = new ArrayList<>();
+
+        List<String> existUserEmailList = projectInviteRequestDto.getEmailList().stream()
+                .filter( email -> {
+                    Optional<User> optionalUser = userService.findUserByEmail(email);
+                    if( !optionalUser.isPresent()){
+                        notExistUserEmailList.add(email);
+                        return false;
+                    } else {
+                        userList.add(optionalUser.get());
+                        return true;
+                    }
+                })
                 .collect(Collectors.toList());
 
         project.invite(userList);
 
         projectRepository.save(project);
+
+        if(!notExistUserEmailList.isEmpty()){
+            throw new UserEmailBadRequestException(ErrorCode.USER_EMAIL_BAD_REQUEST,notExistUserEmailList.toString());
+        }
 
     }
 
@@ -146,9 +162,30 @@ public class ProjectService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(()->new ProjectNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
 
-        project.oust(projectOustRequestDto.getEmailList());
+        List<User> userList = new ArrayList<>();
+
+        List<String> notExistUserEmailList = new ArrayList<>();
+
+        List<String> existUserEmailList = projectOustRequestDto.getEmailList().stream()
+                .filter( email -> {
+                    Optional<User> optionalUser = userService.findUserByEmail(email);
+                    if( !optionalUser.isPresent()){
+                        notExistUserEmailList.add(email);
+                        return false;
+                    } else {
+                        userList.add(optionalUser.get());
+                        return true;
+                    }
+                })
+                .collect(Collectors.toList());
+
+        project.oust(existUserEmailList);
 
         projectRepository.save(project);
+
+        if(!notExistUserEmailList.isEmpty()){
+            throw new UserEmailBadRequestException(ErrorCode.USER_EMAIL_BAD_REQUEST,notExistUserEmailList.toString());
+        }
 
     }
 

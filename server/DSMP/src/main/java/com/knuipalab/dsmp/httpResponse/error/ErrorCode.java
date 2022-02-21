@@ -5,10 +5,10 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-@AllArgsConstructor
 public enum ErrorCode {
     /* 400 BAD_REQUEST : 잘못된 요청 */
     DEFAULT_BAD_REQUEST(HttpStatus.BAD_REQUEST,"잘못된 요청으로 인해 등록이 불가능 합니다."),
+    USER_EMAIL_BAD_REQUEST(HttpStatus.BAD_REQUEST,"%s 로 가입된 USER EMAIL 정보가 없습니다.",""),
 
     /* 401 UNAUTHORIZED : 권한이 없는 접근 */
     UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "해당 접근에 대한 권한이 없습니다."),
@@ -17,9 +17,9 @@ public enum ErrorCode {
 //    FORBIDDEN_ACCESS(HttpStatus.FORBIDDEN, "해당 접근은 권한이 없어 접근이 불가능합니다."),
 
     /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."),
-    METADATA_NOT_FOUND(HttpStatus.NOT_FOUND,"metadata를 찾을 수 없습니다."),
-    PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND,"project를 찾을 수 없습니다."),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER 를 찾을 수 없습니다."),
+    METADATA_NOT_FOUND(HttpStatus.NOT_FOUND,"METADATA 를 찾을 수 없습니다."),
+    PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND,"PROJECT 를 찾을 수 없습니다."),
 
     /* 409 CONFLICT : DB 데이터 관리 충돌 */
     CONSTRAINT_VIOLATION_RESOURCE(HttpStatus.CONFLICT, "DB 제약조건 위반입니다."),
@@ -33,4 +33,20 @@ public enum ErrorCode {
 
     private final HttpStatus httpStatus;
     private final String detail;
+    private String formattedString;
+
+    ErrorCode(HttpStatus httpStatus, String detail){
+        this.httpStatus = httpStatus;
+        this.detail = detail;
+    }
+
+    ErrorCode(HttpStatus httpStatus, String detail,String formattedString){
+        this.httpStatus = httpStatus;
+        this.detail = detail;
+        this.formattedString = formattedString;
+    }
+
+    public void setFormattedString(String formattedString) {
+        this.formattedString = formattedString;
+    }
 }
