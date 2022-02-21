@@ -52,7 +52,7 @@ public class Project {
 
     public void oust(String email){
         this.visitor = this.visitor.stream()
-                .filter(visitor -> !visitor.getEmail().contains(email) )
+                .filter(visitor -> !visitor.getEmail().equals(email) )
                 .collect(Collectors.toList());
     }
 
