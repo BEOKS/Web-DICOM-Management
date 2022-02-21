@@ -151,7 +151,7 @@ public class ProjectService {
         projectRepository.save(project);
 
         if(!notExistUserEmailList.isEmpty()){
-            throw new UserEmailBadRequestException(ErrorCode.USER_EMAIL_BAD_REQUEST,notExistUserEmailList.toString());
+            throw new UserEmailBadRequestException(ErrorCode.USER_EMAIL_BAD_REQUEST, new ArrayList<Object>(notExistUserEmailList));
         }
 
     }
@@ -184,7 +184,7 @@ public class ProjectService {
         projectRepository.save(project);
 
         if(!notExistUserEmailList.isEmpty()){
-            throw new UserEmailBadRequestException(ErrorCode.USER_EMAIL_BAD_REQUEST,notExistUserEmailList.toString());
+            throw new UserEmailBadRequestException(ErrorCode.USER_EMAIL_BAD_REQUEST, new ArrayList<Object>(notExistUserEmailList));
         }
 
     }

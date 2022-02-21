@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+import java.util.List;
+
 @Getter
 public enum ErrorCode {
     /* 400 BAD_REQUEST : 잘못된 요청 */
     DEFAULT_BAD_REQUEST(HttpStatus.BAD_REQUEST,"잘못된 요청으로 인해 등록이 불가능 합니다."),
-    USER_EMAIL_BAD_REQUEST(HttpStatus.BAD_REQUEST,"%s 로 가입된 USER EMAIL 정보가 없습니다.",""),
+    USER_EMAIL_BAD_REQUEST(HttpStatus.BAD_REQUEST,"해당 EMAIL 로 가입된 USER 정보가 없습니다."),
 
     /* 401 UNAUTHORIZED : 권한이 없는 접근 */
     UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "해당 접근에 대한 권한이 없습니다."),
@@ -33,20 +35,20 @@ public enum ErrorCode {
 
     private final HttpStatus httpStatus;
     private final String detail;
-    private String formattedString;
+    private List<Object> failList;
 
     ErrorCode(HttpStatus httpStatus, String detail){
         this.httpStatus = httpStatus;
         this.detail = detail;
     }
 
-    ErrorCode(HttpStatus httpStatus, String detail,String formattedString){
+    ErrorCode(HttpStatus httpStatus, String detail,List<Object> failList){
         this.httpStatus = httpStatus;
         this.detail = detail;
-        this.formattedString = formattedString;
+        this.failList = failList;
     }
 
-    public void setFormattedString(String formattedString) {
-        this.formattedString = formattedString;
+    public void setFailList(List<Object> failList) {
+        this.failList = failList;
     }
 }

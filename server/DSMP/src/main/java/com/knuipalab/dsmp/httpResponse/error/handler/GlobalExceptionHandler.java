@@ -1,6 +1,7 @@
 package com.knuipalab.dsmp.httpResponse.error.handler;
 
 import com.knuipalab.dsmp.httpResponse.error.ErrorCode;
+import com.knuipalab.dsmp.httpResponse.error.ErrorDataResponse;
 import com.knuipalab.dsmp.httpResponse.error.ErrorResponse;
 import com.knuipalab.dsmp.httpResponse.error.handler.exception.*;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +21,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     //  ErrorCode 400 : BAD_REQUEST  ----------------------------------
     @ExceptionHandler(value = UserEmailBadRequestException.class)
-    protected ResponseEntity<ErrorResponse> handleUserEmailBadRequestException(HttpServletRequest request, UserEmailBadRequestException userEmailBadRequestException) {
+    protected ResponseEntity<ErrorDataResponse> handleUserEmailBadRequestException(HttpServletRequest request, UserEmailBadRequestException userEmailBadRequestException) {
         log.error("ErrorExceptionURI : " + request.getRequestURI());
         log.error("handleUserEmailBadRequestException throw Exception : {}", ErrorCode.USER_EMAIL_BAD_REQUEST);
-        return ErrorResponse.toResponseEntity(userEmailBadRequestException.getErrorCode(),request);
+        return ErrorDataResponse.toResponseEntity(userEmailBadRequestException.getErrorCode(),request);
     }
 
     //  ErrorCode 401 : Un Authorized ----------------------------------
