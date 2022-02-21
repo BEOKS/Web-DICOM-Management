@@ -17,6 +17,7 @@
     "cross-env": "^7.0.3",
     "csv": "^6.0.5",
     "csv-parse": "^5.0.4",
+    "dcmjs": "^0.19.5",
     "dicom-parser": "^1.8.11",
     "fastq": "^1.13.0",
     "http-proxy-middleware": "^2.0.1",

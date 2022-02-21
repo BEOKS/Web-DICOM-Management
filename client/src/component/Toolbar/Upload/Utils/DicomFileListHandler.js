@@ -1,6 +1,6 @@
 import axios from 'axios'
 import dicomParser from 'dicom-parser'
-
+import dcmjs from "dcmjs";
 export class DicomFileListHandler {
     constructor(fileList) {
         this.fileList=fileList
@@ -61,21 +61,42 @@ export class DicomFileListHandler {
                 });
                 let byteArray = new Uint8Array(result)
                 storeFile(dicomParser.parseDicom(byteArray));
+                console.log('dicomParser.parseDicom(byteArray)',dicomParser.parseDicom(byteArray))
                 onloadEachCallBack(this.dicomFileList[index]);
             }
         }
         onLoadAllCallBack(this.dicomFilelist);
     }
-    anonymizeDicom(dicomFile) {
-
-    }
-    updateDicomFileList(filePath) {
-
-    }
     static getPatientIDof(dicomFile){
         return dicomFile.string('x00100020');
     }
-    uploadFile(){
-        
+
+    /**
+     * dicom 파일 태그 중 PATIENT, STUDY, SERIES, INSTANCE ID를 익명화합니다.
+     */
+    anonymizeIDs(anonymizePatientIDProcess, anonymizeUIDProcess){
+        this.fileList=this.fileList.map(async file=>{
+            console.log('file format',file)
+            let fileReader = new FileReader();
+            fileReader.readAsArrayBuffer(file);
+            let result = await new Promise((resolve) => {
+                let fileReader = new FileReader();
+                fileReader.onload = (e) => resolve(fileReader.result);
+                fileReader.readAsArrayBuffer(file);
+            });
+            let dicomDict=dcmjs.data.DicomMessage.readFile(result);
+            const dataset=dcmjs.data.DicomMetaDictionary.naturalizeDataset(dicomDict.dict)
+            console.log('dataset',dataset);
+            //anonymize 4 ids
+            dataset.PatientID=anonymizePatientIDProcess([dataset.PatientID])[0]
+            dataset.StudyInstanceUID=anonymizeUIDProcess(dataset.StudyInstanceUID)
+            dataset.SeriesInstanceUID=anonymizeUIDProcess(dataset.SeriesInstanceUID)
+            dataset.SOPInstanceUID=anonymizeUIDProcess(dataset.SOPInstanceUID)
+            dicomDict.dict = dcmjs.data.DicomMetaDictionary.denaturalizeDataset(dataset);
+            console.log('dataset',dicomDict.dict);
+            let new_file_buffer=dicomDict.write();
+
+        })
     }
+
 }

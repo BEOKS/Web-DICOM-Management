@@ -29,7 +29,6 @@ class FileHandler{
      * }
      */
     async checkUpdatePossibility(csvFile,dicomFileList,metaData){
-        this.anonymizeData();
         if(!csvFile.data[0].hasOwnProperty(CsvFileHandler.ANONYMIZED_ID)){
             return {'state':FileHandler.CSV_NOT_CONTAIN_PATIENT_ID,'errorDicomPathList':[]}
         }
@@ -53,15 +52,18 @@ class FileHandler{
         return {'state': state, 'errorDicomPathList':errorDicomPathList};
     }
     async uploadFiles(onloadEachFileCallBack){
+        this.anonymizeIDinDicomAndCSV();
+        console.log('anonymizeUID',this.anonymizeUID('1.3.12.2.1107.5.1.4.54191.30000008101905312148400002618'))
         await this.csvFileHandler.uploadToServer(onloadEachFileCallBack);
         this.dicomFileListHandler.uploadToServer(onloadEachFileCallBack);
         //this.dicomFileListHandler.uploadToServer(onloadEachFileCallBack)
     }
-    anonymizeData(){
+    anonymizeIDinDicomAndCSV(){
         const anonymizedIdList=this.anonymizePatientID(this.csvFileHandler.getPatientIDList());
         this.csvFileHandler.csvJson.data=this.csvFileHandler.csvJson.data.map((json,index)=>{
             return {...json , 'anonymized_id' : anonymizedIdList[index]};
         })
+        this.dicomFileListHandler.anonymizeIDs(this.anonymizePatientID,this.anonymizeUID)
 
     }
     anonymizePatientID(patientIdList){
@@ -69,6 +71,23 @@ class FileHandler{
             const APP_UUID=process.env.REACT_APP_APP_UUID;
             return getUuid(id+APP_UUID)
         });
+    }
+    anonymizeUID(uid){
+        /**
+         * UID는 IOS식별자.ANSI식별자.국가코드.OID코드.제품분류코드.시리얼번호.검사ID.시리즈번호.인스턴스번호.획득시간 (10개)
+         * 형식으로 정해져있다. (ex.1.2.410.xxxxx.3.152.235.2.12.187636473)
+         * ex. STUDY : 1.2.410.2000010.82.242.1018932208290001
+         *  series : 1.3.12.2.1107.5.1.4.54191.30000008101905312148400002618
+         *  instance : 1.3.12.2.1107.5.1.4.54191.30000008101905312148400002628
+         *
+         *  여기서는 익명화를 위해서 REACT_APP_ENCODE_DIGIT을 기준으로 암호화를 진행한다.
+         */
+        const ENCODE_DIGIT=process.env.REACT_APP_ENCODE_DIGIT;
+        const MOD=100000000000000000000000000000;
+        return uid.split('.').map((digit,index) =>{
+            return index < 3? digit: (((digit%MOD) * (ENCODE_DIGIT%MOD)) %MOD)
+                .toLocaleString('fullwide', { useGrouping: false })
+        }).join('.')
     }
     
 }
