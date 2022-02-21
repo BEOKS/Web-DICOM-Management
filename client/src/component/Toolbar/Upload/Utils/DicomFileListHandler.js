@@ -14,6 +14,7 @@ export class DicomFileListHandler {
         this.uploadCount=0;
         this.fileListLength=this.fileList.length;
         const url='/api/dicom'
+        console.log('uploadToServer dicom',this.fileList)
         for(let index=0;index<this.fileList.length;index++){
             const file=this.fileList[index]
             const formData = new FormData();
@@ -74,8 +75,9 @@ export class DicomFileListHandler {
     /**
      * dicom 파일 태그 중 PATIENT, STUDY, SERIES, INSTANCE ID를 익명화합니다.
      */
-    anonymizeIDs(anonymizePatientIDProcess, anonymizeUIDProcess){
-        this.fileList=this.fileList.map(async file=>{
+    async anonymizeIDs(anonymizePatientIDProcess, anonymizeUIDProcess){
+        for(let index=0;index<this.fileList.length;index++){
+            const file=this.fileList[index]
             console.log('file format',file)
             let fileReader = new FileReader();
             fileReader.readAsArrayBuffer(file);
@@ -93,10 +95,12 @@ export class DicomFileListHandler {
             dataset.SeriesInstanceUID=anonymizeUIDProcess(dataset.SeriesInstanceUID)
             dataset.SOPInstanceUID=anonymizeUIDProcess(dataset.SOPInstanceUID)
             dicomDict.dict = dcmjs.data.DicomMetaDictionary.denaturalizeDataset(dataset);
-            console.log('dataset',dicomDict.dict);
-            let new_file_buffer=dicomDict.write();
-
-        })
+            const blob=new Blob([dicomDict.write()])
+            const dicomFile = new File([blob], "new.dcm",{ lastModified:new Date().getTime()})
+            console.log('dataset',dicomDict);
+            console.log('file format',dicomFile)
+            this.fileList[index]=dicomFile
+        }
     }
 
 }

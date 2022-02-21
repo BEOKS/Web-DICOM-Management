@@ -82,11 +82,22 @@ class FileHandler{
          *
          *  여기서는 익명화를 위해서 REACT_APP_ENCODE_DIGIT을 기준으로 암호화를 진행한다.
          */
-        const ENCODE_DIGIT=process.env.REACT_APP_ENCODE_DIGIT;
-        const MOD=100000000000000000000000000000;
+        const ENCODE_DIGIT=135612217;
         return uid.split('.').map((digit,index) =>{
-            return index < 3? digit: (((digit%MOD) * (ENCODE_DIGIT%MOD)) %MOD)
+            return index < 2? digit: (parseInt(digit)*ENCODE_DIGIT)%(Math.pow(10,digit.length))
                 .toLocaleString('fullwide', { useGrouping: false })
+            if(index < 3){
+                return digit
+            }
+            else if(index<=4){
+                return ((ENCODE_DIGIT+parseInt(digit))%10).toString()
+            }
+            else if(index<7){
+                return ((ENCODE_DIGIT+parseInt(digit))%1000).toString()
+            }
+            else{
+                return digit;
+            }
         }).join('.')
     }
     
