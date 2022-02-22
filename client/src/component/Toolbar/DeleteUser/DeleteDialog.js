@@ -15,14 +15,22 @@ export default function DeleteDialog(props) {
             .then(response => {
                 console.log(response);
             }).catch(error => {
-                console.log(`user deletion fail ${error}`);
+                if (error.response) {
+                    alert(error.response.data.message + "\n삭제 실패한 이메일: " + error.response.data.failList);
+                    console.log(error.response.data);
+                } else {
+                    alert(error.message);
+                    console.log(error);
+                }
             }).finally(() => {
+                setChecked([]);
                 setOpen(false);
                 window.location.reload();
             });
     };
 
     const handleCancelClick = () => {
+        setChecked([]);
         setOpen(false);
     };
 
@@ -76,7 +84,7 @@ export default function DeleteDialog(props) {
                 </List>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleDeleteClick} disabled={project && project.visitor.length === 0}>삭제</Button>
+                <Button onClick={handleDeleteClick} disabled={project && (project.visitor.length === 0 || checked.length === 0)}>삭제</Button>
                 <Button onClick={handleCancelClick}>취소</Button>
             </DialogActions>
         </Dialog>

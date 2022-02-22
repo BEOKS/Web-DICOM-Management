@@ -49,7 +49,13 @@ export default function InviteDialog(props) {
             .then(response => {
                 console.log(response);
             }).catch(error => {
-                console.log(`user invitation fail ${error}`);
+                if (error.response) {
+                    alert(error.response.data.message + '\n초대에 실패한 이메일: ' + error.response.data.failList);
+                    console.log(error.response.data);
+                } else {
+                    alert(error.message);
+                    console.log(error);
+                }
             }).finally(() => {
                 setEmailArray([]);
                 setEmail('');

@@ -11,7 +11,13 @@ export default function ExitDialog(props) {
             .then(response => {
                 console.log(response);
             }).catch(error => {
-                console.log(`exit project fail ${error}`);
+                if (error.response) {
+                    alert(error.response.data.message);
+                    console.log(error.response.data);
+                } else {
+                    alert(error.message);
+                    console.log(error);
+                }
             }).finally(() => {
                 setOpen(false);
                 window.location.reload();

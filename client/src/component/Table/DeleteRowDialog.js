@@ -14,7 +14,15 @@ export default function DeleteRowDialog(props) {
             const url = `api/MetaData/${metadataId}`;
             axios.delete(url)
                 .then(response => console.log(response))
-                .catch(error => console.log(error));
+                .catch(error => {
+                    if (error.response) {
+                        alert(error.response.data.message);
+                        console.log(error.response.data);
+                    } else {
+                        alert(error.message);
+                        console.log(error);
+                    }
+                });
         });
     };
 
@@ -23,7 +31,15 @@ export default function DeleteRowDialog(props) {
             const url = `api/study/${studyUID}`;
             axios.delete(url)
                 .then(response => console.log(response))
-                .catch(error => console.log(error));
+                .catch(error => {
+                    if (error.response) {
+                        alert(error.response.data.message);
+                        console.log(error.response.data);
+                    } else {
+                        alert(error.message);
+                        console.log(error);
+                    }
+                });
         })
     };
 

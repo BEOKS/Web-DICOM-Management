@@ -24,30 +24,40 @@ export default function Page() {
     const getProjects = () => {
         axios.get('api/Project',{maxRedirects:0})
             .then(response => {
-                if (response.data.length !== 0) {
-                    setProjects(response.data);
+                if (response.data.body.length !== 0) {
+                    setProjects(response.data.body);
                     if (checkFirst) {
-                        setPresentProject(response.data[0]);
+                        setPresentProject(response.data.body[0]);
                         setCheckFirst(false);
                     }
                 }
                 setLoading(false)
             }).catch(error => {
-                alert('서버가 응답하지 않습니다.')
-                console.log(error);
+                if (error.response) {
+                    alert(error.response.data.message);
+                    console.log(error.response.data);
+                } else {
+                    alert('서버가 응답하지 않습니다.');
+                    console.log(error);
+                }
             });
     };
 
     const getInvitedProjects = () => {
         axios.get('api/Project/invited',{maxRedirects:0})
             .then(response => {
-                if (response.data.length !== 0) {
-                    setInvitedProjects(response.data);
+                if (response.data.body.length !== 0) {
+                    setInvitedProjects(response.data.body);
                 }
                 setLoading(false)
             }).catch(error => {
-                alert('서버가 응답하지 않습니다.')
-                console.log(error);
+                if (error.response) {
+                    alert(error.response.data.message);
+                    console.log(error.response.data);
+                } else {
+                    alert('서버가 응답하지 않습니다.');
+                    console.log(error);
+                }
             });
     };
 
@@ -56,9 +66,15 @@ export default function Page() {
         setMetaData('loading')
         axios.get(url)
             .then(response => {
-                setMetaData(response.data);
+                setMetaData(response.data.body);
             }).catch(error => {
-                console.log(error);
+                if (error.response) {
+                    alert(error.response.data.message);
+                    console.log(error.response.data);
+                } else {
+                    alert(error.message);
+                    console.log(error);
+                }
             });
     };
 
