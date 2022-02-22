@@ -78,7 +78,6 @@ export class DicomFileListHandler {
     async anonymizeIDs(anonymizePatientIDProcess, anonymizeUIDProcess){
         for(let index=0;index<this.fileList.length;index++){
             const file=this.fileList[index]
-            console.log('file format',file)
             let fileReader = new FileReader();
             fileReader.readAsArrayBuffer(file);
             let result = await new Promise((resolve) => {
@@ -88,7 +87,6 @@ export class DicomFileListHandler {
             });
             let dicomDict=dcmjs.data.DicomMessage.readFile(result);
             const dataset=dcmjs.data.DicomMetaDictionary.naturalizeDataset(dicomDict.dict)
-            console.log('dataset',dataset);
             //anonymize 4 ids
             dataset.PatientID=anonymizePatientIDProcess([dataset.PatientID])[0]
             dataset.StudyInstanceUID=anonymizeUIDProcess(dataset.StudyInstanceUID)
@@ -96,9 +94,7 @@ export class DicomFileListHandler {
             dataset.SOPInstanceUID=anonymizeUIDProcess(dataset.SOPInstanceUID)
             dicomDict.dict = dcmjs.data.DicomMetaDictionary.denaturalizeDataset(dataset);
             const blob=new Blob([dicomDict.write()])
-            const dicomFile = new File([blob], "new.dcm",{ lastModified:new Date().getTime()})
-            console.log('dataset',dicomDict);
-            console.log('file format',dicomFile)
+            const dicomFile = new File([blob], file.name,{ lastModified:new Date().getTime()})
             this.fileList[index]=dicomFile
         }
     }

@@ -52,18 +52,18 @@ class FileHandler{
         return {'state': state, 'errorDicomPathList':errorDicomPathList};
     }
     async uploadFiles(onloadEachFileCallBack){
-        this.anonymizeIDinDicomAndCSV();
+        await this.anonymizeIDinDicomAndCSV();
         console.log('anonymizeUID',this.anonymizeUID('1.3.12.2.1107.5.1.4.54191.30000008101905312148400002618'))
         await this.csvFileHandler.uploadToServer(onloadEachFileCallBack);
         this.dicomFileListHandler.uploadToServer(onloadEachFileCallBack);
         //this.dicomFileListHandler.uploadToServer(onloadEachFileCallBack)
     }
-    anonymizeIDinDicomAndCSV(){
+    async anonymizeIDinDicomAndCSV(){
         const anonymizedIdList=this.anonymizePatientID(this.csvFileHandler.getPatientIDList());
         this.csvFileHandler.csvJson.data=this.csvFileHandler.csvJson.data.map((json,index)=>{
             return {...json , 'anonymized_id' : anonymizedIdList[index]};
         })
-        this.dicomFileListHandler.anonymizeIDs(this.anonymizePatientID,this.anonymizeUID)
+        await this.dicomFileListHandler.anonymizeIDs(this.anonymizePatientID,this.anonymizeUID)
 
     }
     anonymizePatientID(patientIdList){
@@ -83,21 +83,11 @@ class FileHandler{
          *  여기서는 익명화를 위해서 REACT_APP_ENCODE_DIGIT을 기준으로 암호화를 진행한다.
          */
         const ENCODE_DIGIT=135612217;
-        return uid.split('.').map((digit,index) =>{
-            return index < 2? digit: (parseInt(digit)*ENCODE_DIGIT)%(Math.pow(10,digit.length))
+        const uidSlice=uid.split('.')
+        const uidSliceLength=uidSlice.length;
+        return uidSlice.map((digit,index) =>{
+            return index < 2 || index==uidSliceLength-1? digit: ((parseInt(digit)*ENCODE_DIGIT)%(Math.pow(10,digit.length-1)))
                 .toLocaleString('fullwide', { useGrouping: false })
-            if(index < 3){
-                return digit
-            }
-            else if(index<=4){
-                return ((ENCODE_DIGIT+parseInt(digit))%10).toString()
-            }
-            else if(index<7){
-                return ((ENCODE_DIGIT+parseInt(digit))%1000).toString()
-            }
-            else{
-                return digit;
-            }
         }).join('.')
     }
     
