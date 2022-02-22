@@ -86,7 +86,7 @@ class FileHandler{
         const uidSlice=uid.split('.')
         const uidSliceLength=uidSlice.length;
         return uidSlice.map((digit,index) =>{
-            return index < 2 || index==uidSliceLength-1? digit: ((parseInt(digit)*ENCODE_DIGIT)%(Math.pow(10,digit.length-1)))
+            return index < 2 || index===uidSliceLength-1? digit: ((parseInt(digit)*ENCODE_DIGIT)%(Math.pow(10,digit.length-1)))
                 .toLocaleString('fullwide', { useGrouping: false })
         }).join('.')
     }
