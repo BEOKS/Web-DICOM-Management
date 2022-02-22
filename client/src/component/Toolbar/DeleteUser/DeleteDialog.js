@@ -15,7 +15,13 @@ export default function DeleteDialog(props) {
             .then(response => {
                 console.log(response);
             }).catch(error => {
-                console.log(`user deletion fail ${error}`);
+                if (error.response) {
+                    alert(error.response.data.message + "\n삭제 실패한 이메일: " + error.response.data.failList);
+                    console.log(error.response.data);
+                } else {
+                    alert(error.message);
+                    console.log(error);
+                }
             }).finally(() => {
                 setChecked([]);
                 setOpen(false);
