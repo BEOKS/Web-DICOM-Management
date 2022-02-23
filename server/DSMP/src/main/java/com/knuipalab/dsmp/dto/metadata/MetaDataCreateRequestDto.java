@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 
 @Setter
 @Getter
@@ -13,7 +12,7 @@ public class MetaDataCreateRequestDto {
 
     private String projectId;
 
-    private Bson body;
+    private Document body;
 
     public MetaDataCreateRequestDto(String projectId, String strBody){
         this.projectId = projectId;

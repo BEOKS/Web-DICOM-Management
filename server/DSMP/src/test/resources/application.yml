@@ -1,5 +1,26 @@
 spring:
   main:
     allow-bean-definition-overriding: true
+  session:
+    store-type: jdbc
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: test
+            client-secret: test
+            scope: email, profile
 
-
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+hostLocation : 155.230.29.41
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+hostLocation : localhost

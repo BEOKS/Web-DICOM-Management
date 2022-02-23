@@ -5,7 +5,7 @@ import UploadDialog from './UploadDialog/UploadDialog';
 import CircularProgressWithLabel from './UploadDialog/CircularProgressWithLabel';
 
 let fileHandler;
-export default function  UploadButton({projects}){
+export default function  UploadButton({projects,getMetaData,metaData}){
     const [open, setOpen] = React.useState(false);
     const [snackbarInfo,setSnackBarInfo]=React.useState({});
     const handleClickOpen = () => {
@@ -24,8 +24,10 @@ export default function  UploadButton({projects}){
       };
     const action = (
     <React.Fragment>
-        {snackbarInfo.progress ? <CircularProgressWithLabel value={snackbarInfo.progress}/> : <CircularProgress/>}
-        {snackbarInfo.progress===100 && <IconButton
+        {snackbarInfo.progress ? 
+            <CircularProgressWithLabel value={snackbarInfo.progress}/> 
+            : snackbarInfo.progress===false ? <div/> :<CircularProgress/>}
+        {(snackbarInfo.progress===100 || snackbarInfo.closeButtonOpen) && <IconButton
         size="small"
         aria-label="close"
         color="inherit"
@@ -44,7 +46,10 @@ export default function  UploadButton({projects}){
                 snackbarInfo={snackbarInfo}
                 setSnackBarInfo={setSnackBarInfo}
                 fileHandler={fileHandler}
-                projects={projects} />
+                projects={projects}
+                getMetaData={getMetaData}
+                metaData={metaData}
+            />
             <Snackbar
                 key='DataLoadingMessenger'
                 open={snackbarInfo.open}

@@ -21,7 +21,11 @@ const deleteProject=(projectID,setOpen)=>{
             alert(successMessage)
         })
         .catch(error=>{
-            alert(errorMessage+'\n'+error);
+            if(error.response) {
+                alert(errorMessage+'\n'+error.response.data.message);
+            } else {
+                alert(errorMessage+'\n'+error);
+            }
         })
         .finally(()=>{
             setOpen(false)

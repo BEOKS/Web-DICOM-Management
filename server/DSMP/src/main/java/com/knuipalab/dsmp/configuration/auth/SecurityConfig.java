@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @EnableWebSecurity
@@ -23,17 +24,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable(); // 스프링 시큐리티는 기본적으로 crsf에 대해 체크하기에 post가 안된다. 그래서 이를 disable 시켜야함
+        http.cors().and().csrf().disable(); // 스프링 시큐리티는 기본적으로 csrf에 대해 체크하기에 post가 안된다. 그래서 이를 disable 시켜야함
         http.authorizeRequests()
                 .antMatchers("/","/oauth2/*").permitAll() // root page, login page는 모두에게 허용
                 .anyRequest().authenticated() // 나머지 page는 인증된 사용자만 허용
             .and()
-                .logout().logoutSuccessUrl("/") // 로그아웃에 대해서 성공하면 "/"로 이동
+                .logout().logoutSuccessUrl("/redirectToMainPage") // 로그아웃에 대해서 성공하면 "/"로 이동
             .and()
                 .oauth2Login()
                 .defaultSuccessUrl("/redirectToMainPage") // oauth2 로그인 성공 시 "/"로 이동
                 .userInfoEndpoint()
-                .userService(customOAuth2UserService); // oauth2 로그인에 성공하면, 유저 데이터를 가지고 우리가 생성한 customOAuth2UserService에서 처리를 하겠다. 그 후 "/"로 이동.
+                .userService(customOAuth2UserService) // oauth2 로그인에 성공하면, 유저 데이터를 가지고 우리가 생성한 customOAuth2UserService에서 처리를 하겠다. 그 후 "/"로 이동.
+        ;
     }
 
 }

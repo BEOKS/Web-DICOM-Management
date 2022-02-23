@@ -18,13 +18,21 @@ export default function DicomTable(props) {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('id');
     const [selected, setSelected] = React.useState([]);
+    const [selectedStudyUIDList, setSelectedStudyUIDList] = React.useState([]);
+
+    // Sprint4: Dicom 삭제, 다운로드는 Study UID를 기준으로 변경하지만,
+    // Non-Referenced Dicom은 여전히 Patient ID를 기준으로 삭제하기 때문에 selectedPatientIDList를 남겨둠
     const [selectedPatientIDList, setSelectedPatientIDList] = React.useState([]);
+
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     
     const rows = [...props.data];
     const isNonReferenced = props.isNonReferenced;
+
+    // 메타 데이터 형식 변경으로 인한 임시 키
+    const STUDY_KEY_NAME = "StudyInstanceUID";
 
     // 드로어에서 다른 프로젝트 클릭 시 테이블 행 선택을 해제함
     React.useEffect(() => {
@@ -54,10 +62,12 @@ export default function DicomTable(props) {
                 ? rows.map(n => n.body.patientId)
                 : rows.map(n => n.metadataId);
             setSelected(newSelecteds);
+            setSelectedStudyUIDList(rows.map(n => n.body[STUDY_KEY_NAME]));
             setSelectedPatientIDList(rows.map(n => n.body.patientId));
             return;
         }
         setSelected([]);
+        setSelectedStudyUIDList([]);
         setSelectedPatientIDList([]);
     };
 
@@ -78,6 +88,9 @@ export default function DicomTable(props) {
             );
         }
         setSelected(newSelected);
+        setSelectedStudyUIDList(newSelected.map(id => {
+            return rows.find(row=>row.metadataId === id).body[STUDY_KEY_NAME];
+        }));
         setSelectedPatientIDList(newSelected.map(id => {
             const patientId = isNonReferenced 
                 ? id 
@@ -111,10 +124,13 @@ export default function DicomTable(props) {
                 <EnhancedTableToolbar 
                     numSelected={selected.length}
                     selected={selected}
+                    selectedStudyUIDList={selectedStudyUIDList}
                     selectedPatientIDList={selectedPatientIDList}
                     isNonReferenced={isNonReferenced}
                     metaDataUpdated={props.metaDataUpdated}
                     setMetaDataUpdated={props.setMetaDataUpdated}
+                    metadata={rows}
+                    projectName={props.projectName}
                     />
                 <TableContainer>
                     <Table

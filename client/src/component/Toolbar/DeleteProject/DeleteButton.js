@@ -7,7 +7,7 @@ export default function DeleteProjectButton({projectID}){
     const handleOnClick=()=>setDialogOpen(true)
     return(
     <div>
-        <Button  onClick={handleOnClick} variant="outlined" style={{marginLeft:10}}>Delete Project</Button>
+        <Button onClick={handleOnClick} variant="outlined" sx={{ml: 1}}>Delete Project</Button>
         <DeleteDialog projectID={projectID} open={dialogOpen} setOpen={setDialogOpen}/>
     </div>)
 }
