@@ -17,6 +17,7 @@
     "cross-env": "^7.0.3",
     "csv": "^6.0.5",
     "csv-parse": "^5.0.4",
+    "dcmjs": "^0.19.5",
     "dicom-parser": "^1.8.11",
     "fastq": "^1.13.0",
     "http-proxy-middleware": "^2.0.1",
@@ -26,6 +27,7 @@
     "react-router": "^6.2.1",
     "react-router-dom": "^6.2.1",
     "react-scripts": "4.0.3",
+    "uuid-by-string": "^3.0.6",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
