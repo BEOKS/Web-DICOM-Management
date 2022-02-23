@@ -52,8 +52,10 @@ dependencies {
         exclude group: "org.hamcrest", module: "hamcrest-core"
     }
     testImplementation "de.flapdoodle.embed:de.flapdoodle.embed.mongo"// mongoDB for testcode
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version" // oauth2
+
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' // oauth2
+    testImplementation 'org.springframework.security:spring-security-test' //oauth2 test
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version" 
 
 }
 

@@ -1,37 +1,62 @@
 package com.knuipalab.dsmp.controller.metadata.api;
 
+import com.knuipalab.dsmp.configuration.auth.CustomOAuth2UserService;
+import com.knuipalab.dsmp.configuration.auth.SecurityConfig;
 import com.knuipalab.dsmp.domain.metadata.MetaData;
 import com.knuipalab.dsmp.dto.metadata.MetaDataResponseDto;
 import com.knuipalab.dsmp.dto.project.ProjectRequestDto;
 import com.knuipalab.dsmp.service.metadata.MetaDataService;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(MetaDataApiController.class)
+@WebMvcTest(controllers = MetaDataApiController.class)
 class MetaDataApiControllerTest {
 
+    @MockBean
+    private CustomOAuth2UserService customOAuth2UserService;
+
     @Autowired
+    private WebApplicationContext context;
+
     private MockMvc mvc;
+
+    @BeforeEach
+    public void setup() {
+        mvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
+    }
 
     @MockBean
     private MetaDataService metaDataService;
@@ -66,6 +91,7 @@ class MetaDataApiControllerTest {
         return testData;
     }
 
+    @WithMockUser
     @DisplayName("get by {projectId}")
     @Test
     void findByProjectidTest() throws Exception {
@@ -82,9 +108,11 @@ class MetaDataApiControllerTest {
                 .andExpect(jsonPath("$[0].metadataId", is("12345")))
                 .andExpect(jsonPath("$[0].projectId", is("54321")))
                 .andExpect(jsonPath("$[0].body.age", is(53))) // body 확인
+                .andDo(print())
                 ;
     }
 
+    @WithMockUser
     @DisplayName("post by {projectID}")
     @Test
     void insertTest() throws Exception {
@@ -95,6 +123,7 @@ class MetaDataApiControllerTest {
                 ;
     }
 
+    @WithMockUser
     @DisplayName("put by {metadataId}")
     @Test
     void updateTest() throws Exception{
@@ -119,6 +148,7 @@ class MetaDataApiControllerTest {
                 ;
     }
 
+    @WithMockUser
     @DisplayName("delete by {metadataId}")
     @Test
     void deleteByIdTest() throws Exception{
