@@ -29,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/","/oauth2/*").permitAll() // root page, login page는 모두에게 허용
                 .anyRequest().authenticated() // 나머지 page는 인증된 사용자만 허용
             .and()
-                .logout().logoutSuccessUrl("/") // 로그아웃에 대해서 성공하면 "/"로 이동
+                .logout().logoutSuccessUrl("/redirectToMainPage") // 로그아웃에 대해서 성공하면 "/"로 이동
             .and()
                 .oauth2Login()
                 .defaultSuccessUrl("/redirectToMainPage") // oauth2 로그인 성공 시 "/"로 이동

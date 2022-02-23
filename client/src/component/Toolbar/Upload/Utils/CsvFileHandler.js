@@ -1,5 +1,12 @@
 import axios from "axios";
+import { parse } from 'csv-parse/lib/sync';
+/**
+ * CSV 파일을 관리하기 위한 클래스입니다.
+ * Json 변환, 파일 로드, 서버 업로드 등의 메서드가 포함되어 있습니다.
+ */
 export class CsvFileHandler {
+    static ANONYMIZED_ID='anonymized_id'
+    static STUDY_UID='StudyInstanceUID'
     constructor(csvFile,projects) {
         this.csvFile=csvFile;
         this.projects=projects;
@@ -12,17 +19,13 @@ export class CsvFileHandler {
         console.log('callbackList[0]',callbackList[0])
         callbackList[0](0,'Uploading Metadata...')
         this.uploadFileCount=0
-        await this.csvJson.data.map(async (data,index)=>{
-            this.uploadFileCount=0;
-            await axios.post(`api/MetaData/${this.projects.projectId}`,data)
-                .then(response=>{
-                    callbackList[0]((++this.uploadFileCount/this.csvJson.data.length)*100,'Uploading Metadata...')
-                })
-                .catch(error=>{
-                    console.error(error);
-                    callbackList[0](0,'Uploading Metadata error occurred')
-                })
-        })
+        await axios.post(`api/MetaDataList/${this.projects.projectId}`,this.csvJson.data)
+            .then(response=>{
+                callbackList[0](0,'Uploading Complete!')
+            })
+            .catch(error=>{
+                alert(`update fail ${error}`)
+            })
         callbackList[0](0,'',false);
     }
     /**
@@ -37,40 +40,18 @@ export class CsvFileHandler {
                 fileReader.onload = (e) => resolve(fileReader.result);
                 fileReader.readAsText(this.csvFile);
             });
-            this.csvJson=this.csvJSON(result) 
+            this.csvJson=this.csv2json(result)           
             onloadCallBack(this.csvJson)
         }
     }
-    csvJSON(csv){
-        var lines=csv.split("\n");
-      
-        var result = {data:[]};
-
-        var headers=lines[0].split(",");
-      
-        for(var i=1;i<lines.length;i++){
-      
-            var obj = {};
-            var currentline=lines[i].split(",");
-      
-            for(var j=0;j<headers.length;j++){
-                obj[headers[j]] = currentline[j];
-            }
-      
-            result.data.push(obj);
-      
-        }
-      
-        //return result; //JavaScript object
-        return result; //JSON
-      }
-    getContentOfColumn(columnName){
-        
+    csv2json(csv){
+        const data= parse (csv,{
+            columns: true,
+            skip_empty_lines: true
+          });
+        return {'data':data}
     }
     getPatientIDList(){
         return this.csvJson.map( json => json.anonymized_id)
-    }
-    uploadFile(){
-        
     }
 }

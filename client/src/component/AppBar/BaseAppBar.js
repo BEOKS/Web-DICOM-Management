@@ -46,9 +46,9 @@ export default function BaseAppBar(props) {
                 </Typography>
                 <Button
                     color="inherit"
-                    href="oauth2/authorization/google"
+                    href="logout"
                 >
-                    Login
+                    Logout
                 </Button>
             </Toolbar>
         </AppBar>
