@@ -40,7 +40,7 @@ run_project.sh prod # run project for deploy
 sudo sh run_project.sh local # run project for development,localhost:3000에서 서비스 이용가능
 sudo sh run_project.sh prod # run project for deploy
 ```
-> 실행 직후, 클라이언트 서버가 먼저 실행되는 경우 localhost:3000 페이지에서 에러가 발생할 수 있습니다. 도커 서버가 모두 실행완료 된 후, 새로고침을 해주세요
+> 실행 직후, 클라이언트 서버가 먼저 실행되는 경우 localhost:3000,localhost:3001 페이지에서 에러가 발생할 수 있습니다. 도커 서버가 모두 실행완료 된 후, 새로고침을 해주세요
 ## 📓 Requirements
 ### 1. 의료 데이터 관리
 Requirement | User Story | Notes | Priority
