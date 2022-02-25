@@ -54,4 +54,7 @@ export class CsvFileHandler {
     getPatientIDList(){
         return this.csvJson.data.map( json => json.anonymized_id)
     }
+    getColumnHeaders(){
+        return Object.keys(this.csvJson.data[0])
+    }
 }
