@@ -5,7 +5,7 @@ spring:
 
   data:
     mongodb:
-      host: mongodb  #local에서는 'localhost', docker server에서는 'mongodb'로 설정
+      host: localhost
       port: 27017
       database: DSMP
       authentication-database: admin
@@ -27,6 +27,9 @@ spring:
   config:
     activate:
       on-profile: prod
+  data:
+    mongodb:
+      host: mongodb
 hostLocation : imdc.hopto.org
 ---
 spring:
