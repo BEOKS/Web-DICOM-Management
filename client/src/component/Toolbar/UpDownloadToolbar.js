@@ -37,9 +37,11 @@ export default function UpDownloadToolbar({ projects, getMetaData, metaData, isI
                 <Grid item xs='auto'>
                     <UploadButton projects={projects} getMetaData={getMetaData} metaData={metaData} />
                 </Grid>
-                <Grid item xs='auto'>
-                    <DeleteProjectButton projectID={projects.projectId} />
-                </Grid>
+                {!isInvitedProject && (
+                    <Grid item xs='auto'>
+                        <DeleteProjectButton projectID={projects.projectId} />
+                    </Grid>
+                )}
             </Grid>
         </Box>
     );
