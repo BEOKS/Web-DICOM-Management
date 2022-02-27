@@ -2,38 +2,32 @@ package com.knuipalab.dsmp.controller.project.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.knuipalab.dsmp.configuration.auth.CustomOAuth2UserService;
-import com.knuipalab.dsmp.configuration.auth.SecurityConfig;
-import com.knuipalab.dsmp.controller.metadata.api.MetaDataApiController;
 import com.knuipalab.dsmp.domain.project.Project;
+import com.knuipalab.dsmp.domain.user.User;
+import com.knuipalab.dsmp.dto.project.ProjectInviteRequestDto;
+import com.knuipalab.dsmp.dto.project.ProjectOustRequestDto;
 import com.knuipalab.dsmp.dto.project.ProjectRequestDto;
 import com.knuipalab.dsmp.dto.project.ProjectResponseDto;
 import com.knuipalab.dsmp.service.project.ProjectService;
-import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -63,65 +57,172 @@ public class ProjectApiControllerTest {
     ProjectService projectService;
 
 
-//    @DisplayName("get all")
-//    @Test
-//    void findAllTest() throws Exception{
-//        //given
-//        Project project = Project.builder()
-//                .projectId("54321")
-//                .projectName("US")
-//                .build();
-//        List<ProjectResponseDto> projectResponseDtoList = new ArrayList<>();
-//        projectResponseDtoList.add(new ProjectResponseDto(project));
-//        given(projectService.findAll())
-//                .willReturn(projectResponseDtoList);
-//
-//        mockMvc.perform(get("/api/Project"))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$[0].projectId", is("54321")))
-//                .andExpect(jsonPath("$[0].projectName", is("US")))
-//                .andDo(print())
-//                ;
-//    }
+    public User createMockUser(){
+        return User.builder()
+                .name("testName")
+                .email("test@test.com")
+                .picture("testImg")
+                .build();
+    }
+
+    public List<ProjectResponseDto> createMockProjectResponseDtoList(){
+
+        User mockUser = createMockUser();
+
+        Project project = Project.builder()
+                .projectId("54321")
+                .projectName("US")
+                .creator(mockUser)
+                .build();
+
+        List<ProjectResponseDto> projectResponseDtoList = Arrays.asList(new ProjectResponseDto(project));
+
+        return projectResponseDtoList;
+    }
+
+    @WithMockUser
+    @DisplayName("Find by Creator")
+    @Test
+    void findByCreatorTest() throws Exception{
+
+        //given
+        given(projectService.findByCreator())
+                .willReturn(createMockProjectResponseDtoList());
+
+        mockMvc.perform(get("/api/Project"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.body.[0].projectId", is("54321")))
+                .andExpect(jsonPath("$.body.[0].projectName", is("US")))
+                .andExpect(jsonPath("$.body.[0].creator.name",is("testName")))
+                .andExpect(jsonPath("$.body.[0].creator.email",is("test@test.com")))
+                .andDo(print())
+                ;
+    }
+
+    @WithMockUser
+    @DisplayName("Find Invisited Project")
+    @Test
+    void findInvisitedProject() throws Exception{
+
+        //given
+        given(projectService.findInvitedProject())
+                .willReturn(createMockProjectResponseDtoList());
+
+        mockMvc.perform(get("/api/Project/invited"))
+                .andExpect(jsonPath("$.status",is(200)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.body.[0].projectId", is("54321")))
+                .andExpect(jsonPath("$.body.[0].projectName", is("US")))
+                .andExpect(jsonPath("$.body.[0].creator.name",is("testName")))
+                .andExpect(jsonPath("$.body.[0].creator.email",is("test@test.com")))
+                .andDo(print())
+        ;
+
+
+    }
 
 
     @WithMockUser
-    @DisplayName("post Project")
+    @DisplayName("Insert Project")
     @Test
     void insertTest() throws Exception{
         //given
-        ProjectRequestDto projectRequestDto = new ProjectRequestDto("new");
+        String content = "{ \"projectName\" : \"insertedName\" }";
+
+        //Dto
+        ProjectRequestDto projectRequestDto = new ObjectMapper().readValue(content,ProjectRequestDto.class);
 
         mockMvc.perform(post("/api/Project")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(projectRequestDto)))
+                .andExpect(jsonPath("$.status",is(200)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 ;
     }
 
     @WithMockUser
-    @DisplayName("put by {projectId}")
+    @DisplayName("Update by ProjectId")
     @Test
     void updateTest() throws Exception{
+
         //given
-        ProjectRequestDto projectRequestDto = new ProjectRequestDto("update");
+        String content = "{ \"projectName\" : \"updatedName\" }";
+
+        //Dto
+        ProjectRequestDto projectRequestDto = new ObjectMapper().readValue(content,ProjectRequestDto.class);
+
         mockMvc.perform(put("/api/Project/54321")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(projectRequestDto)))
+                .andExpect(jsonPath("$.status",is(200)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 ;
     }
 
     @WithMockUser
-    @DisplayName("delete by {projectId}")
+    @DisplayName("Delete by ProjectId")
     @Test
     void deleteTest() throws Exception{
         mockMvc.perform(delete("/api/Project/54321"))
+                .andExpect(jsonPath("$.status",is(200)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 ;
     }
+
+    @WithMockUser
+    @DisplayName("Invite Project by emailList")
+    @Test
+    void inviteTest() throws Exception{
+        //given
+        String content = "{ \"emailList\" : [\"a@a.com\",\"b@b.com\"] }";
+
+        //Dto
+        ProjectInviteRequestDto projectInviteRequestDto = new ObjectMapper().readValue(content,ProjectInviteRequestDto.class);
+
+        mockMvc.perform(put("/api/Project/54321/invite")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(projectInviteRequestDto)))
+                .andExpect(jsonPath("$.status",is(200)))
+                .andExpect(status().isOk())
+                .andDo(print())
+        ;
+    }
+
+    @WithMockUser
+    @DisplayName("Oust Project")
+    @Test
+    void oustTest() throws Exception{
+        mockMvc.perform(put("/api/Project/54321/oust"))
+                .andExpect(jsonPath("$.status",is(200)))
+                .andExpect(status().isOk())
+                .andDo(print())
+        ;
+    }
+
+    @WithMockUser
+    @DisplayName("Oust Project by emailList")
+    @Test
+    void oustListTest() throws Exception{
+
+        //given
+        String content = "{ \"emailList\" : [\"a@a.com\",\"b@b.com\"] }";
+
+        //Dto
+        ProjectOustRequestDto projectOustRequestDto = new ObjectMapper().readValue(content,ProjectOustRequestDto.class);
+
+        mockMvc.perform(put("/api/Project/54321/oust/list")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(projectOustRequestDto)))
+                .andExpect(jsonPath("$.status",is(200)))
+                .andExpect(status().isOk())
+                .andDo(print())
+        ;
+    }
+
+
 }
