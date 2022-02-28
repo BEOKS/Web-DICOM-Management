@@ -60,7 +60,7 @@ function ColumnTypeDecisionDialog(){
             <DialogTitle>{TITLE}</DialogTitle>
             <DialogContent>
                 <Stack>
-                    {columnList.map(columnName =>selectComponent(columnName))}
+                    {columnList.map((columnName:string) =>selectComponent(columnName))}
                 </Stack>
             </DialogContent>
             <DialogActions>
