@@ -5,7 +5,6 @@ import { useState } from 'react';
 import DicomUploadBox from './DicomUploadBox/DicomUploadBox';
 import MetaUploadBox from "./MetaUploadBox";
 import {DialogAction} from "../MetadataColumnTypeDecision/ColumnTypeDesicionDialogReducer";
-import ColumnTypeDecisionDialog from "../MetadataColumnTypeDecision/ColumnTypeDesicionDialog";
 import FileHandler from '../Utils/FileHandler';
 import { useDispatch} from "react-redux";
 
@@ -91,7 +90,6 @@ export default function UploadDialog({open,setOpen,snackbarInfo,setSnackBarInfo,
                 <Button onClick={handleOkEvent}>확인</Button>
                 <Button onClick={handleClearEvent}>취소</Button>
             </DialogActions>
-            <ColumnTypeDecisionDialog/>
         </Dialog>
     )
 }
