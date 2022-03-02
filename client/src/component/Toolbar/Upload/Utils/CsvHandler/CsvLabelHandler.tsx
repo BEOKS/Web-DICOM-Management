@@ -50,7 +50,7 @@ function divideCsvRowWithLevel(csvData : any,schema : Schema): CsvSlices{
                 instanceCsv[key]=csvData[key]
                 return;
             default:
-                throw TypeError(`스키마의 타입이 올바르지 않습니다. input type : ${type}`)
+                throw TypeError(`스키마의 타입이 올바르지 않습니다. \ninput type : ${type}`)
         }
     })
     csvSlices.patient=patientCsv
