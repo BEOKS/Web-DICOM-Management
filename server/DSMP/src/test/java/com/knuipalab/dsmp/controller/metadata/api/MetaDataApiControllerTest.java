@@ -105,36 +105,21 @@ class MetaDataApiControllerTest {
             "    \"compressionForce\": 173.5019\n" +
             "  }]";
 
-    public MetaData createTestData(){
-        String metaId = "12345";
-        String proId = "54321";
-        Bson body = Document.parse(strBody);
-
-        MetaData metaData = MetaData.builder()
-                .metadataId(metaId)
-                .projectId(proId)
-                .body(body)
-                .build();
-
-        return metaData;
-    }
-
-    public List<MetaData> createTestDummyData(){
+    public List<MetaData> createMockMetaDataList(){
         List<MetaData> metaDataList = new ArrayList<>();
-        String metaId = "12345";
-        String proId = "54321";
+        String metadataId = "12345";
+        String projectId = "54321";
 
-        MetaDataCreateAllRequestDto metaDataCreateAllRequestDto = new MetaDataCreateAllRequestDto(proId,strBodyList);
+        MetaDataCreateAllRequestDto metaDataCreateAllRequestDto = new MetaDataCreateAllRequestDto(projectId,strBodyList);
         List<Document>bodyList = metaDataCreateAllRequestDto.getBodyList();
-        String projectId = metaDataCreateAllRequestDto.getProjectId();
 
         for(Document body : bodyList) {
             MetaData metaData = new MetaData().builder()
-                    .metadataId(metaId)
+                    .metadataId(metadataId)
                     .projectId(projectId)
                     .body(body).build();
             metaDataList.add(metaData);
-            metaId = String.valueOf((Integer.parseInt(metaId)+1));
+            metadataId = String.valueOf((Integer.parseInt(metadataId)+1));
         }
 
         return metaDataList;
@@ -143,10 +128,10 @@ class MetaDataApiControllerTest {
     @WithMockUser
     @DisplayName("Find by ProjectId")
     @Test
-    void findByProjectidTest() throws Exception {
+    void findByProjectIdTest() throws Exception {
 
         //given
-        List<MetaData> metaDataList = createTestDummyData();
+        List<MetaData> metaDataList = createMockMetaDataList();
 
         List<MetaDataResponseDto> metaDataResponseDtoList = metaDataList.stream()
                 .map(metaData -> new MetaDataResponseDto(metaData))
