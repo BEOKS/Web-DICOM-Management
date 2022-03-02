@@ -13,10 +13,10 @@ export class CsvSlices{
     instance : CsvRow[] = []
 
     appendSlice(csvSlice: CsvSlices) {
-        this.patient.concat(csvSlice.patient)
-        this.study.concat(csvSlice.study)
-        this.series.concat(csvSlice.series)
-        this.instance.concat(csvSlice.instance)
+        this.patient=this.patient.concat(csvSlice.patient)
+        this.study=this.study.concat(csvSlice.study)
+        this.series=this.series.concat(csvSlice.series)
+        this.instance=this.instance.concat(csvSlice.instance)
     }
 }
 function divideCsvRowWithLevel(csvData : any,schema : Schema): CsvSlices{
@@ -37,33 +37,37 @@ function divideCsvRowWithLevel(csvData : any,schema : Schema): CsvSlices{
     Object.entries(schema).forEach(i=>{
         const [key,type] = i
         switch (type){
-            case DICOM_ID.PATIENT || LABEL.PATIENT:
+            case LABEL.PATIENT:
+            case DICOM_ID.PATIENT:
                 patientCsv[key]=csvData[key]
-                return
-            case DICOM_ID.STUDY || LABEL.STUDY:
-                return;
+                break
+            case LABEL.STUDY:
+            case DICOM_ID.STUDY:
                 studyCsv[key]=csvData[key]
-            case DICOM_ID.SERIES || LABEL.SERIES:
+                break
+            case LABEL.SERIES:
+            case DICOM_ID.SERIES:
                 seriesCsv[key]=csvData[key]
-                return;
-            case DICOM_ID.INSTANCE || LABEL.INSTANCE:
+                break
+            case LABEL.INSTANCE:
+            case DICOM_ID.INSTANCE:
                 instanceCsv[key]=csvData[key]
-                return;
+                break
             default:
                 throw TypeError(`스키마의 타입이 올바르지 않습니다. \ninput type : ${type}`)
         }
     })
-    csvSlices.patient=patientCsv
-    csvSlices.study=studyCsv
-    csvSlices.series=seriesCsv
-    csvSlices.instance=instanceCsv
+    csvSlices.patient=[patientCsv]
+    csvSlices.study=[studyCsv]
+    csvSlices.series=[seriesCsv]
+    csvSlices.instance=[instanceCsv]
     return csvSlices
 }
 export default function divideCsvWithLevel(csvData : CsvRow[],schema : Schema) : CsvSlices{
-    const csvSlices : CsvSlices=new CsvSlices()
+    const result : CsvSlices=new CsvSlices()
     csvData.forEach((csvRow: CsvRow)=>{
         const csvSlice=divideCsvRowWithLevel(csvRow,schema)
-        csvSlice.appendSlice(csvSlice)
+        result.appendSlice(csvSlice)
     })
-    return csvSlices
+    return result
 }
