@@ -1,4 +1,4 @@
-import { CsvFileHandler } from "./CsvFileHandler"
+import { CsvFileHandler } from "./CsvHandler/CsvFileHandler"
 import { DicomFileListHandler } from "./DicomFileListHandler"
 import getUuid from 'uuid-by-string';
 /**

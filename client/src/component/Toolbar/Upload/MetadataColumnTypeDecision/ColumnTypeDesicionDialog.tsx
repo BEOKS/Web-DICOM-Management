@@ -10,13 +10,13 @@ import {DialogAction} from './ColumnTypeDesicionDialogReducer'
 const TITLE="스키마 설정"
 const OK_BUTTON_STRING="확인"
 const CLOSE_BUTTON_STRING="취소"
-const DICOM_ID ={
+export const DICOM_ID ={
     PATIENT : 'anonymized_id',
     STUDY : 'StudyInstanceUID',
     SERIES : 'SeriesInstanceUID',
     INSTANCE : 'SOPInstanceUID'
 }
-const LABEL={
+export const LABEL={
     PATIENT : 'PATIENT LABEL',
     STUDY : 'STUDY LABEL',
     SERIES : 'SERIES LABEL',

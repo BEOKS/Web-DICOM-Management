@@ -1,3 +1,4 @@
+export type Schema=object
 const HEADER='ColumnTypeDesicionDialog'
 const TYPE={
     OPEN_DIALOG : `${HEADER}/OPEN_DIALOG` as const,
@@ -9,7 +10,7 @@ const DialogAction={
     openDialog : ()=>({type: TYPE.OPEN_DIALOG}),
     closeDialog : ()=>({type: TYPE.CLOSE_DIALOG}),
     setColumnList : (columnList : string[])=>({type : TYPE.SET_COLUMN_LIST, payload : columnList}),
-    setColumnSchema : (columnSchema : Object)=>({type : TYPE.SET_COLUMN_SCHEMA, payload:columnSchema })
+    setColumnSchema : (columnSchema : Schema)=>({type : TYPE.SET_COLUMN_SCHEMA, payload:columnSchema })
 }
 
 type CounterAction =
@@ -21,7 +22,7 @@ type CounterAction =
 type DialogState={
     columnTypeDecisionOpenStatus : boolean,
     columnList: string[],
-    columnSchema : Object
+    columnSchema : Schema
 }
 
 const INIT_DIALOG_STATE : DialogState={
