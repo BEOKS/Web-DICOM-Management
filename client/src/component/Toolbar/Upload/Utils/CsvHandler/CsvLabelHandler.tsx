@@ -21,10 +21,14 @@ export class CsvSlices{
 }
 function divideCsvRowWithLevel(csvData : any,schema : Schema): CsvSlices{
     const csvSlices : CsvSlices=new CsvSlices()
-    if(new Set(Object.keys(csvData))!==new Set(Object.keys(schema))){
+    const csvDataKeySet=new Set(Object.keys(csvData))
+    const schemaKeySet=new Set(Object.keys(schema))
+
+    let areSetsEqual = (a: Set<string>, b: Set<string>) => a.size === b.size && Array.from(a).every(value => b.has(value));
+    if(!areSetsEqual(csvDataKeySet,schemaKeySet)){
         throw new Error(`입력된 CSV의 키와 스키마의 키가 다릅니다.\n 
-            csvData : ${new Set(Object.keys(csvData))} \n
-            schema : ${new Set(Object.keys(schema))}`)
+            csvData : ${Array.from(csvDataKeySet).join('')} \n
+            schema : ${Array.from(schemaKeySet).join('')}`)
     }
     const patientCsv: any={}
     const studyCsv: any={}

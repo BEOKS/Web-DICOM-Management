@@ -49,6 +49,7 @@ export class CsvFileHandler {
             columns: true,
             skip_empty_lines: true
           });
+        console.log('csv2json',data)
         return {'data':data}
     }
     getPatientIDList(){
