@@ -49,9 +49,16 @@ export class CsvFileHandler {
             columns: true,
             skip_empty_lines: true
           });
+        console.log('csv2json',data)
         return {'data':data}
     }
     getPatientIDList(){
         return this.csvJson.data.map( json => json.anonymized_id)
+    }
+    getStudyUIDList(){
+        return this.csvJson.data.map(json=>json.StudyInstanceUID)
+    }
+    getColumnHeaders(){
+        return Object.keys(this.csvJson.data[0])
     }
 }

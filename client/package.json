@@ -24,9 +24,14 @@
     "json2csv": "^5.0.6",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-redux": "^7.2.6",
     "react-router": "^6.2.1",
     "react-router-dom": "^6.2.1",
     "react-scripts": "4.0.3",
+    "redux": "^4.1.2",
+    "redux-devtools-extension": "^2.13.9",
+    "ts-jest": "^24.3.0",
+    "typescript": "^4.6.2",
     "uuid-by-string": "^3.0.6",
     "web-vitals": "^1.0.1"
   },
@@ -35,7 +40,7 @@
     "start:local": "cross-env REACT_APP_SERVER_HOST=localhost react-scripts start --max_old_space_size=8192",
     "start:prod": "cross-env REACT_APP_SERVER_HOST=imdc.hopto.org react-scripts start --max_old_space_size=8192",
     "build": "react-scripts build --max_old_space_size=4096",
-    "test": "react-scripts test --max_old_space_size=4096",
+    "test": "jest",
     "eject": "react-scripts eject --max_old_space_size=4096"
   },
   "eslintConfig": {
