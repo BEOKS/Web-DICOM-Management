@@ -60,8 +60,10 @@ class FileHandler{
     }
     async anonymizeIDinDicomAndCSV(){
         const anonymizedIdList=this.anonymizePatientID(this.csvFileHandler.getPatientIDList());
+        console.log('this.csvFileHandler.getStudyUIDList()',this.csvFileHandler.getStudyUIDList())
+        const anonymizedStudyUIDList=this.csvFileHandler.getStudyUIDList().map(uid=>this.anonymizeUID(uid));
         this.csvFileHandler.csvJson.data=this.csvFileHandler.csvJson.data.map((json,index)=>{
-            return {...json , 'anonymized_id' : anonymizedIdList[index]};
+            return {...json , 'anonymized_id' : anonymizedIdList[index], 'StudyInstanceUID' : anonymizedStudyUIDList[index]};
         })
         await this.dicomFileListHandler.anonymizeIDs(this.anonymizePatientID,this.anonymizeUID)
 
