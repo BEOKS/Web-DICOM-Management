@@ -57,3 +57,59 @@ export const schemaExample = {
     'page number': LABEL.INSTANCE
 }
 export const csvSlicesExample = new CsvSlices()
+csvSlicesExample.instance=[
+    {
+        "instance_id" : "1",
+        "page number" : 1,
+    },
+    {
+        "instance_id" : "2",
+        "page number" : 2,
+    }
+]
+csvSlicesExample.patient=[
+    {
+        'ER': "1",
+        'HER2': "1",
+        'PR': "1",
+        'age': "53",
+        'anonymized_id': "00000003",
+        'class non-pCR: 0 pCR: 1': "0",
+        'compressionForce': "173.5019",
+        'left: 0 right: 1': "1",
+        'manufacturer': "HOLOGIC, Inc.",
+        'manufacturerModelName': "Lorad Selenia",
+        'non-IDC: 0 IDC: 1': "1",
+    },
+    {
+        'ER': "0",
+        'HER2': "0",
+        'PR': "0",
+        'age': "56",
+        'anonymized_id': "1106526",
+        'class non-pCR: 0 pCR: 1': "1",
+        'compressionForce': "115.6019",
+        'left: 0 right: 1': "0",
+        'manufacturer': "HOLOGIC, Inc.",
+        'manufacturerModelName': "Lorad Selenia",
+        'non-IDC: 0 IDC: 1': "1",
+    }
+]
+csvSlicesExample.series=[
+    {
+        "modality": "MG",
+        "series_id": "1",
+    },
+    {
+        "modality": "MG",
+        "series_id": "2",
+    }
+]
+csvSlicesExample.study=[
+    {
+        "StudyInstanceUID": "1.2.410.2000010.82.242.1018932208290001",
+    },
+    {
+        "StudyInstanceUID": "123",
+    }
+]
