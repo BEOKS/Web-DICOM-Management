@@ -104,6 +104,9 @@ public class MetaDataService {
     }
     @Transactional
     public Long deleteAllByProjectId(String projectId){
+
+        projectService.findById(projectId); // 존재하는 프로젝트 id인지 확인.
+
         return metaDataRepository.deleteAllByProjectId(projectId);
     }
 

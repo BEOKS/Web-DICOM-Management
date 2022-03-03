@@ -25,6 +25,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 public class MetaDataServiceTest {
@@ -193,7 +195,7 @@ public class MetaDataServiceTest {
 
         //then
         Assertions.assertEquals(mockedProjectResponseDto.getProjectId(),projectId);
-        Assertions.assertEquals(mockedMetaData.getMetadataId(),null);
+        Assertions.assertNull(mockedMetaData.getMetadataId());
         Assertions.assertEquals(mockedMetaData.getProjectId(),projectId);
 
     }
@@ -237,15 +239,15 @@ public class MetaDataServiceTest {
         // then
         Assertions.assertEquals(mockedMetaDataList.get(0).getProjectId(),projectId);
         Assertions.assertEquals(mockedMetaDataList.get(1).getProjectId(),projectId);
-        Assertions.assertEquals(mockedMetaDataList.get(0).getMetadataId(),null);
-        Assertions.assertEquals(mockedMetaDataList.get(1).getMetadataId(),null);
+        Assertions.assertNull(mockedMetaDataList.get(0).getMetadataId());
+        Assertions.assertNull(mockedMetaDataList.get(1).getMetadataId());
         Assertions.assertEquals(mockedMetaDataList.get(0).getPatientIdFromBody(),"1028011");
         Assertions.assertEquals(mockedMetaDataList.get(1).getPatientIdFromBody(),"1028012");
     }
 
     @Test
     @DisplayName("Update MetaData")
-    public void update(){
+    public void updateTest(){
 
         // given
         String metadataId = "12345";
@@ -278,8 +280,50 @@ public class MetaDataServiceTest {
         MetaData metaData = OptionalMetaData.get();
         metaData.update(metaDataUpdateRequestDto.getBody());
 
+        metaDataRepository.save(metaData);
+
         //then
         Assertions.assertEquals(metaData.getPatientIdFromBody(),"3389322");
+        verify(metaDataRepository,times(1)).save(metaData);
+    }
 
+    @Test
+    @DisplayName("Delete MetaData By Id")
+    public void deleteByIdTest(){
+        // given
+        String metadataId = "12345";
+        MetaData mockedMetaData = createMockMetaData();
+
+        // mocking
+        given(metaDataRepository.findById(metadataId))
+                .willReturn(Optional.ofNullable(mockedMetaData));
+
+        //when
+        Optional<MetaData> optionalMockedMetaData = metaDataRepository.findById(metadataId);
+        metaDataRepository.delete(optionalMockedMetaData.get());
+
+        //then
+        verify(metaDataRepository,times(1)).delete(optionalMockedMetaData.get());
+    }
+
+    @Test
+    @DisplayName("Delete All MetaData By ProjectId")
+    public void deleteAllByProjectIdTest(){
+        // given
+        String projectId = "54321";
+        ProjectResponseDto projectResponseDto = createMockProjectResponseDto();
+
+        // mocking
+        given(projectService.findById(projectId))
+                .willReturn(projectResponseDto);
+
+        //when
+        given(projectService.findById(projectId))
+                .willReturn(projectResponseDto);
+
+        metaDataRepository.deleteAllByProjectId(projectId);
+
+        //then
+        verify(metaDataRepository,times(1)).deleteAllByProjectId(projectId);
     }
 }
