@@ -1,5 +1,6 @@
-import { CsvFileHandler } from "./CsvFileHandler"
+import { CsvFileHandler } from "./CsvHandler/CsvFileHandler"
 import { DicomFileListHandler } from "./DicomFileListHandler"
+import getUuid from 'uuid-by-string';
 /**
  * FileHandler는 Dicom과 메타데이터를 다루기 위한 싱글톤 클래스입니다.
  */
@@ -48,13 +49,48 @@ class FileHandler{
         const errorDicomPathList=dicomFilePatientIdsList.map(id => 
             csvFilePatientIdsList.includes(id))
         const state= errorDicomPathList.includes(false)? 'error':'success';
-        console.log('checkUpdatePossibility',{'state': state, 'errorDicomPathList':errorDicomPathList})
         return {'state': state, 'errorDicomPathList':errorDicomPathList};
     }
     async uploadFiles(onloadEachFileCallBack){
+        await this.anonymizeIDinDicomAndCSV();
+        console.log('anonymizeUID',this.anonymizeUID('1.3.12.2.1107.5.1.4.54191.30000008101905312148400002618'))
         await this.csvFileHandler.uploadToServer(onloadEachFileCallBack);
         this.dicomFileListHandler.uploadToServer(onloadEachFileCallBack);
         //this.dicomFileListHandler.uploadToServer(onloadEachFileCallBack)
+    }
+    async anonymizeIDinDicomAndCSV(){
+        const anonymizedIdList=this.anonymizePatientID(this.csvFileHandler.getPatientIDList());
+        console.log('this.csvFileHandler.getStudyUIDList()',this.csvFileHandler.getStudyUIDList())
+        const anonymizedStudyUIDList=this.csvFileHandler.getStudyUIDList().map(uid=>this.anonymizeUID(uid));
+        this.csvFileHandler.csvJson.data=this.csvFileHandler.csvJson.data.map((json,index)=>{
+            return {...json , 'anonymized_id' : anonymizedIdList[index], 'StudyInstanceUID' : anonymizedStudyUIDList[index]};
+        })
+        await this.dicomFileListHandler.anonymizeIDs(this.anonymizePatientID,this.anonymizeUID)
+
+    }
+    anonymizePatientID(patientIdList){
+        return patientIdList.map(id => {
+            const APP_UUID=process.env.REACT_APP_APP_UUID;
+            return getUuid(id+APP_UUID)
+        });
+    }
+    anonymizeUID(uid){
+        /**
+         * UID는 IOS식별자.ANSI식별자.국가코드.OID코드.제품분류코드.시리얼번호.검사ID.시리즈번호.인스턴스번호.획득시간 (10개)
+         * 형식으로 정해져있다. (ex.1.2.410.xxxxx.3.152.235.2.12.187636473)
+         * ex. STUDY : 1.2.410.2000010.82.242.1018932208290001
+         *  series : 1.3.12.2.1107.5.1.4.54191.30000008101905312148400002618
+         *  instance : 1.3.12.2.1107.5.1.4.54191.30000008101905312148400002628
+         *
+         *  여기서는 익명화를 위해서 REACT_APP_ENCODE_DIGIT을 기준으로 암호화를 진행한다.
+         */
+        const ENCODE_DIGIT=135612217;
+        const uidSlice=uid.split('.')
+        const uidSliceLength=uidSlice.length;
+        return uidSlice.map((digit,index) =>{
+            return index < 2 || index===uidSliceLength-1? digit: ((parseInt(digit)*ENCODE_DIGIT)%(Math.pow(10,digit.length-1)))
+                .toLocaleString('fullwide', { useGrouping: false })
+        }).join('.')
     }
     
 }

@@ -3,6 +3,7 @@ import { Button, Snackbar,CircularProgress,IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import UploadDialog from './UploadDialog/UploadDialog';
 import CircularProgressWithLabel from './UploadDialog/CircularProgressWithLabel';
+import ColumnTypeDecisionDialog from "./MetadataColumnTypeDecision/ColumnTypeDesicionDialog";
 
 let fileHandler;
 export default function  UploadButton({projects,getMetaData,metaData}){
@@ -57,6 +58,7 @@ export default function  UploadButton({projects,getMetaData,metaData}){
                 anchorOrigin={{ 'vertical':'bottom', 'horizontal':'right' }}
                 action={action}
             />
+            <ColumnTypeDecisionDialog/>
         </div>
     )
 }

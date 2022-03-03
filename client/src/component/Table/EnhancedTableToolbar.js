@@ -15,7 +15,7 @@ import { useState } from "react";
 import { Fragment } from "react";
 import { Stack } from "@mui/material";
 import exportCSVFile from "./Utils/exportCSVFile";
-
+import axios from 'axios'
 const hostLocation = process.env.SERVER_HOST ? process.env.SERVER_HOST : 'localhost'
 
 export default function EnhancedTableToolbar(props) {
@@ -24,12 +24,24 @@ export default function EnhancedTableToolbar(props) {
 
     const handleDicomDownloadButtonClick = () => {
         //download files
-        selectedStudyUIDList.forEach(studyUID => {
-            window.location.href = `http://${hostLocation}:8080/api/study/${studyUID}/dicom`;
+        const selectedMetadataList=metadata.filter(it => selected.includes(it.metadataId)).map(it=>it.body)
+        selectedMetadataList.forEach(selectedMetadataList => {
+            const studyUID=selectedMetadataList.StudyInstanceUID
+            axios.get(`http://${hostLocation}:8080/api/study/${studyUID}/dicom`,{responseType : 'blob'})
+                .then((response) => {
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', `${studyUID}.zip`); //or any other extension
+                    document.body.appendChild(link);
+                    link.click();
+                });
+
         });
     };
     const handleCSVDownloadButtonClick=()=>{
         const selectedMetadataList=metadata.filter(it => selected.includes(it.metadataId)).map(it=>it.body)
+        console.log('handleCSVDownloadButtonClick',metadata,selectedMetadataList)
         exportCSVFile(selectedMetadataList,projectName+'.csv');
     };
 

@@ -13,6 +13,8 @@ axios.defaults.maxRedirects=0;
 export default function Page() {
     const [open, setOpen] = React.useState(false);
     const [projects, setProjects] = React.useState([]);
+    const [invitedProjects, setInvitedProjects] = React.useState([]);
+    const [isInvitedProject, setIsInvitedProject] = React.useState(false);
     const [presentProject, setPresentProject] = React.useState({ projectName: '현재 선택된 프로젝트가 없습니다.' });
     const [metaData, setMetaData] = React.useState([]);
     const [metaDataUpdated, setMetaDataUpdated] = React.useState(false);
@@ -22,17 +24,40 @@ export default function Page() {
     const getProjects = () => {
         axios.get('api/Project',{maxRedirects:0})
             .then(response => {
-                if (response.data.length !== 0) {
-                    setProjects(response.data);
+                if (response.data.body.length !== 0) {
+                    setProjects(response.data.body);
                     if (checkFirst) {
-                        setPresentProject(response.data[0]);
+                        setPresentProject(response.data.body[0]);
                         setCheckFirst(false);
                     }
                 }
                 setLoading(false)
             }).catch(error => {
-                alert('서버가 응답하지 않습니다.')
-                console.log(error);
+                if (error.response) {
+                    alert(error.response.data.message);
+                    console.log(error.response.data);
+                } else {
+                    alert('서버가 응답하지 않습니다.');
+                    console.log(error);
+                }
+            });
+    };
+
+    const getInvitedProjects = () => {
+        axios.get('api/Project/invited',{maxRedirects:0})
+            .then(response => {
+                if (response.data.body.length !== 0) {
+                    setInvitedProjects(response.data.body);
+                }
+                setLoading(false)
+            }).catch(error => {
+                if (error.response) {
+                    alert(error.response.data.message);
+                    console.log(error.response.data);
+                } else {
+                    alert('서버가 응답하지 않습니다.');
+                    console.log(error);
+                }
             });
     };
 
@@ -41,9 +66,15 @@ export default function Page() {
         setMetaData('loading')
         axios.get(url)
             .then(response => {
-                setMetaData(response.data);
+                setMetaData(response.data.body);
             }).catch(error => {
-                console.log(error);
+                if (error.response) {
+                    alert(error.response.data.message);
+                    console.log(error.response.data);
+                } else {
+                    alert(error.message);
+                    console.log(error);
+                }
             });
     };
 
@@ -59,6 +90,7 @@ export default function Page() {
 
     React.useEffect(() => {
         getProjects();
+        getInvitedProjects();
     }, [open]);
     
     React.useEffect(() => {
@@ -86,6 +118,8 @@ export default function Page() {
                 open={open}
                 setOpen={setOpen}
                 projects={projects}
+                invitedProjects={invitedProjects}
+                setIsInvitedProject={setIsInvitedProject}
                 others={['Non-Reference Dicom']}
                 presentProject={presentProject}
                 setPresentProject={setPresentProject}
@@ -103,7 +137,7 @@ export default function Page() {
                 {
                     presentProject.projectId ?
                     <div>
-                        <UpDownloadToolbar projects={presentProject} getMetaData={getMetaData} metaData={metaData} />
+                        <UpDownloadToolbar projects={presentProject} getMetaData={getMetaData} metaData={metaData} isInvitedProject={isInvitedProject}/>
                         {
                             metaData==='loading'?
                             <Stack alignItems="center" marginTop={2}>

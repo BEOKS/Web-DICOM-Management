@@ -1,0 +1,9 @@
+.divider {
+    border-left: 3px solid #014361;
+    margin-right: 8px;
+}
+
+.invitedEmailList {
+    background-color: #eceff1;
+    border-radius: 4px;
+}
