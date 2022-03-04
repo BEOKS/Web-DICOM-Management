@@ -121,9 +121,9 @@ public class MetaDataServiceTest {
 
     public User createMockUser(){
         return User.builder()
-                .name("testName")
-                .email("test@test.com")
-                .picture("testImg")
+                .name("mockUser")
+                .email("mockUser@mockUser.com")
+                .picture("mockUserImg")
                 .build();
     }
 
@@ -141,7 +141,7 @@ public class MetaDataServiceTest {
     }
 
     @Test
-    @DisplayName("Find by ProjectId")
+    @DisplayName("Find by ProjectId - Success")
     public void findByProjectIdTest() {
 
         // given
@@ -167,7 +167,7 @@ public class MetaDataServiceTest {
     }
 
     @Test
-    @DisplayName("Insert MetaData")
+    @DisplayName("Insert MetaData - Success")
     public void insertTest(){
 
         // given
@@ -201,7 +201,7 @@ public class MetaDataServiceTest {
     }
 
     @Test
-    @DisplayName("Insert All MetaData")
+    @DisplayName("Insert All MetaData - Success")
     void insertAllTest() throws Exception{
 
         // given
@@ -246,7 +246,7 @@ public class MetaDataServiceTest {
     }
 
     @Test
-    @DisplayName("Update MetaData")
+    @DisplayName("Update MetaData - Success")
     public void updateTest(){
 
         // given
@@ -288,7 +288,7 @@ public class MetaDataServiceTest {
     }
 
     @Test
-    @DisplayName("Delete MetaData By Id")
+    @DisplayName("Delete MetaData By Id - Success")
     public void deleteByIdTest(){
         // given
         String metadataId = "12345";
@@ -307,7 +307,7 @@ public class MetaDataServiceTest {
     }
 
     @Test
-    @DisplayName("Delete All MetaData By ProjectId")
+    @DisplayName("Delete All MetaData By ProjectId - Success")
     public void deleteAllByProjectIdTest(){
         // given
         String projectId = "54321";

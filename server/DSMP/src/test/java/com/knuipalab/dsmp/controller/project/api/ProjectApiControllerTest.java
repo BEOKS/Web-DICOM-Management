@@ -59,9 +59,9 @@ public class ProjectApiControllerTest {
 
     public User createMockUser(){
         return User.builder()
-                .name("testName")
-                .email("test@test.com")
-                .picture("testImg")
+                .name("mockUser")
+                .email("mockUser@mockUser.com")
+                .picture("mockUserImg")
                 .build();
     }
 
@@ -81,7 +81,7 @@ public class ProjectApiControllerTest {
     }
 
     @WithMockUser
-    @DisplayName("Find by Creator")
+    @DisplayName("Find by Creator - Success")
     @Test
     void findByCreatorTest() throws Exception{
 
@@ -94,14 +94,14 @@ public class ProjectApiControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.body.[0].projectId", is("54321")))
                 .andExpect(jsonPath("$.body.[0].projectName", is("US")))
-                .andExpect(jsonPath("$.body.[0].creator.name",is("testName")))
-                .andExpect(jsonPath("$.body.[0].creator.email",is("test@test.com")))
+                .andExpect(jsonPath("$.body.[0].creator.name",is("mockUser")))
+                .andExpect(jsonPath("$.body.[0].creator.email",is("mockUser@mockUser.com")))
                 .andDo(print())
                 ;
     }
 
     @WithMockUser
-    @DisplayName("Find Invisited Project")
+    @DisplayName("Find Invisited Project - Success")
     @Test
     void findInvisitedProject() throws Exception{
 
@@ -115,8 +115,8 @@ public class ProjectApiControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.body.[0].projectId", is("54321")))
                 .andExpect(jsonPath("$.body.[0].projectName", is("US")))
-                .andExpect(jsonPath("$.body.[0].creator.name",is("testName")))
-                .andExpect(jsonPath("$.body.[0].creator.email",is("test@test.com")))
+                .andExpect(jsonPath("$.body.[0].creator.name",is("mockUser")))
+                .andExpect(jsonPath("$.body.[0].creator.email",is("mockUser@mockUser.com")))
                 .andDo(print())
         ;
 
@@ -125,7 +125,7 @@ public class ProjectApiControllerTest {
 
 
     @WithMockUser
-    @DisplayName("Insert Project")
+    @DisplayName("Insert Project - Success")
     @Test
     void insertTest() throws Exception{
         //given
@@ -144,7 +144,7 @@ public class ProjectApiControllerTest {
     }
 
     @WithMockUser
-    @DisplayName("Update by ProjectId")
+    @DisplayName("Update by ProjectId - Success")
     @Test
     void updateTest() throws Exception{
 
@@ -164,7 +164,7 @@ public class ProjectApiControllerTest {
     }
 
     @WithMockUser
-    @DisplayName("Delete by ProjectId")
+    @DisplayName("Delete by ProjectId - Success")
     @Test
     void deleteTest() throws Exception{
         mockMvc.perform(delete("/api/Project/54321"))
@@ -175,7 +175,7 @@ public class ProjectApiControllerTest {
     }
 
     @WithMockUser
-    @DisplayName("Invite Project by emailList")
+    @DisplayName("Invite Project by emailList - Success")
     @Test
     void inviteTest() throws Exception{
         //given
@@ -194,7 +194,7 @@ public class ProjectApiControllerTest {
     }
 
     @WithMockUser
-    @DisplayName("Oust Project")
+    @DisplayName("Oust Project - Success")
     @Test
     void oustTest() throws Exception{
         mockMvc.perform(put("/api/Project/54321/oust"))
@@ -205,7 +205,7 @@ public class ProjectApiControllerTest {
     }
 
     @WithMockUser
-    @DisplayName("Oust Project by emailList")
+    @DisplayName("Oust Project by emailList - Success")
     @Test
     void oustListTest() throws Exception{
 
