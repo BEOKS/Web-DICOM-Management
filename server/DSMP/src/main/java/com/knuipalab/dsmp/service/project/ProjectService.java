@@ -113,6 +113,14 @@ public class ProjectService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(()->new ProjectNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
 
+        SessionUser sessionUser = (SessionUser)httpSession.getAttribute("user");
+
+        String userId = sessionUser.getUserId();
+
+        if(!project.getCreator().getUserId().equals(userId)){
+            throw new UnAuthorizedAccessException(ErrorCode.UNAUTHORIZED_ACCESS);
+        }
+
         metaDataService.deleteAllByProjectId(projectId);
 
         projectRepository.delete(project);
