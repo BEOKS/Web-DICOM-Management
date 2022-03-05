@@ -1,11 +1,13 @@
+# 기본 환경은 Intellij에서 실행되었을 때의 환경을 의미한다.
+# 정상적인 실행을 위해서는 orthanc, mongodb 컨테이너가 local 버전으로 실행되어야 한다.
+# 만약 mongodb 접속 에러가 발생한다면, mongodb 컨테이너가 local로 실행되어 있는지, 로컬에 다른 mongodb서버를 실행중인지 확인해야 한다.
 spring:
   profiles:
-    default: local # 기본 환경을 local
+    default: local
     include: oauth
-
   data:
     mongodb:
-      host: mongodb #mongodb
+      host: localhost
       port: 27017
       database: DSMP
       authentication-database: admin
@@ -22,28 +24,26 @@ spring:
       location:  #임시 저장 경로
       max-file-size: #파일 최대 크기
       max-request-size: #요청 당 최대 파일 크기
+hostLocation : imdc.hopto.org
 ---
+# prod 버전에서는 mongodb에 도커 네트워크를 통해서만 접근가능하므로 mongodb로 호스트를 설정한다.
 spring:
   config:
     activate:
-      on-profile: prod
+      on-profile: prod # 실제 사용자들을 위해서 배포할 환경이다.
   data:
     mongodb:
       host: mongodb
 hostLocation : imdc.hopto.org
 ---
-spring:
-  config:
-    activate:
-      on-profile: local
-hostLocation : localhost
----
+#  dev는 전체 컨테이너를 통합 테스트하기 위해서 사용한다.
+#  이 때는 Intellij에서 스프링을 실행하는 것이 아니라 도커에서 실행해야 하기 때문에 mongodb로 호스트를 설정한다.
 spring:
   config:
     activate:
       on-profile: dev
   data:
     mongodb:
-      host: localhost
+      host: mongodb
 hostLocation : localhost
 
