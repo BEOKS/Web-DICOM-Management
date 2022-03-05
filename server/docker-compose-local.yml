@@ -18,7 +18,7 @@ services:
     build:
       context: ./DSMP/
       args:
-        - PROFILE=local
+        - PROFILE=dev
       dockerfile: ./Dockerfile
     ports:
       - 8080:8080
