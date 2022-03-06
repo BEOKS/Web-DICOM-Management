@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    default: QA
   main:
     allow-bean-definition-overriding: true
   session:
@@ -23,4 +25,20 @@ spring:
   config:
     activate:
       on-profile: local
+hostLocation : localhost
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: QA
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: DSMP
+      authentication-database: admin
+      username: knuipalab
+      password: knuipalab418
 hostLocation : localhost

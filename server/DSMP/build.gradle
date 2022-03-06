@@ -55,7 +55,11 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' // oauth2
     testImplementation 'org.springframework.security:spring-security-test' //oauth2 test
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version" 
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    implementation 'com.github.javafaker:javafaker:1.0.2'//java-faker
+
+    implementation 'org.springframework.boot:spring-boot-starter-aop'// aop
 
 }
 
