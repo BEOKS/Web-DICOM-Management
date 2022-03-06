@@ -105,12 +105,10 @@ public class MetaDataQA {
             MetaData metaData = new MetaData().builder()
                     .projectId(projectId)
                     .body(body).build();
-            metaDataRepository.save(metaData);
             metaDataList.add(metaData);
         }
 
-
-//        metaDataRepository.insert(metaDataList);
+        metaDataRepository.insert(metaDataList);
 
         long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
         long secDiffTime = (afterTime - beforeTime)/1000; //두 시간에 차 계산
