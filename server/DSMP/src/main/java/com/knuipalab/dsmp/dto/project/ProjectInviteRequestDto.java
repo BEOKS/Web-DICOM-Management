@@ -10,10 +10,12 @@ import java.util.List;
 @NoArgsConstructor
 public class ProjectInviteRequestDto {
 
+    private String projectId;
     private List<String> emailList ;
 
     @Builder
-    public ProjectInviteRequestDto(List<String> emailList) {
+    public ProjectInviteRequestDto(String projectId,List<String> emailList) {
+        this.projectId = projectId;
         this.emailList = emailList;
     }
 }

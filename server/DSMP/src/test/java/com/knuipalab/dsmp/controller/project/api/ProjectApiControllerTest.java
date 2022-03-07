@@ -179,14 +179,15 @@ public class ProjectApiControllerTest {
     @Test
     void inviteTest() throws Exception{
         //given
-        String content = "{ \"emailList\" : [\"a@a.com\",\"b@b.com\"] }";
+        List<String> emailList = Arrays.asList("a@a.com","b@b.com");
+        String emailListStr = "[\"a@a.com\",\"b@b.com\"]";
 
         //Dto
-        ProjectInviteRequestDto projectInviteRequestDto = new ObjectMapper().readValue(content,ProjectInviteRequestDto.class);
+        ProjectInviteRequestDto projectInviteRequestDto = new ProjectInviteRequestDto("54321",emailList);
 
-        mockMvc.perform(put("/api/Project/54321/invite")
+        mockMvc.perform(put("/api/Project/invite/54321")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(projectInviteRequestDto)))
+                        .content(emailListStr))
                 .andExpect(jsonPath("$.status",is(200)))
                 .andExpect(status().isOk())
                 .andDo(print())
@@ -197,7 +198,7 @@ public class ProjectApiControllerTest {
     @DisplayName("Oust Project - Success")
     @Test
     void oustTest() throws Exception{
-        mockMvc.perform(put("/api/Project/54321/oust"))
+        mockMvc.perform(put("/api/Project/oust/54321"))
                 .andExpect(jsonPath("$.status",is(200)))
                 .andExpect(status().isOk())
                 .andDo(print())
@@ -210,14 +211,14 @@ public class ProjectApiControllerTest {
     void oustListTest() throws Exception{
 
         //given
-        String content = "{ \"emailList\" : [\"a@a.com\",\"b@b.com\"] }";
-
+        List<String> emailList = Arrays.asList("a@a.com","b@b.com");
+        String emailListStr = "[\"a@a.com\",\"b@b.com\"]";
         //Dto
-        ProjectOustRequestDto projectOustRequestDto = new ObjectMapper().readValue(content,ProjectOustRequestDto.class);
+        ProjectOustRequestDto projectOustRequestDto = new ProjectOustRequestDto("54321",emailList);
 
-        mockMvc.perform(put("/api/Project/54321/oust/list")
+        mockMvc.perform(put("/api/Project/oust/list/54321")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(projectOustRequestDto)))
+                        .content(emailListStr))
                 .andExpect(jsonPath("$.status",is(200)))
                 .andExpect(status().isOk())
                 .andDo(print())
