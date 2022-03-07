@@ -52,21 +52,23 @@ public class ProjectApiController {
     }
 
     //poject 초대
-    @PutMapping("api/Project/{projectId}/invite")
-    public ResponseEntity<? extends  BasicResponse> invite(@PathVariable String projectId ,@RequestBody ProjectInviteRequestDto projectInviteRequestDto){
-        projectService.invite(projectId,projectInviteRequestDto);
+    @PutMapping("api/Project/invite/{projectId}")
+    public ResponseEntity<? extends  BasicResponse> invite(@PathVariable String projectId ,@RequestBody List<String> emailList){
+        ProjectInviteRequestDto projectInviteRequestDto = new ProjectInviteRequestDto(projectId,emailList);
+        projectService.invite(projectInviteRequestDto);
         return ResponseEntity.ok().body(new SuccessResponse());
     }
 
     //poject 방문자 삭제 리스트
-    @PutMapping ("api/Project/{projectId}/oust/list")
-    public ResponseEntity<? extends  BasicResponse> oust(@PathVariable String projectId ,@RequestBody ProjectOustRequestDto projectOustRequestDto){
-        projectService.oustByEmailList(projectId,projectOustRequestDto);
+    @PutMapping ("api/Project/oust/list/{projectId}")
+    public ResponseEntity<? extends  BasicResponse> oust(@PathVariable String projectId ,@RequestBody List<String> emailList){
+        ProjectOustRequestDto projectOustRequestDto = new ProjectOustRequestDto(projectId,emailList);
+        projectService.oustByEmailList(projectOustRequestDto);
         return ResponseEntity.ok().body(new SuccessResponse());
     }
 
     //poject 방문자에서 본인 삭제
-    @PutMapping ("api/Project/{projectId}/oust")
+    @PutMapping ("api/Project/oust/{projectId}")
     public ResponseEntity<? extends BasicResponse> oust(@PathVariable String projectId){
         projectService.oust(projectId);
         return ResponseEntity.ok().body(new SuccessResponse());

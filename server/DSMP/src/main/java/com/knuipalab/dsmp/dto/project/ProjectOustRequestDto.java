@@ -9,10 +9,12 @@ import java.util.List;
 @NoArgsConstructor
 public class ProjectOustRequestDto {
 
+    private String projectId;
     private List<String> emailList ;
 
     @Builder
-    public ProjectOustRequestDto(List<String> emailList) {
+    public ProjectOustRequestDto(String projectId,List<String> emailList) {
+        this.projectId = projectId;
         this.emailList = emailList;
     }
 }

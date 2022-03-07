@@ -280,11 +280,12 @@ public class ProjectServiceTest {
         User visitedUser4 = createMockVisitedUser(4);
 
         ProjectInviteRequestDto projectInviteRequestDto = ProjectInviteRequestDto.builder()
+                .projectId(projectId1)
                 .emailList(Arrays.asList("visit3@visit3.com","visit4@visit4.com")).build();
 
 
         // mocking
-        given(projectRepository.findById(projectId1))
+        given(projectRepository.findById(projectInviteRequestDto.getProjectId()))
                 .willReturn(Optional.ofNullable(mockedProject));
 
         given(userService.findUserByEmail("visit3@visit3.com"))
@@ -294,7 +295,7 @@ public class ProjectServiceTest {
                 .willReturn(Optional.ofNullable(visitedUser4));
 
         //when
-        Optional<Project> optionalMockedProject = projectRepository.findById(projectId1);
+        Optional<Project> optionalMockedProject = projectRepository.findById(projectInviteRequestDto.getProjectId());
         Project project = optionalMockedProject.get();
 
         if( project.getCreator().getUserId() != userId){ // null 이여야함
@@ -343,11 +344,12 @@ public class ProjectServiceTest {
         User visitedUser2 = createMockVisitedUser(2);
 
         ProjectOustRequestDto projectOustRequestDto = ProjectOustRequestDto.builder()
+                .projectId(projectId1)
                 .emailList(Arrays.asList("visit1@visit1.com","visit2@visit2.com")).build();
 
 
         // mocking
-        given(projectRepository.findById(projectId1))
+        given(projectRepository.findById(projectOustRequestDto.getProjectId()))
                 .willReturn(Optional.ofNullable(mockedProject));
 
         given(userService.findUserByEmail("visit1@visit1.com"))
@@ -357,7 +359,7 @@ public class ProjectServiceTest {
                 .willReturn(Optional.ofNullable(visitedUser2));
 
         //when
-        Optional<Project> optionalMockedProject = projectRepository.findById(projectId1);
+        Optional<Project> optionalMockedProject = projectRepository.findById(projectOustRequestDto.getProjectId());
         Project project = optionalMockedProject.get();
 
 

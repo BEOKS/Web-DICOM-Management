@@ -127,11 +127,11 @@ public class ProjectService {
     }
 
     @Transactional
-    public void invite(String projectId, ProjectInviteRequestDto projectInviteRequestDto) {
+    public void invite(ProjectInviteRequestDto projectInviteRequestDto) {
 
         SessionUser sessionUser = (SessionUser)httpSession.getAttribute("user");
 
-        Project project = projectRepository.findById(projectId)
+        Project project = projectRepository.findById(projectInviteRequestDto.getProjectId())
                 .orElseThrow(()->new ProjectNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
 
         if(!sessionUser.getUserId().equals(project.getCreator().getUserId())){
@@ -165,9 +165,9 @@ public class ProjectService {
     }
 
     @Transactional
-    public void oustByEmailList(String projectId, ProjectOustRequestDto projectOustRequestDto) {
+    public void oustByEmailList(ProjectOustRequestDto projectOustRequestDto) {
 
-        Project project = projectRepository.findById(projectId)
+        Project project = projectRepository.findById(projectOustRequestDto.getProjectId())
                 .orElseThrow(()->new ProjectNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
 
         List<User> userList = new ArrayList<>();

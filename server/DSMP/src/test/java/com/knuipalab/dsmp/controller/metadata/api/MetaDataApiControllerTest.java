@@ -1,11 +1,11 @@
 package com.knuipalab.dsmp.controller.metadata.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.knuipalab.dsmp.configuration.auth.CustomOAuth2UserService;
 import com.knuipalab.dsmp.domain.metadata.MetaData;
-import com.knuipalab.dsmp.dto.metadata.MetaDataCreateAllRequestDto;
-import com.knuipalab.dsmp.dto.metadata.MetaDataCreateRequestDto;
-import com.knuipalab.dsmp.dto.metadata.MetaDataResponseDto;
-import com.knuipalab.dsmp.dto.metadata.MetaDataUpdateRequestDto;
+import com.knuipalab.dsmp.dto.metadata.*;
 import com.knuipalab.dsmp.service.metadata.MetaDataService;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -105,12 +105,23 @@ class MetaDataApiControllerTest {
             "    \"compressionForce\": 173.5019\n" +
             "  }]";
 
+    public List<Document> convertToDocument(String strBodyList) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<Document> bsonList = null;
+        try {
+            bsonList = mapper.readValue(strBodyList, new TypeReference<List<Document>>(){});
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return bsonList;
+    }
     public List<MetaData> createMockMetaDataList(){
         List<MetaData> metaDataList = new ArrayList<>();
         String metadataId = "12345";
         String projectId = "54321";
 
-        MetaDataCreateAllRequestDto metaDataCreateAllRequestDto = new MetaDataCreateAllRequestDto(projectId,strBodyList);
+        MetaDataCreateAllRequestDto metaDataCreateAllRequestDto = new MetaDataCreateAllRequestDto(projectId,convertToDocument(strBodyList));
         List<Document>bodyList = metaDataCreateAllRequestDto.getBodyList();
 
         for(Document body : bodyList) {
@@ -164,7 +175,7 @@ class MetaDataApiControllerTest {
         String projectId = "54321";
 
         //Dto
-        MetaDataCreateRequestDto metaDataCreateRequestDto = new MetaDataCreateRequestDto(projectId,strBody);
+        MetaDataCreateRequestDto metaDataCreateRequestDto = new MetaDataCreateRequestDto(projectId,Document.parse(strBody));
 
         mvc.perform(post("/api/MetaData/54321")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -176,16 +187,17 @@ class MetaDataApiControllerTest {
     }
 
     @WithMockUser
-    @DisplayName("Insert all by ProjectID - Success")
+    @DisplayName("Insert all by MetaData List - Success")
     @Test
-    void insertAllTest() throws Exception {
+    void insertAllByMetaDataListTest() throws Exception {
 
         String projectId = "54321";
 
         //Dto
-        MetaDataCreateAllRequestDto metaDataCreateAllRequestDto = new MetaDataCreateAllRequestDto(projectId,strBodyList);
+        List<Document> documentList = convertToDocument(strBodyList);
+        MetaDataCreateAllRequestDto metaDataCreateAllRequestDto = new MetaDataCreateAllRequestDto(projectId,convertToDocument(strBodyList));
 
-        mvc.perform(post("/api/MetaDataList/54321")
+        mvc.perform(post("/api/MetaDataList/insert/54321")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(strBodyList))
                 .andExpect(status().isOk())
@@ -195,10 +207,33 @@ class MetaDataApiControllerTest {
     }
 
     @WithMockUser
+    @DisplayName("Delete All By MetaData Id List - Success")
+    @Test
+    void deleteAllByMetaDataIdListTest() throws Exception {
+
+        String projectId = "54321";
+
+        List<String> metadataIdList = List.of("12345","23456");
+
+        //Dto
+        MetaDataDeleteAllRequestDto metaDataDeleteAllRequestDto = new MetaDataDeleteAllRequestDto(projectId,metadataIdList);
+
+        mvc.perform(post("/api/MetaDataList/delete/54321")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("[\"12345\",\"12346\"]"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status",is(200)))
+                .andDo(print())
+        ;
+    }
+
+
+    @WithMockUser
     @DisplayName("Update By MetadataId - Success")
     @Test
     void updateTest() throws Exception{
 
+        String metadataId = "12345";
         String updatedStrBody = "{\n" +
                 "   \"stored_dicom_id\": 283918,\n" +
                 "    \"anonymized_id\": 3389322,\n" +
@@ -216,13 +251,14 @@ class MetaDataApiControllerTest {
                 "  }";
 
         //Dto
-        MetaDataUpdateRequestDto metaDataUpdateRequestDto = new MetaDataUpdateRequestDto(updatedStrBody);
+        MetaDataUpdateRequestDto metaDataUpdateRequestDto = new MetaDataUpdateRequestDto(metadataId,Document.parse(updatedStrBody));
 
         mvc.perform(put("/api/MetaData/12345")
-                .content(updatedStrBody))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status",is(200)))
-                .andDo(print())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updatedStrBody))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.status",is(200)))
+                        .andDo(print())
                 ;
     }
 
