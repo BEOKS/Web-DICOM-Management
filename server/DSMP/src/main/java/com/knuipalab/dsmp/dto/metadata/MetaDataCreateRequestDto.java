@@ -14,9 +14,8 @@ public class MetaDataCreateRequestDto {
 
     private Document body;
 
-    public MetaDataCreateRequestDto(String projectId, String strBody){
+    public MetaDataCreateRequestDto(String projectId, Document body){
         this.projectId = projectId;
-        Document body = Document.parse(strBody);
         this.body = body;
     }
 }

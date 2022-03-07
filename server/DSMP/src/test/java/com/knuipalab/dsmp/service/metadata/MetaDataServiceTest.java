@@ -1,14 +1,16 @@
 package com.knuipalab.dsmp.service.metadata;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.knuipalab.dsmp.domain.metadata.MetaData;
 import com.knuipalab.dsmp.domain.metadata.MetaDataRepository;
 import com.knuipalab.dsmp.domain.project.Project;
 import com.knuipalab.dsmp.domain.user.User;
-import com.knuipalab.dsmp.dto.metadata.MetaDataCreateAllRequestDto;
-import com.knuipalab.dsmp.dto.metadata.MetaDataCreateRequestDto;
-import com.knuipalab.dsmp.dto.metadata.MetaDataResponseDto;
-import com.knuipalab.dsmp.dto.metadata.MetaDataUpdateRequestDto;
+import com.knuipalab.dsmp.dto.metadata.*;
 import com.knuipalab.dsmp.dto.project.ProjectResponseDto;
+import com.knuipalab.dsmp.httpResponse.error.ErrorCode;
+import com.knuipalab.dsmp.httpResponse.error.handler.exception.MetaDataNotFoundException;
 import com.knuipalab.dsmp.service.project.ProjectService;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -97,13 +99,25 @@ public class MetaDataServiceTest {
 
         return metaData;
     }
+
+    public List<Document> convertToDocument(String strBodyList) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<Document> bsonList = null;
+        try {
+            bsonList = mapper.readValue(strBodyList, new TypeReference<List<Document>>(){});
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return bsonList;
+    }
     
     public List<MetaData> createMockMetaDataList(){
         List<MetaData> metaDataList = new ArrayList<>();
         String metaId = "12345";
         String proId = "54321";
 
-        MetaDataCreateAllRequestDto metaDataCreateAllRequestDto = new MetaDataCreateAllRequestDto(proId,strBodyList);
+        MetaDataCreateAllRequestDto metaDataCreateAllRequestDto = new MetaDataCreateAllRequestDto(proId,convertToDocument(strBodyList));
         List<Document>bodyList = metaDataCreateAllRequestDto.getBodyList();
         String projectId = metaDataCreateAllRequestDto.getProjectId();
 
@@ -175,7 +189,7 @@ public class MetaDataServiceTest {
 
         ProjectResponseDto projectResponseDto = createMockProjectResponseDto();
 
-        MetaDataCreateRequestDto metaDataCreateRequestDto = new MetaDataCreateRequestDto(projectId,strBody);
+        MetaDataCreateRequestDto metaDataCreateRequestDto = new MetaDataCreateRequestDto(projectId,Document.parse(strBody));
 
         MetaData metaData = new MetaData().builder()
                 .projectId(metaDataCreateRequestDto.getProjectId())
@@ -201,15 +215,15 @@ public class MetaDataServiceTest {
     }
 
     @Test
-    @DisplayName("Insert All MetaData - Success")
-    void insertAllTest() throws Exception{
+    @DisplayName("Insert All MetaData By MetaData List - Success")
+    void insertAllByMetaDataListTest() throws Exception{
 
         // given
         String projectId = "54321";
 
         ProjectResponseDto projectResponseDto = createMockProjectResponseDto();
 
-        MetaDataCreateAllRequestDto metaDataCreateAllRequestDto = new MetaDataCreateAllRequestDto(projectId,strBodyList);
+        MetaDataCreateAllRequestDto metaDataCreateAllRequestDto = new MetaDataCreateAllRequestDto(projectId,convertToDocument(strBodyList));
 
         List<MetaData> metaDataList = new ArrayList<>();
 
@@ -230,8 +244,6 @@ public class MetaDataServiceTest {
                 .willReturn(metaDataList);
 
         // when
-        ProjectResponseDto mockedProjectResponseDto = projectService.findById(metaDataCreateAllRequestDto.getProjectId()); // 존재하는 프로젝트 id인지 확인.
-
         projectService.findById(metaDataCreateAllRequestDto.getProjectId()); // 존재하는 프로젝트 id인지 확인.
 
         List<MetaData> mockedMetaDataList = metaDataRepository.insert(metaDataList);
@@ -243,6 +255,46 @@ public class MetaDataServiceTest {
         Assertions.assertNull(mockedMetaDataList.get(1).getMetadataId());
         Assertions.assertEquals(mockedMetaDataList.get(0).getPatientIdFromBody(),"1028011");
         Assertions.assertEquals(mockedMetaDataList.get(1).getPatientIdFromBody(),"1028012");
+    }
+
+    @Test
+    @DisplayName("Delete All MetaData By MetaData Id List - Success")
+    void deleteAllByMetaDataIdListTest() throws Exception{
+
+        // given
+        String projectId = "54321";
+
+        List<String> metadataIdList = List.of("12345","12346");
+
+        ProjectResponseDto projectResponseDto = createMockProjectResponseDto();
+
+        MetaDataDeleteAllRequestDto metaDataDeleteAllRequestDto = new MetaDataDeleteAllRequestDto(projectId,metadataIdList);
+
+        List<MetaData> metaDataList = createMockMetaDataList();
+
+        // mocking
+        given(projectService.findById(metaDataDeleteAllRequestDto.getProjectId()))
+                .willReturn(projectResponseDto);
+
+        given(metaDataRepository.findById(metadataIdList.get(0)))
+                .willReturn(Optional.ofNullable(metaDataList.get(0)));
+
+        given(metaDataRepository.findById(metadataIdList.get(1)))
+                .willReturn(Optional.ofNullable(metaDataList.get(1)));
+
+
+        // when
+        projectService.findById(metaDataDeleteAllRequestDto.getProjectId()); // 존재하는 프로젝트 id인지 확인.
+
+        List<MetaData> deletedMetaDataList = metaDataDeleteAllRequestDto.getMetadataIdList().stream()
+                .map( metadataId ->  metaDataRepository.findById(metadataId).orElseThrow(()-> new MetaDataNotFoundException(ErrorCode.METADATA_NOT_FOUND)))
+                .collect(Collectors.toList());
+
+        metaDataRepository.deleteAll(deletedMetaDataList);
+        // then
+        Assertions.assertEquals(deletedMetaDataList.get(0).getMetadataId(),metaDataDeleteAllRequestDto.getMetadataIdList().get(0));
+        Assertions.assertEquals(deletedMetaDataList.get(1).getMetadataId(),metaDataDeleteAllRequestDto.getMetadataIdList().get(1));
+        verify(metaDataRepository,times(1)).deleteAll(deletedMetaDataList);
     }
 
     @Test
@@ -267,7 +319,7 @@ public class MetaDataServiceTest {
                 "    \"compressionForce\": 173.5019\n" +
                 "  }";
 
-        MetaDataUpdateRequestDto metaDataUpdateRequestDto = new MetaDataUpdateRequestDto(updatedStrBody);
+        MetaDataUpdateRequestDto metaDataUpdateRequestDto = new MetaDataUpdateRequestDto(metadataId,Document.parse(updatedStrBody));
         MetaData mockedMetaData = createMockMetaData();
 
         // mocking

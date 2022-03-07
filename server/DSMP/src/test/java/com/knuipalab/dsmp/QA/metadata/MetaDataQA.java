@@ -1,5 +1,8 @@
 package com.knuipalab.dsmp.QA.metadata;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import com.knuipalab.dsmp.domain.metadata.MetaData;
 import com.knuipalab.dsmp.domain.metadata.MetaDataRepository;
@@ -13,7 +16,10 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +29,13 @@ import java.util.List;
 @EnableAutoConfiguration(exclude = {  // 실제 MongoDB에 접근하여 test하기 위해, exclude 시킴. default profile QA로 설정 해야 함
         EmbeddedMongoAutoConfiguration.class
 })
+@Profile("QA") // QA 에서만 실제 몽고 db에 접근
 public class MetaDataQA {
 
     @SpyBean
     MetaDataRepository metaDataRepository;
+
+    Logger log = (Logger) LoggerFactory.getLogger(MetaDataQA.class);
 
     public User createMockUser(){
         return User.builder()
@@ -49,11 +58,23 @@ public class MetaDataQA {
         return project1;
     }
 
+    public List<Document> convertToDocument(String strBodyList) {
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<Document> bsonList = null;
+        try {
+            bsonList = mapper.readValue(strBodyList, new TypeReference<List<Document>>(){});
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return bsonList;
+    }
+
     public String createMockStrBodyList(){
 
         long beforeTime = System.currentTimeMillis();
 
-        long METADATA_SIZE = 1000000;
+        long METADATA_SIZE = 1000;
 
         Faker faker = new Faker();
         StringBuilder strBodyList = new StringBuilder();
@@ -81,17 +102,20 @@ public class MetaDataQA {
         long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
         long secDiffTime = (afterTime - beforeTime)/1000; //두 시간에 차 계산
 
-        System.out.println("createMockStrBodyList 실행 시간(m) : "+secDiffTime);
+        log.info("createMockStrBodyList 실행 시간(m) : "+secDiffTime);
 
         return strBodyList.toString();
     }
 
+
+
+    @Profile("QA")
     @Test
     public void insertAllQA(){
 
         Project mockProject = createMockProject("54321");
 
-        MetaDataCreateAllRequestDto metaDataCreateAllRequestDto = new MetaDataCreateAllRequestDto(mockProject.getProjectId(),createMockStrBodyList());
+        MetaDataCreateAllRequestDto metaDataCreateAllRequestDto = new MetaDataCreateAllRequestDto(mockProject.getProjectId(),convertToDocument(createMockStrBodyList()));
 
         long beforeTime = System.currentTimeMillis();
 
@@ -112,7 +136,8 @@ public class MetaDataQA {
 
         long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
         long secDiffTime = (afterTime - beforeTime)/1000; //두 시간에 차 계산
-        System.out.println("insertAllQA 실행 시간(m) : "+secDiffTime);
+
+        log.info("insertAllQA 실행 시간(m) : "+secDiffTime);
 
     }
 

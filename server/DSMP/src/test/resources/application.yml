@@ -1,6 +1,6 @@
 spring:
   profiles:
-    default: QA
+    default: local
   main:
     allow-bean-definition-overriding: true
   session:
