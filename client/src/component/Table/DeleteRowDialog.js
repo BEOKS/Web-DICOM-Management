@@ -7,23 +7,22 @@ import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios';
 
 export default function DeleteRowDialog(props) {
-    const { open, onClose, selected, selectedStudyUIDList, metaDataUpdated, setMetaDataUpdated } = props;
+    const { open, onClose, selected, selectedStudyUIDList, metaDataUpdated, setMetaDataUpdated, project } = props;
 
     const deleteMetaData = () => {
-        selected.forEach(metadataId => {
-            const url = `api/MetaData/${metadataId}`;
-            axios.delete(url)
-                .then(response => console.log(response))
-                .catch(error => {
-                    if (error.response) {
-                        alert(error.response.data.message);
-                        console.log(error.response.data);
-                    } else {
-                        alert(error.message);
-                        console.log(error);
-                    }
-                });
-        });
+        const url = `api/MetaDataList/delete/${project.projectId}`;
+        const data = selected;
+        axios.post(url, data)
+            .then(response => console.log(response))
+            .catch(error => {
+                if (error.response) {
+                    alert(error.response.data.message);
+                    console.log(error.response.data);
+                } else {
+                    alert(error.message);
+                    console.log(error);
+                }
+            });
     };
 
     const deleteDicom = () => {

@@ -19,7 +19,7 @@ export class CsvFileHandler {
         console.log('callbackList[0]',callbackList[0])
         callbackList[0](0,'Uploading Metadata...')
         this.uploadFileCount=0
-        await axios.post(`api/MetaDataList/${this.projects.projectId}`,this.csvJson.data)
+        await axios.post(`api/MetaDataList/insert/${this.projects.projectId}`,this.csvJson.data)
             .then(response=>{
                 callbackList[0](0,'Uploading Complete!')
             })

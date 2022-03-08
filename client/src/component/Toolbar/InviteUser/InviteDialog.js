@@ -42,8 +42,8 @@ export default function InviteDialog(props) {
     };
 
     const handleInviteClick = () => {
-        const data = { emailList: emailArray };
-        const url = `api/Project/${projectID}/invite`;
+        const data = emailArray;
+        const url = `api/Project/invite/${projectID}`;
 
         axios.put(url, data)
             .then(response => {
