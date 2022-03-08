@@ -130,7 +130,7 @@ export default function DicomTable(props) {
                     metaDataUpdated={props.metaDataUpdated}
                     setMetaDataUpdated={props.setMetaDataUpdated}
                     metadata={rows}
-                    projectName={props.projectName}
+                    project={props.project}
                     />
                 <TableContainer>
                     <Table

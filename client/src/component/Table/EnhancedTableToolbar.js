@@ -19,7 +19,7 @@ import axios from 'axios'
 const hostLocation = process.env.SERVER_HOST ? process.env.SERVER_HOST : 'localhost'
 
 export default function EnhancedTableToolbar(props) {
-    const { numSelected, selected, metaDataUpdated, setMetaDataUpdated, selectedStudyUIDList, selectedPatientIDList, isNonReferenced,metadata,projectName } = props;
+    const { numSelected, selected, metaDataUpdated, setMetaDataUpdated, selectedStudyUIDList, selectedPatientIDList, isNonReferenced,metadata,project } = props;
     const [open, setOpen] = useState(false);
 
     const handleDicomDownloadButtonClick = () => {
@@ -42,7 +42,7 @@ export default function EnhancedTableToolbar(props) {
     const handleCSVDownloadButtonClick=()=>{
         const selectedMetadataList=metadata.filter(it => selected.includes(it.metadataId)).map(it=>it.body)
         console.log('handleCSVDownloadButtonClick',metadata,selectedMetadataList)
-        exportCSVFile(selectedMetadataList,projectName+'.csv');
+        exportCSVFile(selectedMetadataList,project.projectName+'.csv');
     };
 
     const handleDeleteDialogOpen = () => {
@@ -110,6 +110,7 @@ export default function EnhancedTableToolbar(props) {
                                 selectedStudyUIDList={selectedStudyUIDList}
                                 metaDataUpdated={metaDataUpdated}
                                 setMetaDataUpdated={setMetaDataUpdated}
+                                project = {project}
                         />
                         )}
                     </Fragment>
