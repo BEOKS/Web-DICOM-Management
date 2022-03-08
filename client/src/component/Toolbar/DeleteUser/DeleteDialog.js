@@ -8,8 +8,8 @@ export default function DeleteDialog(props) {
     const [checked, setChecked] = React.useState([]);
 
     const handleDeleteClick = () => {
-        const data = { emailList: checked };
-        const url = `api/Project/${project.projectId}/oust/list`;
+        const data = checked;
+        const url = `api/Project/oust/list/${project.projectId}`;
 
         axios.put(url, data)
             .then(response => {
