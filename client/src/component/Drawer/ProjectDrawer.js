@@ -77,7 +77,14 @@ export default function ProjectDrawer({open,setOpen,projects,invitedProjects,set
     React.useEffect(()=>{
         setDialogOpen(openCreateProjectDialog)
     },[openCreateProjectDialog])
-    const handleProjectCreateRequset=(status,message='')=>{
+    let isOkButtonClick=false
+    const preventAdditionalClick=(action)=>{
+        if(isOkButtonClick===false){
+            action()
+        }
+        isOkButtonClick=true
+    }
+    const handleProjectCreateRequest=(status,message='')=>{
         if(status===FAIL){
             alert(message)
         }
@@ -193,7 +200,7 @@ export default function ProjectDrawer({open,setOpen,projects,invitedProjects,set
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={()=>createProject(projectName,handleProjectCreateRequset)}>확인</Button>
+                <Button onClick={()=>preventAdditionalClick(()=>{createProject(projectName,handleProjectCreateRequest)})}>확인</Button>
                 <Button onClick={()=>setDialogOpen(false)}>취소</Button>
             </DialogActions>
         </Dialog>
