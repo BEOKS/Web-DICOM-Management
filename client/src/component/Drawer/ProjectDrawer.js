@@ -118,7 +118,7 @@ export default function ProjectDrawer({open,setOpen,projects,invitedProjects,set
                     </ListItem>
                 ))}
             </List>
-            <Divider />
+            {projects.length > 0 && <Divider />}
             {open && invitedProjects.length > 0 && (
             <Typography className="category" variant="subtitle2" component="div">Invited Projects</Typography>
             )}
@@ -139,6 +139,7 @@ export default function ProjectDrawer({open,setOpen,projects,invitedProjects,set
                     </ListItem>
                 ))}
             </List>
+            {invitedProjects.length > 0 && <Divider />}
             {/* <Divider />
             <List>
                 {others.map((text) => (
