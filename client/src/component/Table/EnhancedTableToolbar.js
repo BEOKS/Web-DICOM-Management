@@ -126,7 +126,8 @@ export default function EnhancedTableToolbar(props) {
                     </Tooltip>
                 </Stack>
             ) : (
-                <Tooltip title="Filter list">
+                <Tooltip title="Filter list" style={{display: "none"}}>
+                    {/* 필터 기능 추가 시 Tooltip의 style prop 삭제하기 */}
                     <IconButton>
                         <FilterListIcon />
                     </IconButton>
