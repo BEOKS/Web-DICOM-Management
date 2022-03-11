@@ -5,13 +5,28 @@ export type User={
     picture : string, // picture link
     role : string
 }
+export function isUser(obj : any): boolean{
+    return typeof obj ==='object' &&
+        typeof obj['userId'] ==='string' &&
+        typeof obj['name'] ==='string' &&
+        typeof obj['email'] ==='string' &&
+        typeof obj['picture'] ==='string' &&
+        typeof obj['role'] ==='string'
+}
 export type Participants={
     projectId : string,
     projectName : string,
     creator : User,
     visitor : User[]
 }
-
+export function isParticipants(obj : any):boolean{
+    return typeof obj ==='object' &&
+        typeof obj['projectId'] ==='string' &&
+        typeof obj['projectName'] ==='string' &&
+        typeof isUser(obj['creator']) &&
+        typeof obj['visitor'] ==='object' &&
+        obj['visitor'].every((visitor :  User)=>isUser(visitor))
+}
 export enum LOADING_STATUS{
     LOADING,
     ERROR,
