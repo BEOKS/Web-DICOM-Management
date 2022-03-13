@@ -2,13 +2,18 @@ import * as React from 'react';
 import {Alert, Avatar, CircularProgress, Stack, Tooltip, Typography} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store";
-import {LOADING_STATUS, ParticipantInfoAction, Participants, User} from "./ParticipantInfoReducer";
+import {isUser, LOADING_STATUS, ParticipantInfoAction, Participants, User} from "./ParticipantInfoReducer";
 import axios from "axios";
 
 const getParticipantInfo=(responseCallback : (participant : Participants)=>void, errorCallback : ()=>void)=>{
     axios.get('/api/Project/invited')
         .then(response=>{
-            responseCallback(response.data.body[0])
+            if (isUser(response.data.body[0])){
+                responseCallback(response.data.body[0])
+            }
+            else{
+                errorCallback()
+            }
         })
         .catch(error=>{
             errorCallback()
