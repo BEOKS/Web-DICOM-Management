@@ -7,7 +7,7 @@ import InviteButton from './InviteUser/InviteButton';
 import DeleteButton from './DeleteUser/DeleteButton';
 import ParticipantInfo from "./ProjectParticipant/ParticipantInfo";
 
-export default function UpDownloadToolbar({ projects, getMetaData, metaData, isInvitedProject }) {
+export default function UpDownloadToolbar({ projects, getMetaData, metaData, isInvitedProject }){
     return (
         <Box
             sx={{

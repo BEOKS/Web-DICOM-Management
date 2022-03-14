@@ -55,21 +55,24 @@ export const TYPE={
     SET_PARTICIPANT : `${HEADER}/SET_PARTICIPANT` as const,
     SET_LOADING_COMPLETE : `${HEADER}/SET_LOADING_COMPLETE` as const,
     SET_LOADING_START : `${HEADER}/SET_LOADING_START` as const,
-    SET_ERROR_STATE : `${HEADER}/SET_ERROR_STATE` as const
+    SET_ERROR_STATE : `${HEADER}/SET_ERROR_STATE` as const,
+    SET_PROJECT_ID : `${HEADER}/SET_PROJECT_ID` as const
 }
 
 export const ParticipantInfoAction={
     setParticipant : (participant : Participants)=>({type: TYPE.SET_PARTICIPANT,payload : participant}),
     setLoadingComplete : ()=>({type: TYPE.SET_LOADING_COMPLETE}),
     setLoadingStart : ()=>({type: TYPE.SET_LOADING_START}),
-    setErrorState : ()=>({type : TYPE.SET_ERROR_STATE})
+    setErrorState : ()=>({type : TYPE.SET_ERROR_STATE}),
+    setProjectId : (projectId : string)=>({type : TYPE.SET_PROJECT_ID,payload : projectId})
 }
 
 type ParticipantInfoActionType=
     ReturnType<typeof ParticipantInfoAction.setParticipant> |
     ReturnType<typeof ParticipantInfoAction.setLoadingComplete> |
     ReturnType<typeof ParticipantInfoAction.setLoadingStart> |
-    ReturnType<typeof ParticipantInfoAction.setErrorState>
+    ReturnType<typeof ParticipantInfoAction.setErrorState> |
+    ReturnType<typeof ParticipantInfoAction.setProjectId>
 
 export default function ParticipantInfoReducer(state : ParticipantInfoState=INIT_PARTICIPANT_INFO_STATE,action : ParticipantInfoActionType): ParticipantInfoState{
     switch (action.type){
@@ -81,6 +84,8 @@ export default function ParticipantInfoReducer(state : ParticipantInfoState=INIT
             return {...state,loadingStatus : LOADING_STATUS.LOADING}
         case TYPE.SET_ERROR_STATE:
             return {...state,loadingStatus :LOADING_STATUS.ERROR}
+        case TYPE.SET_PROJECT_ID:
+            return {...state, participants : {... state.participants, projectId : action.payload },loadingStatus : LOADING_STATUS.LOADING}
         default :
             return state;
     }
