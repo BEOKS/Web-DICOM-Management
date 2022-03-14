@@ -2,14 +2,22 @@ import * as React from 'react';
 import {Alert, Avatar, CircularProgress, Stack, Tooltip, Typography} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store";
-import {isUser, LOADING_STATUS, ParticipantInfoAction, Participants, User} from "./ParticipantInfoReducer";
+import {
+    isParticipants,
+    isUser,
+    LOADING_STATUS,
+    ParticipantInfoAction,
+    Participants,
+    User
+} from "./ParticipantInfoReducer";
 import axios from "axios";
+import {useState} from "react";
 
-const getParticipantInfo=(responseCallback : (participant : Participants)=>void, errorCallback : ()=>void)=>{
-    axios.get('/api/Project/invited')
+const getParticipantInfo=(projectId : string,responseCallback : (participant : Participants)=>void, errorCallback : ()=>void)=>{
+    axios.get(`/api/Project/${projectId}`)
         .then(response=>{
-            if (isUser(response.data.body[0])){
-                responseCallback(response.data.body[0])
+            if (isParticipants(response.data.body)){
+                responseCallback(response.data.body)
             }
             else{
                 errorCallback()
@@ -19,12 +27,16 @@ const getParticipantInfo=(responseCallback : (participant : Participants)=>void,
             errorCallback()
         })
 }
+type ParticipantInfoProps={
+    projectId : string
+}
 export default function ParticipantInfo(){
     const loadingStatus : LOADING_STATUS= useSelector((state : RootState)=>state.ParticipantInfoReducer.loadingStatus)
     const participantInfo : Participants=useSelector((state:RootState)=> state.ParticipantInfoReducer.participants)
     const dispatch = useDispatch()
     if(loadingStatus===LOADING_STATUS.LOADING){
         getParticipantInfo(
+            participantInfo.projectId,
             (participantInfo : Participants)=>{
                 dispatch(ParticipantInfoAction.setParticipant(participantInfo))
             },()=>{dispatch(ParticipantInfoAction.setErrorState())})
@@ -38,7 +50,7 @@ export default function ParticipantInfo(){
                 </Stack>
             }
             {loadingStatus===LOADING_STATUS.ERROR &&
-                <Alert  severity={'error'}>참여자 정보를 가져오는데 실패했습니다.</Alert>
+                <Alert  severity={'error'} style={{height : "70%"}}>참여자 정보를 가져오는데 실패했습니다.</Alert>
             }
             {loadingStatus===LOADING_STATUS.FINISH &&
                 <Stack direction={"row"}>
