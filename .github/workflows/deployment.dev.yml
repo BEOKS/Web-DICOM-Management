@@ -34,7 +34,7 @@ jobs:
           git reset --hard origin/dev
           cd client
           yarn install
-          yarn start:prod
+          echo ${{ secrets.PASSWORD }} | sudo yarn start:prod
           cd ../server
           echo ${{ secrets.PASSWORD }}  | sudo -S sh run_docker.sh prod
           
