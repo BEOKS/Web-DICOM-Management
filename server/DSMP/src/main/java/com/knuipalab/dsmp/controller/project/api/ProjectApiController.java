@@ -37,6 +37,13 @@ public class ProjectApiController {
         return ResponseEntity.ok().body(new SuccessResponse());
     }
 
+    // projectId를 기반으로 project 정보 및 생성자 참여자 정보
+    @GetMapping("api/Project/{projectId}")
+    public ResponseEntity<? extends  BasicResponse> findById(@PathVariable String projectId) {
+        ProjectResponseDto projectResponseDtos = projectService.findById(projectId);
+        return ResponseEntity.ok().body(new SuccessDataResponse<ProjectResponseDto>(projectResponseDtos));
+    }
+
     // projectId를 기반으로 ProjectName을 수정
     @PutMapping("api/Project/{projectId}")
     public ResponseEntity<? extends  BasicResponse> update(@PathVariable String projectId , @RequestBody ProjectRequestDto projectRequestDto){

@@ -123,7 +123,6 @@ public class ProjectApiControllerTest {
 
     }
 
-
     @WithMockUser
     @DisplayName("Insert Project - Success")
     @Test
@@ -141,6 +140,18 @@ public class ProjectApiControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 ;
+    }
+
+    @WithMockUser
+    @DisplayName("Find by ProjectId - Success")
+    @Test
+    void findByIdTest() throws Exception{
+        //given
+        mockMvc.perform(get("/api/Project/54321"))
+                .andExpect(jsonPath("$.status",is(200)))
+                .andExpect(status().isOk())
+                .andDo(print())
+        ;
     }
 
     @WithMockUser
