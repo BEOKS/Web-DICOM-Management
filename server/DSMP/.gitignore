@@ -38,3 +38,6 @@ out/
 
 ### oauth ###
 src/main/resources/application-oauth.yml
+
+### Test Data ###
+src/test/resources/TestData
