@@ -1,13 +1,20 @@
 import * as React from 'react';
-import { Button, Typography } from '@mui/material';
+import {Button, CircularProgress, Typography} from '@mui/material';
 import UploadBoxRow from './UploadBoxRow';
 import { Stack } from '@mui/material';
+import {useRef, useState} from "react";
 const DicomUploadBox=({csvFile,dicomFiles,setdicomFiles,updatePossibility})=>{
-    console.log('build DicomUploadBox Component ',csvFile,dicomFiles)
+    const [uploadState,setUploadState]=useState("wait");
+    const inputFile = useRef(null)
     const handleChangeFile=(event)=>{
+        console.log('handleChangeFile!!')
         const newFileArray=[...event.target.files].filter(file => Array.isArray(dicomFiles) && !dicomFiles.some( e => e.name===file.name))
-        console.log('dicomFiles',[...dicomFiles, ...newFileArray])
+        setUploadState("wait")
         setdicomFiles([...dicomFiles, ...newFileArray])
+    }
+    const handleDicomButtonClicked=()=>{
+        setUploadState("loading")
+        inputFile.current.click()
     }
     console.log('DicomUploadBox', updatePossibility);
     const checkSeverity=(index)=>{
@@ -33,32 +40,38 @@ const DicomUploadBox=({csvFile,dicomFiles,setdicomFiles,updatePossibility})=>{
             </div>
         )
     }
-    return(
-        <Stack sx={{marginTop: '8px'}}>
-            <Stack borderRadius="5px" style={{alignItems: "center", backgroundColor:'#f5f5f5'}}>
-                {Array.isArray(dicomFiles) && dicomFiles.map((path,index)=> (
-                    <UploadBoxRow 
-                        key={path.name}
-                        fileName={path.name} 
-                        severity={checkSeverity(index)}
-                        dicomFiles={dicomFiles}
-                        setdicomFiles={setdicomFiles}
-                    />))}
-                <input
-                    accept=".dcm"
-                    style={{ display: 'none' }}
-                    id="dicom-upload-input"
-                    multiple
-                    type="file"
-                    onChange={handleChangeFile}
-                />
-                <label htmlFor="dicom-upload-input">
-                    <Button variant="raised" component="span">
-                        + Upload Dicoms
-                    </Button>
-                </label> 
+    if(uploadState==="wait"){
+        return(
+            <Stack sx={{marginTop: '8px'}}>
+                <Stack borderRadius="5px" style={{alignItems: "center", backgroundColor:'#f5f5f5'}}>
+                    {Array.isArray(dicomFiles) && dicomFiles.map((path,index)=> (
+                        <UploadBoxRow
+                            key={path.name}
+                            fileName={path.name}
+                            severity={checkSeverity(index)}
+                            dicomFiles={dicomFiles}
+                            setdicomFiles={setdicomFiles}
+                        />))}
+                    <input
+                        accept=".dcm"
+                        style={{ display: 'none' }}
+                        id="dicom-upload-input"
+                        ref={inputFile}
+                        multiple
+                        type="file"
+                        onChange={handleChangeFile}
+                    />
+                    <label htmlFor="dicom-upload-input">
+                        <Button variant="raised" component="span" onClick={handleDicomButtonClicked}>
+                            + Upload Dicoms
+                        </Button>
+                    </label>
+                </Stack>
             </Stack>
-        </Stack>
-    )
+        )
+    }
+    else{
+        return (<CircularProgress/>)
+    }
 }
 export default DicomUploadBox;
