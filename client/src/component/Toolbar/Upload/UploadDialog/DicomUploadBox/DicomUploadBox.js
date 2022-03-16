@@ -5,16 +5,11 @@ import { Stack } from '@mui/material';
 import {useRef, useState} from "react";
 const DicomUploadBox=({csvFile,dicomFiles,setdicomFiles,updatePossibility})=>{
     const [uploadState,setUploadState]=useState("wait");
-    const inputFile = useRef(null)
     const handleChangeFile=(event)=>{
         console.log('handleChangeFile!!')
         const newFileArray=[...event.target.files].filter(file => Array.isArray(dicomFiles) && !dicomFiles.some( e => e.name===file.name))
         setUploadState("wait")
         setdicomFiles([...dicomFiles, ...newFileArray])
-    }
-    const handleDicomButtonClicked=()=>{
-        setUploadState("loading")
-        inputFile.current.click()
     }
     console.log('DicomUploadBox', updatePossibility);
     const checkSeverity=(index)=>{
@@ -56,13 +51,12 @@ const DicomUploadBox=({csvFile,dicomFiles,setdicomFiles,updatePossibility})=>{
                         accept=".dcm"
                         style={{ display: 'none' }}
                         id="dicom-upload-input"
-                        ref={inputFile}
                         multiple
                         type="file"
                         onChange={handleChangeFile}
                     />
                     <label htmlFor="dicom-upload-input">
-                        <Button variant="raised" component="span" onClick={handleDicomButtonClicked}>
+                        <Button variant="raised" component="span">
                             + Upload Dicoms
                         </Button>
                     </label>
