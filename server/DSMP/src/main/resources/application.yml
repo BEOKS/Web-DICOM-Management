@@ -25,6 +25,12 @@ spring:
       max-file-size: #파일 최대 크기
       max-request-size: #요청 당 최대 파일 크기
 hostLocation : imdc.hopto.org
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+
 ---
 # prod 버전에서는 mongodb에 도커 네트워크를 통해서만 접근가능하므로 mongodb로 호스트를 설정한다.
 spring:
