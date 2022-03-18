@@ -34,7 +34,7 @@ public class OAuthAttributes {
         else if (registrationId.equals("naver")) {
             return ofNaver(userNameAttributeName,attributes);
         }
-    return ofGoogle(userNameAttributeName, attributes);
+        return ofGoogle(userNameAttributeName, attributes);
     }
 
     private static OAuthAttributes ofKakao(String userNameAttributeName, Map<String, Object> attributes) {

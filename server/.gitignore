@@ -1,2 +1,5 @@
 mongoDB/db 
 orthanc/orthanc-db
+grafana/data
+grafana/provisioning
+prometheus/data

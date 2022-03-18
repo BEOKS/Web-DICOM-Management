@@ -60,6 +60,9 @@ dependencies {
     implementation 'com.github.javafaker:javafaker:1.0.2'//java-faker
 
     implementation 'org.springframework.boot:spring-boot-starter-aop'// aop
+    //Metrics
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
 
 }
 

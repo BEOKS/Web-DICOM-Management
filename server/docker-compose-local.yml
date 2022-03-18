@@ -60,6 +60,44 @@ services:
         aliases:
           - orthanc
     restart: unless-stopped
+  prometheus:
+    image: prom/prometheus:v2.16.0
+    container_name: prometheus
+    command:
+      - '--web.listen-address=0.0.0.0:9099'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/data:/prometheus
+    ports:
+      - 9099:9099
+    networks:
+      innerNetwork:
+        aliases:
+          - prometheus
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:6.6.2
+    environment:
+      - GF_SECURITY_ADMIN_USER=knuimdc
+      - GF_SECURITY_ADMIN_PASSWORD=knuimdc418!
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./grafana/data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    ports:
+      - 9900:3000
+    depends_on:
+      - prometheus
+    networks:
+      innerNetwork:
+        aliases:
+          - grafana
   
 
 networks:

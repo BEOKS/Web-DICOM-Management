@@ -7,12 +7,14 @@ export default function App(){
     const [loginStatus,setLoginStatus]=useState();
     if(loginStatus===undefined){
         chcekLoginStatusAsync(setLoginStatus);
+        console.log('사용자 정보를 확인중입니다..')
         return(
             <LoadingPage message="사용자 정보를 확인중입니다."/>
         )
     }
     else if(loginStatus===false){
-        window.location.href='/oauth2/authorization/google'
+        console.log('1초 뒤 페이지가 이동됩니다.')
+        window.location.href='/oauth2/authorization/naver'
         return(<div></div>)
     }
     else if(loginStatus){
