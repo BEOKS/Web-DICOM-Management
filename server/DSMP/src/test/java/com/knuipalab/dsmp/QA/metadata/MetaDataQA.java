@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
+import com.google.common.collect.Lists;
 import com.knuipalab.dsmp.domain.metadata.MetaData;
 import com.knuipalab.dsmp.domain.metadata.MetaDataRepository;
 import com.knuipalab.dsmp.domain.project.Project;
@@ -74,7 +75,7 @@ public class MetaDataQA {
 
         long beforeTime = System.currentTimeMillis();
 
-        long METADATA_SIZE = 1000;
+        long METADATA_SIZE = 20000;
 
         Faker faker = new Faker();
         StringBuilder strBodyList = new StringBuilder();
@@ -108,10 +109,9 @@ public class MetaDataQA {
     }
 
 
-
     @Profile("QA")
     @Test
-    public void insertAllQA(){
+    public void saveQA(){
 
         Project mockProject = createMockProject("54321");
 
@@ -132,13 +132,63 @@ public class MetaDataQA {
             metaDataList.add(metaData);
         }
 
-        metaDataRepository.insert(metaDataList);
+        metaDataList.stream().forEach( metaData -> metaDataRepository.save(metaData));
 
         long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
-        long secDiffTime = (afterTime - beforeTime)/1000; //두 시간에 차 계산
+        long secDiffTime = (afterTime - beforeTime); //두 시간에 차 계산
 
-        log.info("insertAllQA 실행 시간(m) : "+secDiffTime);
+        log.info("save QA 실행 시간(m) : "+secDiffTime);
 
+    }
+
+
+    @Profile("QA")
+    @Test
+    public void saveAllQA(){
+
+        Project mockProject = createMockProject("54321");
+
+        MetaDataCreateAllRequestDto metaDataCreateAllRequestDto = new MetaDataCreateAllRequestDto(mockProject.getProjectId(),convertToDocument(createMockStrBodyList()));
+
+        long beforeTime = System.currentTimeMillis();
+
+        List<Document> bodyList = metaDataCreateAllRequestDto.getBodyList();
+
+        String projectId = metaDataCreateAllRequestDto.getProjectId();
+
+        List<MetaData> metaDataList = new ArrayList<>();
+
+        for(Document body : bodyList){
+            MetaData metaData = new MetaData().builder()
+                    .projectId(projectId)
+                    .body(body).build();
+            metaDataList.add(metaData);
+        }
+
+        int chunk_size = 10000;
+        for (List<MetaData> batch : Lists.partition(metaDataList,chunk_size)) {
+            metaDataRepository.saveAll(batch);
+        }
+
+
+        long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
+        long secDiffTime = (afterTime - beforeTime); //두 시간에 차 계산
+
+        log.info("saveAll QA 실행 시간(m) : "+secDiffTime);
+
+    }
+
+    @Profile("QA")
+    @Test
+    public void findAllQA(){
+        long beforeTime = System.currentTimeMillis();
+
+        List<MetaData> metaDataList = metaDataRepository.findAll();
+
+        long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
+        long secDiffTime = (afterTime - beforeTime); //두 시간에 차 계산
+
+        log.info("findAll QA 실행 시간(m) : "+secDiffTime);
     }
 
 }

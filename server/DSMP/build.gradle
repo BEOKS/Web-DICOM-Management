@@ -61,6 +61,7 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-aop'// aop
 
+    implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre' // guava
 }
 
 test {

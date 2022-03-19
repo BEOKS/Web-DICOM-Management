@@ -1,4 +1,5 @@
 package com.knuipalab.dsmp.service.metadata;
+import com.google.common.collect.Lists;
 import com.knuipalab.dsmp.domain.metadata.MetaData;
 import com.knuipalab.dsmp.domain.metadata.MetaDataRepository;
 import com.knuipalab.dsmp.dto.metadata.*;
@@ -73,7 +74,10 @@ public class MetaDataService {
                 patientService.addProjectCount(metaData.getPatientIdFromBody());
             }
 
-            metaDataRepository.saveAll(metaDataList);
+            int chunk_size = 10000;
+            for (List<MetaData> batch : Lists.partition(metaDataList,chunk_size)) {
+                metaDataRepository.saveAll(batch);
+            }
 
         }
     }
