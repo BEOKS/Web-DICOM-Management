@@ -64,6 +64,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.micrometer:micrometer-registry-prometheus'
 
+    implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre' // guava
 }
 
 test {
