@@ -42,7 +42,7 @@ export default function ParticipantInfo(){
             },()=>{dispatch(ParticipantInfoAction.setErrorState())})
     }
     return(
-        <Stack >
+        <Stack sx={{ml: 1}}>
             {loadingStatus===LOADING_STATUS.LOADING &&
                 <Stack direction={"row"} style={{ verticalAlign: "middle" }}>
                     <Typography style={{ verticalAlign: "middle" }}>Loading User Information...</Typography>
