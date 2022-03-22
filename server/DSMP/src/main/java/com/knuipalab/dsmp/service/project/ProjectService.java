@@ -113,17 +113,25 @@ public class ProjectService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(()->new ProjectNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
 
+        SessionUser sessionUser = (SessionUser)httpSession.getAttribute("user");
+
+        String userId = sessionUser.getUserId();
+
+        if(!project.getCreator().getUserId().equals(userId)){
+            throw new UnAuthorizedAccessException(ErrorCode.UNAUTHORIZED_ACCESS);
+        }
+
         metaDataService.deleteAllByProjectId(projectId);
 
         projectRepository.delete(project);
     }
 
     @Transactional
-    public void invite(String projectId, ProjectInviteRequestDto projectInviteRequestDto) {
+    public void invite(ProjectInviteRequestDto projectInviteRequestDto) {
 
         SessionUser sessionUser = (SessionUser)httpSession.getAttribute("user");
 
-        Project project = projectRepository.findById(projectId)
+        Project project = projectRepository.findById(projectInviteRequestDto.getProjectId())
                 .orElseThrow(()->new ProjectNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
 
         if(!sessionUser.getUserId().equals(project.getCreator().getUserId())){
@@ -157,9 +165,9 @@ public class ProjectService {
     }
 
     @Transactional
-    public void oustByEmailList(String projectId, ProjectOustRequestDto projectOustRequestDto) {
+    public void oustByEmailList(ProjectOustRequestDto projectOustRequestDto) {
 
-        Project project = projectRepository.findById(projectId)
+        Project project = projectRepository.findById(projectOustRequestDto.getProjectId())
                 .orElseThrow(()->new ProjectNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
 
         List<User> userList = new ArrayList<>();

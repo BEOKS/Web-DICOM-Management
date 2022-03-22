@@ -9,6 +9,8 @@ import ProjectDrawer from './component/Drawer/ProjectDrawer'
 import BaseAppBar from './component/AppBar/BaseAppBar';
 import LoadingPage from './component/Login/Loading';
 import axios from 'axios';
+import {useDispatch} from "react-redux";
+import {ParticipantInfoAction} from "./component/Toolbar/ProjectParticipant/ParticipantInfoReducer";
 axios.defaults.maxRedirects=0;
 export default function Page() {
     const [open, setOpen] = React.useState(false);
@@ -20,6 +22,9 @@ export default function Page() {
     const [metaDataUpdated, setMetaDataUpdated] = React.useState(false);
     const [checkFirst, setCheckFirst] = React.useState(true);
     const [loading,setLoading] =React.useState(true);
+
+    const dispatch=useDispatch()
+    dispatch(ParticipantInfoAction.setProjectId(presentProject.projectId))
 
     const getProjects = () => {
         axios.get('api/Project',{maxRedirects:0})
@@ -151,7 +156,7 @@ export default function Page() {
                                 metaDataUpdated={metaDataUpdated}
                                 setMetaDataUpdated={setMetaDataUpdated}
                                 isNonReferenced={presentProject.projectName === 'Non-Reference Dicom' ? true : false}
-                                projectName={presentProject.projectName}
+                                project={presentProject}
                             />
                         }
                     </div>

@@ -5,7 +5,7 @@ import axios from 'axios';
 export default function ExitDialog(props) {
     const { open, setOpen, project } = props;
     const handleClickExit = () => {
-        const url = `api/Project/${project.projectId}/oust`;
+        const url = `api/Project/oust/${project.projectId}`;
 
         axios.put(url)
             .then(response => {

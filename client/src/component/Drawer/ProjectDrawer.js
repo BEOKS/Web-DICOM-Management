@@ -14,7 +14,7 @@ import IconButton from '@mui/material/IconButton';
 import { useTheme } from '@mui/material/styles';
 import { Grid } from '@mui/material';
 import { Dialog,DialogTitle,DialogContent,DialogContentText,DialogActions,TextField,Button,Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, {useRef, useState} from 'react';
 import { createProject } from './Utils/ProjectUtils';
 import './ProjectDrawer.css';
 
@@ -77,7 +77,14 @@ export default function ProjectDrawer({open,setOpen,projects,invitedProjects,set
     React.useEffect(()=>{
         setDialogOpen(openCreateProjectDialog)
     },[openCreateProjectDialog])
-    const handleProjectCreateRequset=(status,message='')=>{
+    let okButtonRef=useRef()
+    const preventAdditionalClick=(action)=>{
+        if(okButtonRef.current){
+            okButtonRef.current.setAttribute("disabled", "disabled");
+        }
+        action()
+    }
+    const handleProjectCreateRequest=(status,message='')=>{
         if(status===FAIL){
             alert(message)
         }
@@ -118,7 +125,7 @@ export default function ProjectDrawer({open,setOpen,projects,invitedProjects,set
                     </ListItem>
                 ))}
             </List>
-            <Divider />
+            {projects.length > 0 && <Divider />}
             {open && invitedProjects.length > 0 && (
             <Typography className="category" variant="subtitle2" component="div">Invited Projects</Typography>
             )}
@@ -139,6 +146,7 @@ export default function ProjectDrawer({open,setOpen,projects,invitedProjects,set
                     </ListItem>
                 ))}
             </List>
+            {invitedProjects.length > 0 && <Divider />}
             {/* <Divider />
             <List>
                 {others.map((text) => (
@@ -193,7 +201,7 @@ export default function ProjectDrawer({open,setOpen,projects,invitedProjects,set
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={()=>createProject(projectName,handleProjectCreateRequset)}>확인</Button>
+                <Button ref={okButtonRef} onClick={()=>preventAdditionalClick(()=>{createProject(projectName,handleProjectCreateRequest)})}>확인</Button>
                 <Button onClick={()=>setDialogOpen(false)}>취소</Button>
             </DialogActions>
         </Dialog>

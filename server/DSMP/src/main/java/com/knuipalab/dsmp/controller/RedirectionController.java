@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 @RestController
 public class RedirectionController {
+
     @Value("${hostLocation}")
     private String hostLocation;
 

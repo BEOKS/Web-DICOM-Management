@@ -108,7 +108,7 @@ export default function UploadDialog({
                     updatePossibility={updatePossibility}/>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleOkEvent}>확인</Button>
+                <Button onClick={handleOkEvent} disabled={!csvFile}>확인</Button>
                 <Button onClick={handleClearEvent}>취소</Button>
             </DialogActions>
         </Dialog>

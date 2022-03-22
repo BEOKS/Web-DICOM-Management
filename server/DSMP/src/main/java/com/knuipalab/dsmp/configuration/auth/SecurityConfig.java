@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     // 커스텀한 OAuth2UserService DI
@@ -26,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable(); // 스프링 시큐리티는 기본적으로 csrf에 대해 체크하기에 post가 안된다. 그래서 이를 disable 시켜야함
         http.authorizeRequests()
-                .antMatchers("/","/oauth2/*").permitAll() // root page, login page는 모두에게 허용
+                .antMatchers("/","/oauth2/*","/actuator/prometheus").permitAll() // root page, login page는 모두에게 허용
                 .anyRequest().authenticated() // 나머지 page는 인증된 사용자만 허용
             .and()
                 .logout().logoutSuccessUrl("/redirectToMainPage") // 로그아웃에 대해서 성공하면 "/"로 이동

@@ -1,11 +1,9 @@
 package com.knuipalab.dsmp.service.metadata;
+import com.google.common.collect.Lists;
 import com.knuipalab.dsmp.domain.metadata.MetaData;
 import com.knuipalab.dsmp.domain.metadata.MetaDataRepository;
-import com.knuipalab.dsmp.dto.metadata.MetaDataCreateAllRequestDto;
-import com.knuipalab.dsmp.dto.metadata.MetaDataResponseDto;
-import com.knuipalab.dsmp.dto.metadata.MetaDataCreateRequestDto;
+import com.knuipalab.dsmp.dto.metadata.*;
 
-import com.knuipalab.dsmp.dto.metadata.MetaDataUpdateRequestDto;
 import com.knuipalab.dsmp.httpResponse.error.ErrorCode;
 import com.knuipalab.dsmp.httpResponse.error.handler.exception.MetaDataNotFoundException;
 import com.knuipalab.dsmp.service.patient.PatientService;
@@ -56,7 +54,7 @@ public class MetaDataService {
     }
 
     @Transactional
-    public void insertAll(MetaDataCreateAllRequestDto metaDataCreateAllRequestDto){
+    public void insertAllByMetaDataList(MetaDataCreateAllRequestDto metaDataCreateAllRequestDto){
 
         List<MetaData> metaDataList=new ArrayList<MetaData>();
 
@@ -76,15 +74,30 @@ public class MetaDataService {
                 patientService.addProjectCount(metaData.getPatientIdFromBody());
             }
 
-            metaDataRepository.insert(metaDataList);
+            int chunk_size = 10000;
+            for (List<MetaData> batch : Lists.partition(metaDataList,chunk_size)) {
+                metaDataRepository.saveAll(batch);
+            }
 
         }
     }
 
     @Transactional
-    public void update(String metadataId, MetaDataUpdateRequestDto metaDataUpdateRequestDto){
+    public void deleteAllByMetaDataIdList(MetaDataDeleteAllRequestDto metaDataDeleteAllRequestDto){
 
-        MetaData metaData = metaDataRepository.findById(metadataId)
+        projectService.findById(metaDataDeleteAllRequestDto.getProjectId()); // 존재하는 프로젝트 id인지 확인.
+
+        List<MetaData> metaDataList = metaDataDeleteAllRequestDto.getMetadataIdList().stream()
+                .map( metadataId ->  metaDataRepository.findById(metadataId).orElseThrow(()-> new MetaDataNotFoundException(ErrorCode.METADATA_NOT_FOUND)))
+                .collect(Collectors.toList());
+
+        metaDataRepository.deleteAll(metaDataList);
+    }
+
+    @Transactional
+    public void update(MetaDataUpdateRequestDto metaDataUpdateRequestDto){
+
+        MetaData metaData = metaDataRepository.findById(metaDataUpdateRequestDto.getMetadataId())
                 .orElseThrow(()-> new MetaDataNotFoundException(ErrorCode.METADATA_NOT_FOUND));
 
         metaData.update(metaDataUpdateRequestDto.getBody());
@@ -102,8 +115,12 @@ public class MetaDataService {
 
         metaDataRepository.delete(metaData);
     }
+
     @Transactional
     public Long deleteAllByProjectId(String projectId){
+
+        projectService.findById(projectId); // 존재하는 프로젝트 id인지 확인.
+
         return metaDataRepository.deleteAllByProjectId(projectId);
     }
 
