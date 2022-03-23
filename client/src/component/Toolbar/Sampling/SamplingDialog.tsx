@@ -4,11 +4,14 @@ import { RootState } from "../../../store";
 import { SamplingAction } from "./SamplingReducer";
 
 export default function SamplingDialog() {
-    const open = useSelector((state: RootState) => state.SamplingReducer.dialogStatus);
     const dispatch = useDispatch();
+    const open = useSelector((state: RootState) => state.SamplingReducer.dialogOpen);
 
     const handleClickOK = () => {
         dispatch(SamplingAction.closeDialog());
+        dispatch(SamplingAction.openSnackbar());
+        // sampling API request 예정
+        setTimeout(() => { dispatch(SamplingAction.updateSnackbar()) }, 3000);
     };
 
     const handleClickCancel = () => {
