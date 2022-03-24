@@ -74,7 +74,7 @@ public class MetaDataService {
                 patientService.addProjectCount(metaData.getPatientIdFromBody());
             }
 
-            int chunk_size = 10000;
+            int chunk_size = 1000;
             for (List<MetaData> batch : Lists.partition(metaDataList,chunk_size)) {
                 metaDataRepository.saveAll(batch);
             }
