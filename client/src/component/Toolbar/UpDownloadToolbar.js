@@ -6,8 +6,9 @@ import DeleteProjectButton from './DeleteProject/DeleteButton';
 import InviteButton from './InviteUser/InviteButton';
 import DeleteButton from './DeleteUser/DeleteButton';
 import ParticipantInfo from "./ProjectParticipant/ParticipantInfo";
+import SamplingButton from './Sampling/SamplingButton';
 
-export default function UpDownloadToolbar({ projects, getMetaData, metaData, isInvitedProject }){
+export default function UpDownloadToolbar({ projects, getMetaData, metaData, isInvitedProject }) {
     return (
         <Box
             sx={{
@@ -34,11 +35,15 @@ export default function UpDownloadToolbar({ projects, getMetaData, metaData, isI
                 <Grid item xs='auto'>
                     <DeleteButton project={projects} isInvitedProject={isInvitedProject} />
                 </Grid>
-                <Grid item xs>
-                    <ParticipantInfo/>
+                <Grid item xs='auto'>
+                    <ParticipantInfo />
                 </Grid>
+                <Grid item xs />
                 <Grid item xs='auto'>
                     <UploadButton projects={projects} getMetaData={getMetaData} metaData={metaData} />
+                </Grid>
+                <Grid>
+                    <SamplingButton getMetaData={getMetaData}/>
                 </Grid>
                 {!isInvitedProject && (
                     <Grid item xs='auto'>
