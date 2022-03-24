@@ -100,102 +100,30 @@ public class MachineLearningQA {
             int validSize = (int)(metaDataListSize * validPercent);
             int testSize = metaDataListSize - (trainSize+validSize);
             int randomValue;
-            int mod = 3;
 
             long sec = System.currentTimeMillis();
 
-            for(int i =0 ; i < metaDataList.size() ; i++ ){
-                MetaData metaData = metaDataList.get(i);
+            MLType sampleType = null;
+            int cnt = 0;
+            while(trainSize!=0 || validSize!=0 || testSize!=0 ) {
                 randomValue = (int)(Math.random() * 10);
-                switch (mod) {
-                    case 3 : {
-                        if (randomValue%3 == 0 && 0 < trainSize ){
-                            trainSize -= 1;
-                            metaDataRepository.updateType(metaData.getMetadataId(),MLType.TRAIN.getTypeString());
-                            break;
-                        }
-                        else if(randomValue%3 == 1 && 0 < validSize) {
-                            validSize -= 1;
-                            metaDataRepository.updateType(metaData.getMetadataId(),MLType.VALID.getTypeString());
-                            break;
-                        }
-                        else if(randomValue%3 == 2 && 0 < testSize) {
-                            testSize -= 1;
-                            BsonUtils.addToMap(metaData.getBody(), "type", MLType.TEST.getTypeString());
-                            metaDataRepository.updateType(metaData.getMetadataId(),MLType.TEST.getTypeString());
-                            break;
-                        } else {
-                            mod -= 1;
-                        }
-                    }
-
-                    case 2 : {
-                        if (trainSize == 0) {
-                            if (randomValue%2 == 0 && 0 < validSize ){
-                                validSize -= 1;
-                                metaDataRepository.updateType(metaData.getMetadataId(),MLType.VALID.getTypeString());
-                                break;
-                            }
-                            else if (randomValue%2 == 1 && 0 < testSize ){
-                                testSize -= 1;
-                                metaDataRepository.updateType(metaData.getMetadataId(),MLType.TEST.getTypeString());
-                                break;
-                            } else {
-                                mod -= 1;
-                            }
-                        }
-                        else if (validSize == 0){
-                            if (randomValue%2 == 0 && 0 < trainSize ){
-                                trainSize -= 1;
-                                metaDataRepository.updateType(metaData.getMetadataId(),MLType.TRAIN.getTypeString());
-                                break;
-                            }
-                            else if (randomValue%2 == 1 && 0 < testSize ){
-                                testSize -= 1;
-                                metaDataRepository.updateType(metaData.getMetadataId(),MLType.TEST.getTypeString());
-                                break;
-                            } else {
-                                mod -= 1;
-                            }
-                        }
-                        else {
-                            if (randomValue%2 == 0 && 0 < trainSize ){
-                                trainSize -= 1;
-                                metaDataRepository.updateType(metaData.getMetadataId(),MLType.TRAIN.getTypeString());
-                                break;
-                            }
-                            else if (randomValue%2 == 1 && 0 < validSize ){
-                                validSize -= 1;
-                                metaDataRepository.updateType(metaData.getMetadataId(),MLType.VALID.getTypeString());
-                                break;
-                            } else {
-                                mod -= 1;
-                            }
-
-                        }
-
-                    }
-
-                    case 1 : {
-                        if(trainSize != 0){
-                            trainSize -= 1;
-                            metaDataRepository.updateType(metaData.getMetadataId(),MLType.TRAIN.getTypeString());
-                            break;
-                        }
-                        else  if (validSize != 0){
-                            validSize -= 1;
-                            metaDataRepository.updateType(metaData.getMetadataId(),MLType.VALID.getTypeString());
-                            break;
-                        } else {
-                            testSize -= 1;
-                            metaDataRepository.updateType(metaData.getMetadataId(),MLType.TEST.getTypeString());
-                            break;
-                        }
-
-                    }
-
+                if( 0 <= randomValue && randomValue < 7 && trainSize!=0 ){
+                    trainSize -= 1;
+                    sampleType = MLType.TRAIN;
                 }
-
+                else if ( randomValue < 9 && validSize!=0 ) {
+                    validSize -= 1;
+                    sampleType = MLType.VALID;
+                }
+                else if ( randomValue < 10 && testSize!=0 ) {
+                    testSize -= 1;
+                    sampleType = MLType.TEST;
+                }
+                else {
+                    continue;
+                }
+                metaDataRepository.updateType(metaDataList.get(cnt).getMetadataId(),sampleType.getTypeString());
+                cnt += 1;
             }
 
             sec = System.currentTimeMillis() - sec ; // 코드 실행 후에 시간 받아오기
