@@ -43,7 +43,7 @@ export default function UpDownloadToolbar({ projects, getMetaData, metaData, isI
                     <UploadButton projects={projects} getMetaData={getMetaData} metaData={metaData} />
                 </Grid>
                 <Grid>
-                    <SamplingButton />
+                    <SamplingButton getMetaData={getMetaData}/>
                 </Grid>
                 {!isInvitedProject && (
                     <Grid item xs='auto'>
