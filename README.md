@@ -1,5 +1,5 @@
 # Dicom Service Management Project
-![example workflow](https://github.com/BEOKS/DicomProject/actions/workflows/deployment.dev.yml/badge.svg)
+[![Deployment](https://github.com/BEOKS/DicomProject/actions/workflows/deployment.dev.yml/badge.svg?branch=BEOKS-patch-1)](https://github.com/BEOKS/DicomProject/actions/workflows/deployment.dev.yml)
 ## :dart: Objective
 Dicom 의료 영상 데이터를 저장, 관리하며 시각화 기능과 머신러닝 개발을 지원하는 SW개발
 ## :bar_chart: Success metrics
