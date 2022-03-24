@@ -6,10 +6,11 @@ import SamplingDialog from './SamplingDialog';
 import { RootState } from '../../../store';
 import CloseIcon from '@mui/icons-material/Close';
 
-interface SamplingButtonProps{
-    getMetaData: ()=>{}
+interface SamplingButtonProps {
+    getMetaData: () => {}
 }
-const SamplingButton : React.FC<SamplingButtonProps>=({getMetaData})=>{
+
+const SamplingButton: React.FC<SamplingButtonProps> = ({ getMetaData }) => {
     const dispatch = useDispatch();
     const snackbarInfo = useSelector((state: RootState) => state.SamplingReducer.snackbarInfo);
 
@@ -39,7 +40,7 @@ const SamplingButton : React.FC<SamplingButtonProps>=({getMetaData})=>{
     return (
         <div>
             <Button onClick={handleSamplingButtonClick} variant="outlined" sx={{ ml: 1 }}>Sampling</Button>
-            <SamplingDialog />
+            <SamplingDialog getMetaData={getMetaData} />
             <Snackbar
                 key='SamplingMessenger'
                 open={snackbarInfo.open}

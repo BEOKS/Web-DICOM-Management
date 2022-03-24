@@ -4,7 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { SamplingAction } from "./SamplingReducer";
 
-export default function SamplingDialog() {
+interface SamplingDialogProps {
+    getMetaData: () => {}
+}
+
+const SamplingDialog: React.FC<SamplingDialogProps> = ({ getMetaData }) => {
     const dispatch = useDispatch();
     const open = useSelector((state: RootState) => state.SamplingReducer.dialogOpen);
     const projectId = useSelector((state: RootState) => state.ParticipantInfoReducer.participants.projectId);
@@ -18,6 +22,7 @@ export default function SamplingDialog() {
             .then(response => {
                 console.log(response);
                 dispatch(SamplingAction.updateSnackbar());
+                getMetaData();
             }).catch(error => {
                 alert(error);
                 console.log(error);
@@ -41,3 +46,5 @@ export default function SamplingDialog() {
         </Dialog>
     );
 }
+
+export default SamplingDialog;
