@@ -1,4 +1,5 @@
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { SamplingAction } from "./SamplingReducer";
@@ -6,12 +7,21 @@ import { SamplingAction } from "./SamplingReducer";
 export default function SamplingDialog() {
     const dispatch = useDispatch();
     const open = useSelector((state: RootState) => state.SamplingReducer.dialogOpen);
+    const projectId = useSelector((state: RootState) => state.ParticipantInfoReducer.participants.projectId);
 
     const handleClickOK = () => {
         dispatch(SamplingAction.closeDialog());
         dispatch(SamplingAction.openSnackbar());
-        // sampling API request 예정
-        setTimeout(() => { dispatch(SamplingAction.updateSnackbar()) }, 3000);
+        
+        const url = `api/MetaData/Sampling/${projectId}`;
+        axios.put(url)
+            .then(response => {
+                console.log(response);
+                dispatch(SamplingAction.updateSnackbar());
+            }).catch(error => {
+                alert(error);
+                console.log(error);
+            });
     };
 
     const handleClickCancel = () => {
