@@ -37,7 +37,7 @@ const SamplingDialog: React.FC<SamplingDialogProps> = ({ getMetaData }) => {
         <Dialog open={open}>
             <DialogTitle>데이터 샘플링</DialogTitle>
             <DialogContent>
-                <Alert severity='info'>이 프로젝트의 데이터 셋에 대해 랜덤 샘플링을 진행합니다.</Alert>
+                <Alert severity='info'>이 프로젝트의 데이터 셋에 대해 <strong>랜덤 샘플링</strong>을 진행합니다.</Alert>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClickOK}>확인</Button>
