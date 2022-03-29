@@ -23,4 +23,12 @@ public class CustomizedMetaDataRepositoryImpl implements CustomizedMetaDataRepos
         update.set("body.type", type);
         mongoTemplate.updateFirst(query,update,"metadata");
     }
+
+    @Override
+    public void updateClassification(String metadataId, String Classification) {
+        Query query = new Query(Criteria.where("_id").is(metadataId));
+        Update update = new Update();
+        update.set("body.classification", Classification);
+        mongoTemplate.updateFirst(query,update,"metadata");
+    }
 }
