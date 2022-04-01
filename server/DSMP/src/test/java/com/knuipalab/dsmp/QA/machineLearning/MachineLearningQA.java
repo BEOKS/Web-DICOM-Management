@@ -1,5 +1,9 @@
 package com.knuipalab.dsmp.QA.machineLearning;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.knuipalab.dsmp.QA.metadata.MetaDataQA;
 import com.knuipalab.dsmp.domain.metadata.MetaData;
@@ -14,12 +18,16 @@ import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoCo
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.mongodb.util.BsonUtils;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.stream.StreamSupport;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -32,6 +40,46 @@ public class MachineLearningQA {
     MetaDataRepository metaDataRepository;
 
     Logger log = (Logger) LoggerFactory.getLogger(MetaDataQA.class);
+
+    @Profile("QA")
+    @Test
+    public void setClassification() {
+
+        // 실제 DB의 업데이트를 테스트 하기 위한 용도 이므로,  metadataId는 실제 DB에 존재하는 metadata collection에 Id를 넣어주세요.
+        // Embeded Mongo로 테스트 하기 위해서는 @Before 어노테이션을 통해 strJsonNodeArray에 존재하는 Id를 가지는 metadata를 만들어주세요.
+
+        String strJsonNodeArray = "[{\n" +
+                "   \"metadataId\":  \"623c1639b2da2c6acaf1176b\",\n" +
+                "   \"classification1\": 120,\n" +
+                "    \"classification2\": 50\n" +
+                "  },\n" +
+                "  {\n" +
+                "   \"metadataId\":  \"623c1639b2da2c6acaf1176c\",\n" +
+                "   \"classification1\": 110,\n" +
+                "    \"classification2\": 80\n" +
+                "  }]";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode jsonNode = objectMapper.readTree(strJsonNodeArray);
+            StreamSupport.stream(jsonNode.spliterator(),false).forEach(node -> {
+                HashMap<String,Object> classificationSet = new HashMap<>();
+                node.fields().forEachRemaining(
+                        field -> {
+                            if (!field.getKey().equals("metadataId")) {
+                                classificationSet.put(field.getKey(), field.getValue());
+                            }
+                        }
+                );
+                metaDataRepository.setClassification(node.get("metadataId").textValue(),classificationSet);
+            });
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     @Profile("QA")
     @Test

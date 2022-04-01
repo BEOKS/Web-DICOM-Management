@@ -51,6 +51,10 @@ public class MachineLearningServiceImpl implements MachineLearningService{
 
     }
 
+    @Override
+    public void setClassification(String projectId) {
+    }
+
     class updateThread implements Runnable {
 
         private List<MetaData> metaDataList;

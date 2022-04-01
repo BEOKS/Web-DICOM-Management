@@ -3,29 +3,28 @@ package com.knuipalab.dsmp.service.machineLearning;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.knuipalab.dsmp.domain.metadata.MetaData;
 import com.knuipalab.dsmp.domain.metadata.MetaDataRepository;
-import com.knuipalab.dsmp.domain.user.User;
 import com.knuipalab.dsmp.dto.metadata.MetaDataCreateAllRequestDto;
-import com.knuipalab.dsmp.mock.MockMetaData;
-import com.knuipalab.dsmp.mock.MockUser;
 import org.bson.Document;
-import org.bson.conversions.Bson;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.mongodb.util.BsonUtils;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.stream.StreamSupport;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -191,4 +190,45 @@ public class MachineLearningServiceImplTest{
 
         }
     }
+
+    @Test
+    public void setClassification() {
+
+        // given
+        String strJsonNodeArray = "[{\n" +
+                "   \"metadataId\": 12345,\n" +
+                "   \"classification1\": 120,\n" +
+                "    \"classification2\": 50\n" +
+                "  },\n" +
+                "  {\n" +
+                "   \"metadataId\": 12346,\n" +
+                "   \"classification1\": 110,\n" +
+                "    \"classification2\": 80\n" +
+                "  }]";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode jsonNode = objectMapper.readTree(strJsonNodeArray);
+            StreamSupport.stream(jsonNode.spliterator(),false).forEach( node -> {
+                HashMap<String,Object> classificationSet = new HashMap<>();
+                node.fields().forEachRemaining(
+                        field -> {
+                            if (!field.getKey().equals("metadataId")) {
+                                classificationSet.put(field.getKey(), field.getValue());
+                            }
+                        }
+                );
+                Assertions.assertEquals(classificationSet.size(),2);
+                Assertions.assertNotNull(node.get("metadataId"));
+                metaDataRepository.setClassification(node.get("metadataId").textValue(),classificationSet);
+            });
+            verify(metaDataRepository,times(jsonNode.size())).setClassification(any(),any());
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }

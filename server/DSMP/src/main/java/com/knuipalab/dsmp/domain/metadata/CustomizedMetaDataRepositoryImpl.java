@@ -6,6 +6,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.util.Assert;
 
+import java.util.HashMap;
+
 public class CustomizedMetaDataRepositoryImpl implements CustomizedMetaDataRepository{
 
     private final MongoTemplate mongoTemplate;
@@ -25,10 +27,12 @@ public class CustomizedMetaDataRepositoryImpl implements CustomizedMetaDataRepos
     }
 
     @Override
-    public void updateClassification(String metadataId, String Classification) {
+    public void setClassification(String metadataId, HashMap classificationSet) {
         Query query = new Query(Criteria.where("_id").is(metadataId));
         Update update = new Update();
-        update.set("body.classification", Classification);
+        classificationSet.keySet().iterator().forEachRemaining(key -> {
+            update.set(String.format("%s.%s","body",key), Double.parseDouble(classificationSet.get(key).toString()));
+        });
         mongoTemplate.updateFirst(query,update,"metadata");
     }
 }
