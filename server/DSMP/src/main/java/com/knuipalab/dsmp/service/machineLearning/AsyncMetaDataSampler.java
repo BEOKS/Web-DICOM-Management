@@ -53,13 +53,14 @@ public class AsyncMetaDataSampler implements MetaDataSampler {
 
     }
 
+
     @Autowired
     MalignancyServerMessenger malignancyServerMessenger;
 
     @Override
     public void setClassification(String projectId) {
         //....
-        JsonNode jsonNode=malignancyServerMessenger.getClassificationData("id");
+        JsonNode jsonNode = malignancyServerMessenger.getClassificationData("id");
         //...
     }
 
