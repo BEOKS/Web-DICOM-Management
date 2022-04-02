@@ -1,10 +1,14 @@
 package com.knuipalab.dsmp.QA.machineLearning;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.knuipalab.dsmp.QA.metadata.MetaDataQA;
 import com.knuipalab.dsmp.domain.metadata.MetaData;
 import com.knuipalab.dsmp.domain.metadata.MetaDataRepository;
-import com.knuipalab.dsmp.service.machineLearning.MLType;
+import com.knuipalab.dsmp.service.machineLearning.SampleType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -14,12 +18,15 @@ import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoCo
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.mongodb.util.BsonUtils;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -27,11 +34,77 @@ import java.util.concurrent.*;
         EmbeddedMongoAutoConfiguration.class
 })
 @Profile("QA") // QA 에서만 실제 몽고 db에 접근
-public class MachineLearningQA {
+public class AsyncMetaDataSamplerQA {
     @SpyBean
     MetaDataRepository metaDataRepository;
 
     Logger log = (Logger) LoggerFactory.getLogger(MetaDataQA.class);
+
+    @Profile("QA")
+    @Test
+    public void setMalignancyClassification() {
+
+        List<MetaData> metaDataList = metaDataRepository.findByProjectId("54321");
+
+        final int NUM_THREADS = Runtime.getRuntime().availableProcessors() + 1;
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(NUM_THREADS);
+
+        List<Future<Runnable>> futures = new ArrayList<Future<Runnable>>();
+        for ( MetaData metadata : metaDataList ) {
+            Future f = executor.submit(new getAndSetMalignancyClassificationThread(metadata.getMetadataId(),metadata.getImageNameFromBody()));
+            futures.add(f);
+        }
+        // wait for all tasks to complete before continuing
+        for (Future<Runnable> f : futures)
+        {
+            try {
+                f.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+        //shut down the executor service so that this thread can exit
+        executor.shutdown();
+    }
+
+    class getAndSetMalignancyClassificationThread implements Runnable {
+
+        private String metadataId;
+        private String imageName;
+
+        public getAndSetMalignancyClassificationThread(String metadataId,String imageName){
+            this.metadataId = metadataId;
+            this.imageName = imageName;
+        }
+
+        @Override
+        public void run() {
+            String strJsonNode = "{\n" +
+                    "   \"classification1\": 120.12,\n" +
+                    "    \"classification2\": 50.8\n" +
+                    "  }";
+            ObjectMapper objectMapper=new ObjectMapper();
+            JsonNode jsonNode=null;
+            try {
+                jsonNode = objectMapper.readTree(strJsonNode);
+            } catch (JsonMappingException e) {
+                e.printStackTrace();
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+            if(jsonNode == null) {
+                throw new NullPointerException();
+            }
+            HashMap<String,Object> classificationSet = new HashMap<>();
+            jsonNode.fields().forEachRemaining(
+                    field -> { classificationSet.put(field.getKey(),field.getValue()); }
+            );
+            metaDataRepository.setMalignancyClassification(metadataId,classificationSet);
+        }
+
+    }
 
     @Profile("QA")
     @Test
@@ -103,21 +176,21 @@ public class MachineLearningQA {
 
             long sec = System.currentTimeMillis();
 
-            MLType sampleType = null;
+            SampleType sampleType = null;
             int cnt = 0;
             while(trainSize!=0 || validSize!=0 || testSize!=0 ) {
                 randomValue = (int)(Math.random() * 10);
                 if( 0 <= randomValue && randomValue < 7 && trainSize!=0 ){
                     trainSize -= 1;
-                    sampleType = MLType.TRAIN;
+                    sampleType = SampleType.TRAIN;
                 }
                 else if ( randomValue < 9 && validSize!=0 ) {
                     validSize -= 1;
-                    sampleType = MLType.VALID;
+                    sampleType = SampleType.VALID;
                 }
                 else if ( randomValue < 10 && testSize!=0 ) {
                     testSize -= 1;
-                    sampleType = MLType.TEST;
+                    sampleType = SampleType.TEST;
                 }
                 else {
                     continue;

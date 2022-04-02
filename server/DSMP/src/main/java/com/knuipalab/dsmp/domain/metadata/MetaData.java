@@ -47,4 +47,11 @@ public class MetaData {
         return patientId;
     }
 
+    public String getImageNameFromBody(){
+        Bson body = this.body;
+        BsonUtils bsonUtils = new BsonUtils();
+        String imageName = bsonUtils.toJavaType(body.toBsonDocument().get("image_name")).toString();
+        return imageName;
+    }
+
 }
