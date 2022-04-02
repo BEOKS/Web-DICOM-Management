@@ -1,9 +1,11 @@
 package com.knuipalab.dsmp.service.machineLearning;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
 import com.knuipalab.dsmp.domain.metadata.MetaData;
 import com.knuipalab.dsmp.domain.metadata.MetaDataRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,7 +17,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 @Service
 @RequiredArgsConstructor
-public class MachineLearningServiceImpl implements MachineLearningService{
+public class AsyncMetaDataSampler implements MetaDataSampler {
 
     private final MetaDataRepository metaDataRepository;
 

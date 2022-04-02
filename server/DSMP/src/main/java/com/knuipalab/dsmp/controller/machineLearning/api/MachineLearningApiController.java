@@ -2,10 +2,9 @@ package com.knuipalab.dsmp.controller.machineLearning.api;
 
 import com.knuipalab.dsmp.httpResponse.BasicResponse;
 import com.knuipalab.dsmp.httpResponse.success.SuccessResponse;
-import com.knuipalab.dsmp.service.machineLearning.MachineLearningServiceImpl;
+import com.knuipalab.dsmp.service.machineLearning.AsyncMetaDataSampler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MachineLearningApiController {
 
-    private final MachineLearningServiceImpl machineLearningService;
+    private final AsyncMetaDataSampler asyncMetaDataSampler;
 
     @PutMapping("api/MetaData/Sampling/{projectId}")
     public ResponseEntity< ? extends BasicResponse> typeSampling(@PathVariable String projectId){
-        machineLearningService.typeSampling(projectId);
+        asyncMetaDataSampler.typeSampling(projectId);
         return ResponseEntity.ok().body(new SuccessResponse());
     }
 }
