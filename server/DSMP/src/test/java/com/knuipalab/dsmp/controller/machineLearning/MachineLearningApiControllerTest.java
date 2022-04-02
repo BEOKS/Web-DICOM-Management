@@ -44,7 +44,7 @@ public class MachineLearningApiControllerTest {
     }
 
     @MockBean
-    private AsyncMetaDataSampler machineLearningServiceImpl;
+    private AsyncMetaDataSampler asyncMetaDataSampler;
 
     @WithMockUser
     @DisplayName("Type Sampling Test by ProjectId - Success")
@@ -52,6 +52,18 @@ public class MachineLearningApiControllerTest {
     void typeSamplingTest() throws Exception {
 
         mvc.perform(put("/api/MetaData/Sampling/54321"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status",is(200)))
+                .andDo(print())
+        ;
+    }
+
+    @WithMockUser
+    @DisplayName("Set Malignancy Classification Test by ProjectId - Success")
+    @Test
+    void setMalignancyClassificationTest() throws Exception {
+
+        mvc.perform(put("/api/MetaData/MalignancyClassification/54321"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status",is(200)))
                 .andDo(print())

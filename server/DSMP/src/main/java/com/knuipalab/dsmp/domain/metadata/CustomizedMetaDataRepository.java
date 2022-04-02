@@ -4,5 +4,5 @@ import java.util.HashMap;
 
 public interface CustomizedMetaDataRepository {
     void updateType(String metadataId, String type);
-    void setClassification(String metadataId, HashMap classificationSet);
+    void setMalignancyClassification(String metadataId, HashMap classificationSet);
 }

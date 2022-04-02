@@ -85,6 +85,7 @@ public class MetaDataQA {
             strBodyList.append(" {\n");
             strBodyList.append("   \"stored_dicom_id\": " + faker.number().numberBetween(111111,9999999)+",\n");
             strBodyList.append("   \"anonymized_id\": " + faker.number().numberBetween(11111111,99999999)+",\n");
+            strBodyList.append("   \"image_name\": " + "\"" + String.format("%s_%s","a",faker.number().numberBetween(11111111,99999999)) +"\""+",\n");
             strBodyList.append("   \"age\": " + faker.number().numberBetween(20,80) +",\n");
             strBodyList.append("   \"modality\": \"MG\",\n");
             strBodyList.append("   \"manufacturer\": " + "\"" + faker.company().name()+"\""+",\n");

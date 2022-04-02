@@ -20,4 +20,11 @@ public class MachineLearningApiController {
         asyncMetaDataSampler.typeSampling(projectId);
         return ResponseEntity.ok().body(new SuccessResponse());
     }
+
+    @PutMapping("api/MetaData/MalignancyClassification/{projectId}")
+    public ResponseEntity< ? extends BasicResponse> setMalignancyClassification(@PathVariable String projectId){
+        asyncMetaDataSampler.setMalignancyClassification(projectId);
+        return ResponseEntity.ok().body(new SuccessResponse());
+    }
+
 }

@@ -27,11 +27,11 @@ public class CustomizedMetaDataRepositoryImpl implements CustomizedMetaDataRepos
     }
 
     @Override
-    public void setClassification(String metadataId, HashMap classificationSet) {
+    public void setMalignancyClassification(String metadataId, HashMap classificationSet) {
         Query query = new Query(Criteria.where("_id").is(metadataId));
         Update update = new Update();
         classificationSet.keySet().iterator().forEachRemaining(key -> {
-            update.set(String.format("%s.%s","body",key), Double.parseDouble(classificationSet.get(key).toString()));
+            update.set(String.format("%s.%s","body",key), classificationSet.get(key).toString());
         });
         mongoTemplate.updateFirst(query,update,"metadata");
     }
