@@ -3,24 +3,21 @@ package com.knuipalab.dsmp.service.machineLearning;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.knuipalab.dsmp.domain.metadata.MetaData;
 import com.knuipalab.dsmp.domain.metadata.MetaDataRepository;
-import com.knuipalab.dsmp.domain.user.User;
 import com.knuipalab.dsmp.dto.metadata.MetaDataCreateAllRequestDto;
-import com.knuipalab.dsmp.mock.MockMetaData;
-import com.knuipalab.dsmp.mock.MockUser;
 import org.bson.Document;
-import org.bson.conversions.Bson;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.mongodb.util.BsonUtils;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -34,14 +31,15 @@ import static org.mockito.Mockito.verify;
 
 
 @ExtendWith(SpringExtension.class)
-public class MachineLearningServiceImplTest{
+public class AsyncMetaDataSamplerTest {
 
     @MockBean
     private MetaDataRepository metaDataRepository;
 
     public String strBodyList = "[{\n" +
-            "   \"stored_dicom_id\": 145125,\n" +
+            "    \"stored_dicom_id\": 145125,\n" +
             "    \"anonymized_id\": 1028011,\n" +
+            "    \"image_name\": " + "\"a_123456\""+",\n" +
             "    \"age\": 53,\n" +
             "    \"modality\": \"MG\",\n" +
             "    \"manufacturer\": \"HOLOGIC, Inc.\",\n" +
@@ -55,8 +53,9 @@ public class MachineLearningServiceImplTest{
             "    \"compressionForce\": 173.5019\n" +
             "  },\n" +
             "  {\n" +
-            "   \"stored_dicom_id\": 145126,\n" +
+            "    \"stored_dicom_id\": 145126,\n" +
             "    \"anonymized_id\": 1028012,\n" +
+            "    \"image_name\": " + "\"a_123457\""+",\n" +
             "    \"age\": 54,\n" +
             "    \"modality\": \"MG\",\n" +
             "    \"manufacturer\": \"HOLOGIC, Inc.\",\n" +
@@ -166,21 +165,21 @@ public class MachineLearningServiceImplTest{
             int testSize = metaDataListSize - (trainSize+validSize);
             int randomValue;
 
-            MLType sampleType = null;
+            SampleType sampleType = null;
             int cnt = 0;
             while(trainSize!=0 || validSize!=0 || testSize!=0 ) {
                 randomValue = (int)(Math.random() * 10);
                 if( 0 <= randomValue && randomValue < 7 && trainSize!=0 ){
                     trainSize -= 1;
-                    sampleType = MLType.TRAIN;
+                    sampleType = SampleType.TRAIN;
                 }
                 else if ( randomValue < 9 && validSize!=0 ) {
                     validSize -= 1;
-                    sampleType = MLType.VALID;
+                    sampleType = SampleType.VALID;
                 }
                 else if ( randomValue < 10 && testSize!=0 ) {
                     testSize -= 1;
-                    sampleType = MLType.TEST;
+                    sampleType = SampleType.TEST;
                 }
                 else {
                     continue;
@@ -191,4 +190,81 @@ public class MachineLearningServiceImplTest{
 
         }
     }
+
+    @Test
+    public void setMalignancyClassification() {
+
+        // given
+        String projectId = "54321";
+
+        // mocking
+        given(metaDataRepository.findByProjectId(projectId))
+                .willReturn(createMockMetaDataList());
+        //when
+        List<MetaData> mockedMetaDataList = metaDataRepository.findByProjectId(projectId);
+
+        List<MetaData> metaDataList = metaDataRepository.findByProjectId("54321");
+
+        final int NUM_THREADS = Runtime.getRuntime().availableProcessors() + 1;
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(NUM_THREADS);
+
+        List<Future<Runnable>> futures = new ArrayList<Future<Runnable>>();
+        for ( MetaData metadata : metaDataList ) {
+            Future f = executor.submit(new getAndSetMalignancyClassificationThread(metadata.getMetadataId(),metadata.getImageNameFromBody()));
+            futures.add(f);
+        }
+        // wait for all tasks to complete before continuing
+        for (Future<Runnable> f : futures)
+        {
+            try {
+                f.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+        //shut down the executor service so that this thread can exit
+        executor.shutdown();
+
+        verify(metaDataRepository,times(mockedMetaDataList.size())).setMalignancyClassification(any(),any());
+    }
+
+    class getAndSetMalignancyClassificationThread implements Runnable {
+
+        private String metadataId;
+        private String imageName;
+
+        public getAndSetMalignancyClassificationThread(String metadataId,String imageName){
+            this.metadataId = metadataId;
+            this.imageName = imageName;
+        }
+
+        @Override
+        public void run() {
+            String strJsonNode = "{\n" +
+                    "   \"classification1\": 120.12,\n" +
+                    "    \"classification2\": 50.8\n" +
+                    "  }";
+            ObjectMapper objectMapper=new ObjectMapper();
+            JsonNode jsonNode=null;
+            try {
+                jsonNode = objectMapper.readTree(strJsonNode);
+            } catch (JsonMappingException e) {
+                e.printStackTrace();
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+            if(jsonNode == null) {
+                throw new NullPointerException();
+            }
+            HashMap<String,Object> classificationSet = new HashMap<>();
+            jsonNode.fields().forEachRemaining(
+                    field -> { classificationSet.put(field.getKey(),field.getValue()); }
+            );
+            metaDataRepository.setMalignancyClassification(metadataId,classificationSet);
+        }
+
+    }
+
 }

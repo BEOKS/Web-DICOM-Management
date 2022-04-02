@@ -42,6 +42,7 @@ public class MetaDataServiceTest {
     public String strBody = "{\n" +
             "   \"stored_dicom_id\": 145125,\n" +
             "    \"anonymized_id\": 1028011,\n" +
+            "    \"image_name\": " + "\"a_123456\""+",\n" +
             "    \"age\": 53,\n" +
             "    \"modality\": \"MG\",\n" +
             "    \"manufacturer\": \"HOLOGIC, Inc.\",\n" +
@@ -56,8 +57,9 @@ public class MetaDataServiceTest {
             "  }";
 
     public String strBodyList = "[{\n" +
-            "   \"stored_dicom_id\": 145125,\n" +
+            "    \"stored_dicom_id\": 145125,\n" +
             "    \"anonymized_id\": 1028011,\n" +
+            "    \"image_name\": " + "\"a_123456\""+",\n" +
             "    \"age\": 53,\n" +
             "    \"modality\": \"MG\",\n" +
             "    \"manufacturer\": \"HOLOGIC, Inc.\",\n" +
@@ -71,8 +73,9 @@ public class MetaDataServiceTest {
             "    \"compressionForce\": 173.5019\n" +
             "  },\n" +
             "  {\n" +
-            "   \"stored_dicom_id\": 145126,\n" +
+            "    \"stored_dicom_id\": 145126,\n" +
             "    \"anonymized_id\": 1028012,\n" +
+            "    \"image_name\": " + "\"a_123457\""+",\n" +
             "    \"age\": 54,\n" +
             "    \"modality\": \"MG\",\n" +
             "    \"manufacturer\": \"HOLOGIC, Inc.\",\n" +
@@ -304,8 +307,9 @@ public class MetaDataServiceTest {
         // given
         String metadataId = "12345";
         String updatedStrBody = "{\n" +
-                "   \"stored_dicom_id\": 283918,\n" +
+                "    \"stored_dicom_id\": 283918,\n" +
                 "    \"anonymized_id\": 3389322,\n" +
+                "    \"image_name\": " + "\"a_123456\""+",\n" +
                 "    \"age\": 77,\n" +
                 "    \"modality\": \"MG\",\n" +
                 "    \"manufacturer\": \"HOLOGIC, Inc.\",\n" +
