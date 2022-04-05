@@ -6,7 +6,7 @@ import MetaUploadBox from "../UploadDialog/MetaUploadBox";
 import {useState} from "react";
 import {FileUploadDialogAction} from "./FileUploadDialogReducer";
 import ImageFileUploadBox from "./ImageFileUploadBox";
-import uploadFiles from "./Utils/UploadFiles";
+import {uploadCsvFile, uploadImageFile} from "./Utils/UploadFiles";
 import {SnackbarAction} from "../SnackbarReducer";
 
 /**
@@ -23,7 +23,7 @@ export default function FileUploadDialog(){
     const [csvFile,setCsvFile]= useState(undefined)
     const [imageFiles,setImageFiles]=useState([])
     const dispatch=useDispatch()
-
+    const projectId=useSelector((state:RootState)=> state.ParticipantInfoReducer.participants.projectId)
     const DEBUG=true
     const print=(msg : any)=>{
         if(DEBUG){
@@ -32,11 +32,23 @@ export default function FileUploadDialog(){
     }
 
     print(csvFile)
+    const uploadImageHandler=(filename:string, percentage : number)=>{
+        dispatch(SnackbarAction.setProgress(percentage))
+        if(percentage===100){
+            dispatch(SnackbarAction.setMessage("Upload Image Complete"))
+        }
+        else{
+            dispatch(SnackbarAction.setMessage(`Uploading ${filename}...`))
+        }
+    }
     const handleOk=()=>{
-        uploadFiles(csvFile,imageFiles)
+        uploadCsvFile(projectId,csvFile,()=>dispatch(SnackbarAction.setMessage("Upload CSV complete!")))
+        uploadImageFile(projectId,imageFiles,uploadImageHandler)
         dispatch(FileUploadDialogAction.closeDialog())
+        dispatch(SnackbarAction.closeSnackbar())
     }
     const handleClose=()=>{
+        dispatch(SnackbarAction.closeSnackbar())
         setCsvFile(undefined)
         setImageFiles([])
         dispatch(FileUploadDialogAction.closeDialog())

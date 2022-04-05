@@ -45,7 +45,7 @@ export default function SnackbarReducer(state : SnackbarType=init_state,action :
         case SnackbarActionType.closeSnackbar:
             return {...state,open : false}
         case SnackbarActionType.setMessage:
-            return {...state, message : action.payload}
+            return {...state, open:true,message : action.payload}
         case SnackbarActionType.setProgress:
             return {...state,progress : action.payload}
         case SnackbarActionType.showCloseButton:
