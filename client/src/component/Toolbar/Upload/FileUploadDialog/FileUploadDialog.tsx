@@ -37,6 +37,8 @@ export default function FileUploadDialog(){
         dispatch(FileUploadDialogAction.closeDialog())
     }
     const handleClose=()=>{
+        setCsvFile(undefined)
+        setImageFiles([])
         dispatch(FileUploadDialogAction.closeDialog())
     }
     return(
