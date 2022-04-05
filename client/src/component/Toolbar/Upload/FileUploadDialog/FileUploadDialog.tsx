@@ -1,4 +1,59 @@
 import * as React from 'react'
+import {Alert, Dialog, DialogActions, DialogContent, DialogTitle, Button} from "@mui/material";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../../store";
+import MetaUploadBox from "../UploadDialog/MetaUploadBox";
+import {useState} from "react";
+import {FileUploadDialogAction} from "./FileUploadDialogReducer";
+import ImageFileUploadBox from "./ImageFileUploadBox";
+import uploadFiles from "./Utils/UploadFiles";
+
+const DEBUG=true
+const print=(msg : any)=>{
+    if(DEBUG){
+        console.log(msg)
+    }
+}
+/**
+ * 이미지 파일을 업르드하기 위한 컴퍼넌트입니다.
+ * 메타데이터와 이미지 파일 리스트를 입력받으면
+ * 메타데이터에 image_name 속성이 존재하는지 확인하고
+ * 이미지 파일들의 이름이 image_name 속성에 존재하지 않다면
+ * 업로드를 제한합니다. 위 조건이 충족되면 메타데이터와 이미지 파일이
+ * 같이 업로드 됩니다.
+ * @constructor
+ */
 export default function FileUploadDialog(){
-    return(<div></div>)
+    const open : boolean=useSelector((state: RootState)=>state.FileUploadDialogReducer.open)
+    const [csvFile,setCsvFile]= useState()
+    const [imageFiles,setImageFiles]=useState([])
+    const dispatch=useDispatch()
+    print(csvFile)
+    const handleOk=()=>{
+        uploadFiles(csvFile,imageFiles)
+        dispatch(FileUploadDialogAction.closeDialog())
+    }
+    const handleClose=()=>{
+        dispatch(FileUploadDialogAction.closeDialog())
+    }
+    return(
+        <Dialog open={open}>
+            <DialogTitle>
+                이미지 파일 업로드
+            </DialogTitle>
+            <DialogContent>
+                <Alert severity={"info"}>CSV에는 이미지 파일명을 명시하는 image_name 속성이 있어야 합니다.</Alert>
+                <MetaUploadBox
+                    csvFile={csvFile}
+                    setCsvFile={setCsvFile}
+                    setdicomFiles={setImageFiles}
+                />
+                <ImageFileUploadBox/>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleOk}>확인</Button>
+                <Button onClick={handleClose}>취소</Button>
+            </DialogActions>
+        </Dialog>
+    )
 }

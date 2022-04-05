@@ -2,14 +2,14 @@ import * as React from 'react';
 import {Stack, Button, IconButton, Typography} from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 
-const MetaUploadBox = ({csvFile, setCsvFile, setdicomFiles}) => {
+const MetaUploadBox = ({csvFile, setCsvFile, setdicomFiles: setImageOrDicomFiles}) => {
     console.log('build MetaUploadBox comopnent ', csvFile)
     const handleChangeFile = (event) => {
         setCsvFile(event.target.files[0])
     }
     const handleClearEvent = () => {
         setCsvFile(undefined)
-        setdicomFiles(new Set([]))
+        setImageOrDicomFiles(new Set([]))
     }
 
     function MetaUploadBoxContent(props) {

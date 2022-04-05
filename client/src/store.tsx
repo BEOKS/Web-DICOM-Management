@@ -5,13 +5,14 @@ import ParticipantInfoReducer from "./component/Toolbar/ProjectParticipant/Parti
 import SamplingReducer from "./component/Toolbar/Sampling/SamplingReducer";
 import MLReducer from "./component/Toolbar/MachineLearning/MLReducer";
 import FormatChooseReducer from "./component/Toolbar/Upload/FormatChooseDialog/FormatChooseDialogReducer";
-
+import FileUploadDialogReducer from "./component/Toolbar/Upload/FileUploadDialog/FileUploadDialogReducer";
 const rootReducer=combineReducers({
     ColumnTypeDecisionDialogReducer,
     ParticipantInfoReducer,
     SamplingReducer,
     MLReducer,
-    FormatChooseReducer
+    FormatChooseReducer,
+    FileUploadDialogReducer
 })
 
 export default rootReducer;
