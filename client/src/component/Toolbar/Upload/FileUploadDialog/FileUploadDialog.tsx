@@ -7,13 +7,8 @@ import {useState} from "react";
 import {FileUploadDialogAction} from "./FileUploadDialogReducer";
 import ImageFileUploadBox from "./ImageFileUploadBox";
 import uploadFiles from "./Utils/UploadFiles";
+import {SnackbarAction} from "../SnackbarReducer";
 
-const DEBUG=true
-const print=(msg : any)=>{
-    if(DEBUG){
-        console.log(msg)
-    }
-}
 /**
  * 이미지 파일을 업르드하기 위한 컴퍼넌트입니다.
  * 메타데이터와 이미지 파일 리스트를 입력받으면
@@ -25,9 +20,17 @@ const print=(msg : any)=>{
  */
 export default function FileUploadDialog(){
     const open : boolean=useSelector((state: RootState)=>state.FileUploadDialogReducer.open)
-    const [csvFile,setCsvFile]= useState()
+    const [csvFile,setCsvFile]= useState(undefined)
     const [imageFiles,setImageFiles]=useState([])
     const dispatch=useDispatch()
+
+    const DEBUG=true
+    const print=(msg : any)=>{
+        if(DEBUG){
+            console.log("FileUploadDialog",msg)
+        }
+    }
+
     print(csvFile)
     const handleOk=()=>{
         uploadFiles(csvFile,imageFiles)
@@ -48,7 +51,7 @@ export default function FileUploadDialog(){
                     setCsvFile={setCsvFile}
                     setdicomFiles={setImageFiles}
                 />
-                <ImageFileUploadBox/>
+                <ImageFileUploadBox csvFile={csvFile} imageFiles={imageFiles} setImageFiles={setImageFiles}/>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleOk}>확인</Button>

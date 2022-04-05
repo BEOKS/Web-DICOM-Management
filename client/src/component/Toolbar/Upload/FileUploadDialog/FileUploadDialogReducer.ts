@@ -1,8 +1,8 @@
 export type FileUploadDialogType={
-    open : boolean
+    open : boolean,
 }
 const init_type : FileUploadDialogType={
-    open : false
+    open : false,
 }
 const HEADER='FileUploadDialog'
 const TYPE={
