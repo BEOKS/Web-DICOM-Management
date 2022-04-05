@@ -4,6 +4,15 @@
 Dicom 의료 영상 데이터를 저장, 관리하며 시각화 기능과 머신러닝 개발을 지원하는 SW개발
 ## :bar_chart: Success metrics
 의료데이터 관리 및 시각화 지원 기능을 구현하여 v1.0 배포를 목표로 한다.(option 제외)
+## 🏗️Architecture
+![Untitled Diagram drawio](https://user-images.githubusercontent.com/30094719/161691617-707fad46-eac6-4ed0-80f4-fdce88ed893d.png)
+1. Base Client : 계정관리, Dicom데이터 업로드, 다운로드 그리고 머신러닝 지원 등 전체적인 사용자 기능을 지원한다.
+2. DicomViewer : Base Client에 의해 호출되며 Dicom 파일 시각화를 지원하는  클라이언트이다.
+3. MiddleWare : 클라이언트와 데이터베이스, 서버 사이의 요청을 처리한다.
+4. Dicom Server :  Dicom 데이터를 저장하며 Dicom Web 표준 프로토콜을 통해 Dicom 데이터를 송수신한다.
+5. Database : Dicom 메타데이터 및 계정정보 등 사용자 기능을 지원하기 위한 데이터를 저장한다.
+6. TorchServer : Dicom 이미지를 통한 머신러닝 모델을 학습, 추론 기능을 지원한다.
+7. docker compose : 각 서버는 도커로 실행되며 docker compose는 이를 통합 관리한다.
 ## Usage
 ### Prerequirement
 1. 최신 버전의 도커를 설치해주세요. (docker-compose는 v2 버전으로 설치되어야 합니다, 리눅스의 경우 간혹 v1으로 설치되므로 업데이트가 필요합니다.)
@@ -56,15 +65,6 @@ Dicom 파일 선택 기능 | 사용자는 웹 UI에 있는 Dicom 리스트 뷰�
 줌 인/아웃, 드래그 등 기분 툴 구현 | 사용자는 웹 UI를 통해서 이미지를 다루는 툴을 사용할 수 있다. | OHIF 오픈소스를 통해서 구현이 가능하다. | 2
 Segmentation 뷰어 기능 구현 | 사용자는 웹 UI를 통해서 Dicom에 Segmentation이 적용된 이미지를 확인 할 수 있다. | Dicom SEG 파일을 orthan서버에 업로드 함으로써 구현이 가능하다. | 3
 Annotation(ROI) 작성 기능 구현 | 사용자는 웹 UI를 통해서 이미지 위에 Annotation을 작성할 수 있으며 서버에 저장이 가능하다. | OHIF에는 기능이 구현되어 있지 않아 추후 기능 구현이 필요하다. 작업 난이도 또한 상당히 높다. | 4(>v1.0)
-## 🏗️Architecture
-![Untitled Diagram drawio](https://user-images.githubusercontent.com/30094719/161691617-707fad46-eac6-4ed0-80f4-fdce88ed893d.png)
-1. Base Client : 계정관리, Dicom데이터 업로드, 다운로드 그리고 머신러닝 지원 등 전체적인 사용자 기능을 지원한다.
-2. DicomViewer : Base Client에 의해 호출되며 Dicom 파일 시각화를 지원하는  클라이언트이다.
-3. MiddleWare : 클라이언트와 데이터베이스, 서버 사이의 요청을 처리한다.
-4. Dicom Server :  Dicom 데이터를 저장하며 Dicom Web 표준 프로토콜을 통해 Dicom 데이터를 송수신한다.
-5. Database : Dicom 메타데이터 및 계정정보 등 사용자 기능을 지원하기 위한 데이터를 저장한다.
-6. TorchServer : Dicom 이미지를 통한 머신러닝 모델을 학습, 추론 기능을 지원한다.
-7. docker compose : 각 서버는 도커로 실행되며 docker compose는 이를 통합 관리한다.
 
 ## 📖 Paper
 1. [Wiki](https://alpine-freezer-d6f.notion.site/DSMP-Wiki-0777d45b69124dbbb0e897ec4e7e3279)
