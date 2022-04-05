@@ -5,7 +5,7 @@ Dicom 의료 영상 데이터를 저장, 관리하며 시각화 기능과 머신
 ## :bar_chart: Success metrics
 의료데이터 관리 및 시각화 지원 기능을 구현하여 v1.0 배포를 목표로 한다.(option 제외)
 ## 🏗️Architecture
-![Untitled Diagram drawio](https://user-images.githubusercontent.com/30094719/161691617-707fad46-eac6-4ed0-80f4-fdce88ed893d.png)
+![Untitled Diagram drawio (1)](https://user-images.githubusercontent.com/30094719/161770002-ca0c89f8-defa-4a40-9acd-4ecb48f56469.png)
 1. Base Client : 계정관리, Dicom데이터 업로드, 다운로드 그리고 머신러닝 지원 등 전체적인 사용자 기능을 지원한다.
 2. DicomViewer : Base Client에 의해 호출되며 Dicom 파일 시각화를 지원하는  클라이언트이다.
 3. MiddleWare : 클라이언트와 데이터베이스, 서버 사이의 요청을 처리한다.
