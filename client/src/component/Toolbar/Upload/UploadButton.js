@@ -2,19 +2,23 @@ import * as React from 'react';
 import { Button, Snackbar,CircularProgress,IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import DicomUploadDialog from './UploadDialog/DicomUploadDialog';
+import {RootState} from "../../../store";
 import CircularProgressWithLabel from './UploadDialog/CircularProgressWithLabel';
 import ColumnTypeDecisionDialog from "./MetadataColumnTypeDecision/ColumnTypeDesicionDialog";
 import FormatChooseDialog from "./FormatChooseDialog/FormatChooseDialog";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {FormatChooseAction} from "./FormatChooseDialog/FormatChooseDialogReducer";
+import {SnackbarAction} from "./SnackbarReducer";
 
 let fileHandler;
 export default function  UploadButton({projects,getMetaData,metaData}){
-    const [open, setOpen] = React.useState(false);
-    const [snackbarInfo,setSnackBarInfo]=React.useState({});
+    const snackbarOpen=useSelector((state)=>state.SnackbarReducer.open)
+    const snackbarMessage=useSelector((state)=>state.SnackbarReducer.message)
+    const snackbarProgress=useSelector((state)=>state.SnackbarReducer.progress)
+    const snackbarCloseButtonOpen=useSelector((state)=>state.SnackbarReducer.closeButtonOpen)
     const dispatch=useDispatch()
     const handleClickOpen = () => {
-        if(snackbarInfo.open){
+        if(snackbarOpen){
             alert('업로드 과정이 진행중입니다.')
         }
         else if(projects.projectId){
@@ -26,14 +30,15 @@ export default function  UploadButton({projects,getMetaData,metaData}){
         }
     };
     const handleClose = () => {
-        setSnackBarInfo({...snackbarInfo,'open':false});
+        //setSnackBarInfo({...snackbarInfo,'open':false});
+        dispatch(SnackbarAction.closeSnackbar())
       };
     const action = (
     <React.Fragment>
-        {snackbarInfo.progress ? 
-            <CircularProgressWithLabel value={snackbarInfo.progress}/> 
-            : snackbarInfo.progress===false ? <div/> :<CircularProgress/>}
-        {(snackbarInfo.progress===100 || snackbarInfo.closeButtonOpen) && <IconButton
+        {snackbarProgress ?
+            <CircularProgressWithLabel value={snackbarProgress}/>
+            : snackbarProgress===false ? <div/> :<CircularProgress/>}
+        {(snackbarProgress===100 || snackbarCloseButtonOpen) && <IconButton
         size="small"
         aria-label="close"
         color="inherit"
@@ -59,8 +64,8 @@ export default function  UploadButton({projects,getMetaData,metaData}){
             <FormatChooseDialog/>
             <Snackbar
                 key='DataLoadingMessenger'
-                open={snackbarInfo.open}
-                message={snackbarInfo.message}
+                open={snackbarOpen}
+                message={snackbarMessage}
                 anchorOrigin={{ 'vertical':'bottom', 'horizontal':'right' }}
                 action={action}
             />
