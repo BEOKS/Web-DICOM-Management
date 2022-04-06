@@ -11,6 +11,7 @@ public enum ErrorCode {
     /* 400 BAD_REQUEST : 잘못된 요청 */
     DEFAULT_BAD_REQUEST(HttpStatus.BAD_REQUEST,"잘못된 요청으로 인해 등록이 불가능 합니다."),
     USER_EMAIL_BAD_REQUEST(HttpStatus.BAD_REQUEST,"해당 EMAIL 로 가입된 USER 정보가 없습니다."),
+    EMPTY_FILE_BAD_REQUEST(HttpStatus.BAD_REQUEST,"빈 파일에 대해서는 참조할 수 없습니다."),
 
     /* 401 UNAUTHORIZED : 권한이 없는 접근 */
     UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "해당 접근에 대한 권한이 없습니다."),
@@ -30,6 +31,7 @@ public enum ErrorCode {
     /* 500 핸들링 하지 않은 에러 */
     NULL_POINTER(HttpStatus.INTERNAL_SERVER_ERROR,"NULL 포인터에 대한 접근이 있습니다."),
     MAX_UPLOAD_SIZE(HttpStatus.INTERNAL_SERVER_ERROR,"업로드 가능한 최대용량을 초과 했습니다."),
+    FILE_IO_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR,"File IO 과정에서 오류가 발생했습니다.")
 
     ;
 
