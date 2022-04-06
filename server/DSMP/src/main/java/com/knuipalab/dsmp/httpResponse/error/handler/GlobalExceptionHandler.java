@@ -67,6 +67,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("handleProjectNotFoundException throw Exception : {}", ErrorCode.PROJECT_NOT_FOUND);
         return ErrorResponse.toResponseEntity(projectNotFoundException.getErrorCode(),request);
     }
+    @ExceptionHandler(value = FileNotFoundException.class)
+    protected ResponseEntity<ErrorResponse> handleFileNotFoundException(HttpServletRequest request, FileNotFoundException fileNotFoundException) {
+        log.error("ErrorExceptionURI : " + request.getRequestURI());
+        log.error("handleFileNotFoundException throw Exception : {}", ErrorCode.PROJECT_NOT_FOUND);
+        return ErrorResponse.toResponseEntity(fileNotFoundException.getErrorCode(),request);
+    }
 
     //  ErrorCode 500 : Internal Server error --------------------------
 //    @ExceptionHandler(value = NullPointerException.class)

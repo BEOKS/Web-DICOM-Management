@@ -23,6 +23,7 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER 를 찾을 수 없습니다."),
     METADATA_NOT_FOUND(HttpStatus.NOT_FOUND,"METADATA 를 찾을 수 없습니다."),
     PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND,"PROJECT 를 찾을 수 없습니다."),
+    FILE_NOT_FOUND(HttpStatus.NOT_FOUND,"요청된 FILE을 찾을 수 없습니다."),
 
     /* 409 CONFLICT : DB 데이터 관리 충돌 */
     CONSTRAINT_VIOLATION_RESOURCE(HttpStatus.CONFLICT, "DB 제약조건 위반입니다."),
