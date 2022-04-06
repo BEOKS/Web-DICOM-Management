@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 
 @Slf4j
@@ -26,6 +27,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("handleUserEmailBadRequestException throw Exception : {}", ErrorCode.USER_EMAIL_BAD_REQUEST);
         return ErrorDataResponse.toResponseEntity(userEmailBadRequestException.getErrorCode(),request);
     }
+
+    @ExceptionHandler(value = EmptyFileBadRequestException.class)
+    protected ResponseEntity<ErrorDataResponse> handleEmptyFileBadRequestException(HttpServletRequest request, EmptyFileBadRequestException emptyFileBadRequestException) {
+        log.error("ErrorExceptionURI : " + request.getRequestURI());
+        log.error("EmptyFileBadRequestException throw Exception : {}", ErrorCode.EMPTY_FILE_BAD_REQUEST);
+        return ErrorDataResponse.toResponseEntity(emptyFileBadRequestException.getErrorCode(),request);
+    }
+
 
     //  ErrorCode 401 : Un Authorized ----------------------------------
     @ExceptionHandler(value = UnAuthorizedAccessException.class)
@@ -58,6 +67,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("handleProjectNotFoundException throw Exception : {}", ErrorCode.PROJECT_NOT_FOUND);
         return ErrorResponse.toResponseEntity(projectNotFoundException.getErrorCode(),request);
     }
+    @ExceptionHandler(value = FileNotFoundException.class)
+    protected ResponseEntity<ErrorResponse> handleFileNotFoundException(HttpServletRequest request, FileNotFoundException fileNotFoundException) {
+        log.error("ErrorExceptionURI : " + request.getRequestURI());
+        log.error("handleFileNotFoundException throw Exception : {}", ErrorCode.PROJECT_NOT_FOUND);
+        return ErrorResponse.toResponseEntity(fileNotFoundException.getErrorCode(),request);
+    }
 
     //  ErrorCode 500 : Internal Server error --------------------------
 //    @ExceptionHandler(value = NullPointerException.class)
@@ -66,6 +81,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 //        log.error("handleNullPointerException throw Exception : {}", ErrorCode.NULL_POINTER);
 //        return ErrorResponse.toResponseEntity(ErrorCode.NULL_POINTER,request);
 //    }
+    @ExceptionHandler(value = FileIOException.class)
+    protected ResponseEntity<ErrorResponse> handleFileIOException(HttpServletRequest request, FileIOException fileIOException) {
+        log.error("ErrorExceptionURI : " + request.getRequestURI());
+        log.error("handleFileIOException throw Exception : {}", ErrorCode.FILE_IO_EXCEPTION);
+        return ErrorResponse.toResponseEntity(fileIOException.getErrorCode(),request);
+    }
 
 
 
