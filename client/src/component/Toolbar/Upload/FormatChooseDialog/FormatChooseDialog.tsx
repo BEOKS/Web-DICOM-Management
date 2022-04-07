@@ -17,6 +17,7 @@ const FormatChooseDialog = ()=>{
         }
         if(format===FORMAT_TYPE.DICOM){
             //TODO open dicom dialog
+            alert('현재 이미지 파일 시스템 개발을 위해 일시적으로 Dicom 서비스를 중단하였습니다. 추후 복구 예정입니다.')
         }
         dispatch(FormatChooseAction.closeDialog())
     }
