@@ -3,7 +3,9 @@ import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import { useState } from 'react';
+import { Tooltip } from '@mui/material';
 
+const MAX_CELL_STRING_LENGTH=100
 export default function DicomRow(props) {
     const { isItemSelected, labelId, handleClick, row, keys, isNonReferenced } = props;
     const [dragged, setDragged] = useState(false);
@@ -14,7 +16,16 @@ export default function DicomRow(props) {
     const createTableCell = (rowBody) => {
         const elements = [];
         for (let i = 1; i < keys.length; i++) {
-            elements[i - 1] = <TableCell style={{ whiteSpace: 'pre-wrap' }} key={keys[i]}>{rowBody[keys[i]]}</TableCell>;
+            if(rowBody[keys[i]].length>=MAX_CELL_STRING_LENGTH){
+                elements[i - 1] = <Tooltip key={keys[i]} title={rowBody[keys[i]]}>
+                    <TableCell style={{ whiteSpace: 'pre-wrap' }} key={keys[i]}>
+                    {rowBody[keys[i]].slice(0,20)+"..."}
+                    </TableCell>
+                </Tooltip>;
+            }
+            else{
+                elements[i - 1] = <TableCell style={{ whiteSpace: 'pre-wrap' }} key={keys[i]}>{rowBody[keys[i]]}</TableCell>;
+            }
         }
         return elements;
     };
