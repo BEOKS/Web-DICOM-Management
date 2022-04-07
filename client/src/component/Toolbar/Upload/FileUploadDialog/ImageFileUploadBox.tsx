@@ -91,7 +91,7 @@ const ImageFileUploadBox: React.FC<BoxInput>=({csvFile,imageFiles,setImageFiles}
         dispatch(SnackbarAction.openSnackbar())
     }
     else{
-        dispatch(SnackbarAction.closeSnackbar())
+        //dispatch(SnackbarAction.closeSnackbar())
     }
     if (csvFile===undefined){
         return(<IntroduceMessage/>)

@@ -1,14 +1,14 @@
 export type SnackbarType={
     open : boolean,
     message : string,
-    progress : number,
+    progress : number|boolean,
     closeButtonOpen : boolean
 }
 
 const init_state:SnackbarType={
     open : false,
     message : '',
-    progress : 0,
+    progress : false,
     closeButtonOpen : false
 }
 
@@ -26,7 +26,7 @@ export const SnackbarAction={
     openSnackbar : ()=>({type : SnackbarActionType.openSnackbar}),
     closeSnackbar : ()=>({type : SnackbarActionType.closeSnackbar}),
     setMessage : (msg : string)=>({type : SnackbarActionType.setMessage,payload : msg}),
-    setProgress : (progress : number)=>({type : SnackbarActionType.setProgress,payload : progress}),
+    setProgress : (progress : number|boolean)=>({type : SnackbarActionType.setProgress,payload : progress}),
     showCloseButton : ()=>({type : SnackbarActionType.showCloseButton}),
     hideCloseButton : ()=>({type : SnackbarActionType.hideCloseButton})
 }
@@ -45,7 +45,7 @@ export default function SnackbarReducer(state : SnackbarType=init_state,action :
         case SnackbarActionType.closeSnackbar:
             return {...state,open : false}
         case SnackbarActionType.setMessage:
-            return {...state, open:true,message : action.payload}
+            return {...state,open : true, message : action.payload}
         case SnackbarActionType.setProgress:
             return {...state,progress : action.payload}
         case SnackbarActionType.showCloseButton:

@@ -7,23 +7,45 @@ const print=(msg:any)=>{
         console.log('uploadCsvFile : ',msg)
     }
 }
-export async function uploadCsvFile(projectId : string,csvFile: File|undefined,callback:()=>{}){
+const IMAGE_NAME='image_name'
+const ANONYMIZED_ID='anonymized_id'
+export async function uploadCsvFile(projectId : string,
+                                    csvFile: File|undefined,
+                                    callStart:()=>void,
+                                    callback:()=>void,
+                                    callError:(error : string)=>void){
+    callStart()
     if(csvFile===undefined){
+        //callError("csv is undefined")
         return
     }
     const csvJson=await loadCSV(csvFile)
-    print(csvJson)
+    if(!checkValidCsv(csvJson)){
+        callError(`CSV 속성에는 ${ANONYMIZED_ID}와 ${IMAGE_NAME} 속성이 존재해야합니다.`)
+        return
+    }
     axios.post(`api/MetaDataList/insert/${projectId}`,csvJson)
         .then(response=>{
             callback()
         })
         .catch(error=>{
-            alert(`update fail ${error}`)
+            callError(error)
         })
-    return
+}
+function checkValidCsv(csvJson:any): boolean{
+    if(csvJson.length===0){
+        return true
+    }
+    else{
+        if(!csvJson[0].hasOwnProperty(IMAGE_NAME) || !csvJson[0].hasOwnProperty(ANONYMIZED_ID)){
+            return false
+        }
+        else{
+            return true
+        }
+    }
 }
 function csv2json(csv :any){
-    print(csv)
     const data= parse (csv,{
         columns: true,
         skip_empty_lines: true

@@ -32,6 +32,7 @@ export default function FileUploadDialog(){
     }
 
     print(csvFile)
+
     const uploadImageHandler=(filename:string, percentage : number)=>{
         dispatch(SnackbarAction.setProgress(percentage))
         if(percentage===100){
@@ -41,14 +42,27 @@ export default function FileUploadDialog(){
             dispatch(SnackbarAction.setMessage(`Uploading ${filename}...`))
         }
     }
-    const handleOk=()=>{
-        uploadCsvFile(projectId,csvFile,()=>dispatch(SnackbarAction.setMessage("Upload CSV complete!")))
-        uploadImageFile(projectId,imageFiles,uploadImageHandler)
+    const handleOk=async()=>{
+        await uploadCsvFile(projectId,csvFile,
+            ()=> {
+                dispatch(SnackbarAction.setMessage("Uploading CSV Files..."))
+            },
+            ()=>{
+                dispatch(SnackbarAction.setMessage("Upload CSV complete!"))
+                dispatch(SnackbarAction.setProgress(false))
+                dispatch(SnackbarAction.showCloseButton())
+            },
+            (error)=>{
+                dispatch(SnackbarAction.setMessage(`Upload CSV error :${error}`))
+                dispatch(SnackbarAction.setProgress(false))
+                dispatch(SnackbarAction.showCloseButton())
+            })
+        await uploadImageFile(projectId,imageFiles,uploadImageHandler)
         dispatch(FileUploadDialogAction.closeDialog())
-        dispatch(SnackbarAction.closeSnackbar())
+        // dispatch(SnackbarAction.closeSnackbar())
     }
     const handleClose=()=>{
-        dispatch(SnackbarAction.closeSnackbar())
+        // dispatch(SnackbarAction.closeSnackbar())
         setCsvFile(undefined)
         setImageFiles([])
         dispatch(FileUploadDialogAction.closeDialog())
