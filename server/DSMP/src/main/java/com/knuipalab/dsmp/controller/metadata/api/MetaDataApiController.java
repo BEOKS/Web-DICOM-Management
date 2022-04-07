@@ -10,6 +10,7 @@ import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +23,7 @@ public class MetaDataApiController {
 
     // projectId가 같은 metadata를 모두 반환
     @GetMapping("api/MetaData/{projectId}")
-    public ResponseEntity< ? extends BasicResponse> findByProjectId(@PathVariable String projectId){
+    public ResponseEntity< ? extends BasicResponse> findByProjectId(@PathVariable String projectId, MultipartFile multipartFile){
         List<MetaDataResponseDto> metaDataResponseDtos = metaDataService.findByProjectId(projectId);
         return ResponseEntity.ok().body(new SuccessDataResponse<List<MetaDataResponseDto>>(metaDataResponseDtos));
     }

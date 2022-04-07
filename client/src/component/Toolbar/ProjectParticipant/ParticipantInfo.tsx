@@ -59,7 +59,7 @@ export default function ParticipantInfo(){
                     </Tooltip>
                     {
                         participantInfo.visitor.map((visitor :User,index)=>
-                            <Tooltip title={`${participantInfo.creator.name}`} key={index+1}>
+                            <Tooltip title={`${visitor.name}`} key={index+1}>
                                 <Avatar alt={visitor.name} src={visitor.picture}/>
                             </Tooltip>)
                     }
