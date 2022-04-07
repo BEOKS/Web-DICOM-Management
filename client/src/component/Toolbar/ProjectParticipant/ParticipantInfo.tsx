@@ -42,7 +42,7 @@ export default function ParticipantInfo(){
             },()=>{dispatch(ParticipantInfoAction.setErrorState())})
     }
     return(
-        <Stack >
+        <Stack sx={{ml: 1}}>
             {loadingStatus===LOADING_STATUS.LOADING &&
                 <Stack direction={"row"} style={{ verticalAlign: "middle" }}>
                     <Typography style={{ verticalAlign: "middle" }}>Loading User Information...</Typography>
@@ -59,7 +59,7 @@ export default function ParticipantInfo(){
                     </Tooltip>
                     {
                         participantInfo.visitor.map((visitor :User,index)=>
-                            <Tooltip title={`${participantInfo.creator.name}`} key={index+1}>
+                            <Tooltip title={`${visitor.name}`} key={index+1}>
                                 <Avatar alt={visitor.name} src={visitor.picture}/>
                             </Tooltip>)
                     }

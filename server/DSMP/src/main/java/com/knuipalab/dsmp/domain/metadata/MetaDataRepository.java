@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MetaDataRepository extends MongoRepository<MetaData, String> {
+public interface MetaDataRepository extends MongoRepository<MetaData, String>, CustomizedMetaDataRepository {
 
     List<MetaData> findByProjectId(String projectId);
     Long deleteAllByProjectId(String projectId);

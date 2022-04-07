@@ -13,14 +13,14 @@ import com.knuipalab.dsmp.dto.metadata.MetaDataCreateAllRequestDto;
 import org.bson.Document;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +75,7 @@ public class MetaDataQA {
 
         long beforeTime = System.currentTimeMillis();
 
-        long METADATA_SIZE = 20000;
+        long METADATA_SIZE = 1000;
 
         Faker faker = new Faker();
         StringBuilder strBodyList = new StringBuilder();
@@ -85,6 +85,7 @@ public class MetaDataQA {
             strBodyList.append(" {\n");
             strBodyList.append("   \"stored_dicom_id\": " + faker.number().numberBetween(111111,9999999)+",\n");
             strBodyList.append("   \"anonymized_id\": " + faker.number().numberBetween(11111111,99999999)+",\n");
+            strBodyList.append("   \"image_name\": " + "\"" + String.format("%s_%s","a",faker.number().numberBetween(11111111,99999999)) +"\""+",\n");
             strBodyList.append("   \"age\": " + faker.number().numberBetween(20,80) +",\n");
             strBodyList.append("   \"modality\": \"MG\",\n");
             strBodyList.append("   \"manufacturer\": " + "\"" + faker.company().name()+"\""+",\n");
@@ -165,7 +166,7 @@ public class MetaDataQA {
             metaDataList.add(metaData);
         }
 
-        int chunk_size = 10000;
+        int chunk_size = 1000;
         for (List<MetaData> batch : Lists.partition(metaDataList,chunk_size)) {
             metaDataRepository.saveAll(batch);
         }
@@ -190,5 +191,6 @@ public class MetaDataQA {
 
         log.info("findAll QA 실행 시간(m) : "+secDiffTime);
     }
+
 
 }
