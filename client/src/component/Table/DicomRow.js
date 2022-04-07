@@ -17,7 +17,11 @@ export default function DicomRow(props) {
         const elements = [];
         for (let i = 1; i < keys.length; i++) {
             if(rowBody[keys[i]].length>=MAX_CELL_STRING_LENGTH){
-                elements[i - 1] = <Tooltip key={keys[i]} title={rowBody[keys[i]]}>
+                elements[i - 1] = 
+                <Tooltip key={keys[i]} 
+                    title={
+                        <div style={{ whiteSpace: 'pre-line' }}>{rowBody[keys[i]]}</div>
+                    }>
                     <TableCell style={{ whiteSpace: 'pre-wrap' }} key={keys[i]}>
                     {rowBody[keys[i]].slice(0,20)+"..."}
                     </TableCell>
