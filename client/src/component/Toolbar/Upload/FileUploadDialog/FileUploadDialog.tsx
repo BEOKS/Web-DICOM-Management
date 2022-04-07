@@ -46,6 +46,7 @@ export default function FileUploadDialog(){
         await uploadCsvFile(projectId,csvFile,
             ()=> {
                 dispatch(SnackbarAction.setMessage("Uploading CSV Files..."))
+                dispatch(SnackbarAction.setProgress(0))
             },
             ()=>{
                 dispatch(SnackbarAction.setMessage("Upload CSV complete!"))
