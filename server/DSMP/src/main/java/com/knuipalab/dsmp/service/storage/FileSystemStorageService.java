@@ -1,10 +1,12 @@
 package com.knuipalab.dsmp.service.storage;
 
+import com.knuipalab.dsmp.domain.project.ProjectRepository;
 import com.knuipalab.dsmp.domain.storage.StorageRepository;
 import com.knuipalab.dsmp.httpResponse.error.ErrorCode;
 import com.knuipalab.dsmp.httpResponse.error.handler.exception.EmptyFileBadRequestException;
 import com.knuipalab.dsmp.httpResponse.error.handler.exception.FileIOException;
 import com.knuipalab.dsmp.httpResponse.error.handler.exception.FileNotFoundException;
+import com.knuipalab.dsmp.httpResponse.error.handler.exception.ProjectNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.FileSystemUtils;
@@ -26,15 +28,22 @@ public class FileSystemStorageService implements StorageService {
 
     private final StorageRepository storageRepository;
 
+    private final ProjectRepository projectRepository;
+    
     private final Path rootLocation;
 
-    public FileSystemStorageService(StorageProperties properties,StorageRepository storageRepository ) {
+    public FileSystemStorageService(StorageProperties properties, StorageRepository storageRepository, ProjectRepository projectRepository) {
         this.rootLocation = Paths.get(properties.getLocation());
         this.storageRepository = storageRepository;
+        this.projectRepository = projectRepository;
     }
 
     @Override
     public void uploadFile(String projectId, MultipartFile file) {
+
+        projectRepository.findById(projectId)
+                .orElseThrow(()->new ProjectNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
+
         if (file.isEmpty()) {
             throw new EmptyFileBadRequestException(ErrorCode.EMPTY_FILE_BAD_REQUEST);
         }
@@ -56,6 +65,10 @@ public class FileSystemStorageService implements StorageService {
 
     @Override
     public void deleteAll(String projectId) {
+
+        projectRepository.findById(projectId)
+                .orElseThrow(()->new ProjectNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
+
         Path projectPath = this.rootLocation.resolve(Paths.get(projectId)).normalize().toAbsolutePath();
         try {
             FileSystemUtils.deleteRecursively(projectPath);
@@ -67,6 +80,10 @@ public class FileSystemStorageService implements StorageService {
 
     @Override
     public void deleteByFileName(String projectId, String fileName) {
+
+        projectRepository.findById(projectId)
+                .orElseThrow(()->new ProjectNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
+
         Path filePath = this.rootLocation
                 .resolve(Paths.get(String.format("%s/%s",projectId,fileName)))
                 .normalize().toAbsolutePath();
@@ -81,6 +98,10 @@ public class FileSystemStorageService implements StorageService {
 
     @Override
     public List<String> getFileList(String projectId) {
+
+        projectRepository.findById(projectId)
+                .orElseThrow(()->new ProjectNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
+
         Path projectPath = this.rootLocation.resolve(Paths.get(projectId)).normalize().toAbsolutePath();
         try {
             List<String> files = Files.walk(projectPath)
@@ -97,6 +118,10 @@ public class FileSystemStorageService implements StorageService {
 
     @Override
     public void serveFile(String projectId, String fileName, HttpServletRequest request, HttpServletResponse response) {
+
+        projectRepository.findById(projectId)
+                .orElseThrow(()->new ProjectNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
+
         // globals.properties
         Path filePath = this.rootLocation
                 .resolve(Paths.get(String.format("%s/%s",projectId,fileName)))
