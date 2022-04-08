@@ -16,7 +16,7 @@ export async function uploadCsvFile(projectId : string,
                                     callError:(error : string)=>void){
     callStart()
     if(csvFile===undefined){
-        //callError("csv is undefined")
+        callError("csv is undefined")
         return
     }
     const csvJson=await loadCSV(csvFile)
@@ -24,7 +24,7 @@ export async function uploadCsvFile(projectId : string,
         callError(`CSV 속성에는 ${ANONYMIZED_ID}와 ${IMAGE_NAME} 속성이 존재해야합니다.`)
         return
     }
-    axios.post(`api/MetaDataList/insert/${projectId}`,csvJson)
+    await axios.post(`api/MetaDataList/insert/${projectId}`,csvJson)
         .then(response=>{
             callback()
         })
@@ -62,6 +62,30 @@ async function loadCSV(csvFile : File){
     const csvJson=csv2json(result)
     return csvJson
 }
-export function uploadImageFile(projectId:string,imageFiles : File[],callback:(filename:string, percentage : number)=>void){
+const uploadFileAPI=async (projectId:string,
+    file : File,
+    callbackSuccess:(response:any)=>void,
+    callbackError : (erorr:any)=>void)=>{
+    const formdata=new FormData()
+    formdata.append("file",file)
+    await axios({
+        method: 'post',
+        url: `/api/Storage/${projectId}`,
+        data: formdata,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      })
+      .then(callbackSuccess)
+      .catch(callbackError)
+}
+export async function uploadImageFile(projectId:string,imageFiles : File[],
+    callback:(filename:string, percentage : number)=>void,
+    callError:(filename:string,error :any)=>void){
 
+    imageFiles.forEach(async (file,index)=>{
+        uploadFileAPI(projectId,file,
+            (response:any)=>callback(file.name,(index+1)/imageFiles.length),
+            (error: any)=>callError(file.name,error))
+    })
 }
