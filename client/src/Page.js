@@ -11,6 +11,7 @@ import LoadingPage from './component/Login/Loading';
 import axios from 'axios';
 import {useDispatch} from "react-redux";
 import {ParticipantInfoAction} from "./component/Toolbar/ProjectParticipant/ParticipantInfoReducer";
+import VisualTable from './component/VisualTable/VisualTable';
 axios.defaults.maxRedirects=0;
 export default function Page() {
     const [open, setOpen] = React.useState(false);
@@ -138,7 +139,7 @@ export default function Page() {
             />
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader/>
-                
+                <VisualTable metaData={metaData} />
                 {
                     presentProject.projectId ?
                     <div>
