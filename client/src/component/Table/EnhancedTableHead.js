@@ -7,7 +7,36 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import Box from "@mui/material/Box";
 import {visuallyHidden} from "@mui/utils";
 import PropTypes from "prop-types";
+import {Tooltip} from "@mui/material";
 
+/**
+ * 입력받은 string이 최대 사이즈를 초과할 경우 요약후
+ * 나머지 내용을 툴팁으로 보여주는 래퍼 뷰입니다.
+ * @param string
+ * @constructor
+ */
+const SummarizeComponent=({str, MAX_SIZE = 10})=>{
+    // str=String(str)
+    if (str.length<=MAX_SIZE){
+        return (<span>{str}</span>)
+    }
+    else{
+        return (
+            <Tooltip
+                     title={
+                         <div style={{ whiteSpace: 'pre-line' }}>{str}</div>
+                     }>
+                <span>{str.slice(0,MAX_SIZE)+"..."}</span>
+            </Tooltip>
+        )
+    }
+}
+/**
+ * 테이블에서 속성 및 전체 선택 체크박스가 표시되는 헤더 뷰입니다.
+ * @param props
+ * @return {JSX.Element}
+ * @constructor
+ */
 export default function EnhancedTableHead(props) {
     let headCells = [];
     const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, rows, keys } =
@@ -64,7 +93,7 @@ export default function EnhancedTableHead(props) {
                             direction={orderBy === headCell.id ? order : 'asc'}
                             onClick={createSortHandler(headCell.id)}
                         >
-                            {headCell.label}
+                            <SummarizeComponent str={headCell.label}/>
                             {orderBy === headCell.id ? (
                                 <Box component="span" sx={visuallyHidden}>
                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
