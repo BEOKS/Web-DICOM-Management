@@ -85,7 +85,7 @@ export async function uploadImageFile(projectId:string,imageFiles : File[],
 
     imageFiles.forEach(async (file,index)=>{
         uploadFileAPI(projectId,file,
-            (response:any)=>callback(file.name,(index+1)/imageFiles.length),
+            (response:any)=>callback(file.name,(index+1)/imageFiles.length*100),
             (error: any)=>callError(file.name,error))
     })
 }
