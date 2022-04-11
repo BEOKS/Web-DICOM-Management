@@ -69,6 +69,7 @@ export default function EnhancedTableHead(props) {
     return (
         <TableHead>
             <TableRow>
+                <TableCell></TableCell>
                 <TableCell padding="checkbox">
                     <Checkbox
                         color="primary"

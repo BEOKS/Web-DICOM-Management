@@ -1,5 +1,6 @@
 import axios from "axios";
 import {parse} from "csv-parse/lib/sync";
+import {uploadFileAPI} from "../../../../../api/StorageAPI";
 
 const DEBUG=true
 const print=(msg:any)=>{
@@ -62,28 +63,12 @@ async function loadCSV(csvFile : File){
     const csvJson=csv2json(result)
     return csvJson
 }
-const uploadFileAPI=async (projectId:string,
-    file : File,
-    callbackSuccess:(response:any)=>void,
-    callbackError : (erorr:any)=>void)=>{
-    const formdata=new FormData()
-    formdata.append("file",file)
-    await axios({
-        method: 'post',
-        url: `/api/Storage/${projectId}`,
-        data: formdata,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        }
-      })
-      .then(callbackSuccess)
-      .catch(callbackError)
-}
+
 export async function uploadImageFile(projectId:string,imageFiles : File[],
     callback:(filename:string, percentage : number)=>void,
     callError:(filename:string,error :any)=>void){
 
-    imageFiles.forEach(async (file,index)=>{
+    imageFiles.forEach( (file,index)=>{
         uploadFileAPI(projectId,file,
             (response:any)=>callback(file.name,(index+1)/imageFiles.length*100),
             (error: any)=>callError(file.name,error))
