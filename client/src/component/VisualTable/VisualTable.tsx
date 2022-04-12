@@ -3,12 +3,14 @@ import _ from "lodash";
 import { Grid } from '@mui/material';
 import { Chart, BarSeries, ArgumentAxis, ValueAxis, Title, Tooltip, PieSeries } from '@devexpress/dx-react-chart-material-ui';
 import { EventTracker, HoverState, Animation } from '@devexpress/dx-react-chart';
+import {extractData,getKeysFromData,isNumeric} from './Utils'
+import { Legend } from '@devexpress/dx-react-chart-material-ui';
 
 type Body = {
     [key: string]: string | number
 };
 
-type MetaData = {
+export type MetaData = {
     metadataId: string,
     projectId: string,
     body: Body
@@ -20,26 +22,8 @@ type VisualTableProps = {
 
 const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
 
-    // metaData의 body 안에 있는 실제 data 추출
-    // 단, metaData === 'loading'일 경우 제외
-    const extractData = () => {
-        if (typeof metaData !== 'string') {
-            return Array.from(metaData).map(e => e.body);
-        } else {
-            return [];
-        }
-    };
-    const data = extractData();
-
-    // data로부터 key 추출
-    const getKeysFromData = () => {
-        if (data.length <= 0) {
-            return [];
-        } else {
-            return Object.keys(data[0]);
-        }
-    };
-    const keys = getKeysFromData();
+    const data = extractData(metaData);
+    const keys = getKeysFromData(data);
 
     const eachData: any[] = [];
     const freq: any = {};
@@ -81,16 +65,16 @@ const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
         }
     }
     addPercent();
-
-
     // return문 안에서는 반복문 사용이 불가하므로 차트 만드는 함수 따로 생성
     const chartRendering = () => {
         const result = [];
 
         for (let i = 0; i < keys.length; i++) {
             const key = keys[i];
-
-            if (key === 'age') {
+            if(key.includes("나이")){
+                uniqEachData[i].sort((a:any,b:any)=>{
+                    return parseFloat(a[Object.keys(uniqEachData[i][0])[0]])-parseFloat(b[Object.keys(uniqEachData[i][0])[0]])
+                })
                 result.push(
                     <Grid item xs={12}>
                         <Chart key={key} data={uniqEachData[i]}>
@@ -109,9 +93,8 @@ const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
                         </Chart>
                     </Grid>
                 );
-            } else if (key === 'StudyInstanceUID' || key === 'anonymized_id' || key === 'image_name') {
-                continue;
-            } else {
+            }
+            else if(key==="기관"||key.includes("machine")||key.includes("라벨")){
                 result.push(
                     <Grid item xs={4}>
                         <Chart key={key} data={uniqEachData[i]}>
@@ -126,9 +109,13 @@ const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
                             <HoverState />
                             <Animation />
                             <Tooltip />
+                            <Legend/>
                         </Chart>
                     </Grid>
                 );
+            }
+            else{
+                continue
             }
 
         }
