@@ -57,7 +57,6 @@ class MalignancyModelHandler(BaseHandler):
         prob = output_dict["prob"].item() # Malignancy 확률값
         pred = output_dict["pred"].item() # 0: Non-malignancy, 1: Malignancy
         cam = output_dict["cam"] # cam
-        print("asdfg",prob,pred,cam)
         return [[prob,pred,cam]]
 
     def postprocess(self, preds):
@@ -72,19 +71,19 @@ class MalignancyModelHandler(BaseHandler):
         # convert it to list
         for index,value in enumerate(preds):
             prob,pred,cam=value
+            pred = 'Malignancy' if pred else 'Non-malignancy'
             if pred:
                 img=self.original
                 heatmap = cv2.applyColorMap(cam.numpy(), cv2.COLORMAP_JET) # colormap 때문에 numpy 변환 후 post-processing
+                heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGBA)
                 heatmap = Image.fromarray(heatmap).resize(img.size)
             
-                img = img.convert("RGBA")
-                heatmap = heatmap.convert("RGBA")
-                result = Image.blend(img, heatmap, 0.3)
+                result = Image.blend(img.convert("RGBA"), heatmap, 0.3)
                 buffered = BytesIO()
                 result.save(buffered, format="PNG")
                 cam= base64.b64encode(buffered.getvalue()).decode('utf-8')
             else:
                 cam=''
             print("asdfg",prob,pred,type(cam))
-            res.append({'prob' : prob, 'pred': pred,'cam':'cam' })
+            res.append({'prob' : prob, 'pred': pred,'cam':cam })
         return res
