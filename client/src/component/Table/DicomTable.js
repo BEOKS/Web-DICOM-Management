@@ -13,6 +13,10 @@ import EnhancedTableHead from './EnhancedTableHead'
 import EnhancedTableToolbar from "./EnhancedTableToolbar";
 import { stableSort, getComparator } from './Utils';
 import DicomRow from './DicomRow';
+import {useDispatch, useSelector} from "react-redux";
+import {MLResultReduxAction} from "./MLResult/MLResultRedux";
+import {getFileListAPI} from "../../api/StorageAPI";
+import ParticipantInfoReducer from "../Toolbar/ProjectParticipant/ParticipantInfoReducer";
 
 export default function DicomTable(props) {
     const [order, setOrder] = React.useState('asc');
@@ -27,12 +31,19 @@ export default function DicomTable(props) {
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const projectId=useSelector((state)=>state.ParticipantInfoReducer.participants.projectId)
     
     const rows = [...props.data];
     const isNonReferenced = props.isNonReferenced;
-
+    console.log(projectId)
     // 메타 데이터 형식 변경으로 인한 임시 키
     const STUDY_KEY_NAME = "StudyInstanceUID";
+    const dispatch=useDispatch()
+    getFileListAPI(
+        projectId,
+        fileList => dispatch(MLResultReduxAction.setImageFileNames(fileList)),
+            error=>console.log('이미지 파일 리스트 다운로드 실패'+error.message)
+    )
 
     // 드로어에서 다른 프로젝트 클릭 시 테이블 행 선택을 해제함
     React.useEffect(() => {
