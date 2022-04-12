@@ -41,6 +41,7 @@ const MLImageResult : React.FC<MLResultImageArgs> =({image_name})=>{
     const fileList : string[]=useSelector((state:RootState)=>state.MLResultReducer.imageFileNames)
     const projectId : string=useSelector((state:RootState)=>state.ParticipantInfoReducer.participants.projectId)
     const [img,setImg] = useState('' )
+    console.log('fileList',fileList)
     if(!fileList.some(file=>file.includes(image_name))){
         return (
             <Alert severity={"warning"}> {image_name} 이미지가 존재하지 않습니다.</Alert>
@@ -60,7 +61,7 @@ const MLImageResult : React.FC<MLResultImageArgs> =({image_name})=>{
         )
     }
     else{
-        return (<img src={img} alt="ML original image"/>)
+        return (<img src={img} alt="ML original image" width={"80%"}/>)
     }
 }
 

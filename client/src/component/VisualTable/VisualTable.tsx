@@ -94,7 +94,8 @@ const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
                     </Grid>
                 );
             }
-            else if(key==="기관"||key.includes("machine")||key.includes("라벨")){
+            else if(key.includes("machine")||key.includes("라벨")||key.includes("Tissue composition")
+            ||key.includes("mass")){
                 result.push(
                     <Grid item xs={4}>
                         <Chart key={key} data={uniqEachData[i]}>

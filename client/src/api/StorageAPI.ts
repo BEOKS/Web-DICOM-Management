@@ -31,9 +31,15 @@ export const downloadFile=(projectId: string,
                            filename: string,
                            callbackListener=(image : string)=>{},
                            callbackError:(error:any)=>void)=>{
-    axios.get(`api/Storage/${projectId}/${filename}`)
+    axios.get<Blob>(`api/Storage/${projectId}/${filename}`,{'responseType':'blob'})
         .then((response)=>{
-            callbackListener(Buffer.from(response.data, 'binary').toString('base64'))
+            const myFile = new File([response.data], 'imageName')
+            const reader = new FileReader()
+            reader.onload = ev => {
+                const previewImage = String(ev.target?.result)
+                callbackListener(previewImage) // myImage라는 state에 저장
+              }
+              reader.readAsDataURL(myFile)
         })
         .catch(error=>{
             callbackError(error)
