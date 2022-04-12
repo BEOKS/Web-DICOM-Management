@@ -32,11 +32,10 @@ export default function FileUploadDialog(){
     }
 
     print(csvFile)
-
     const uploadImageHandler=(filename:string, percentage : number)=>{
         dispatch(SnackbarAction.setProgress(percentage))
         if(percentage===100){
-            dispatch(SnackbarAction.setMessage("Upload Image Complete"))
+            dispatch(SnackbarAction.setMessage("Upload Image Complete "))
         }
         else{
             dispatch(SnackbarAction.setMessage(`Uploading ${filename}...`))
