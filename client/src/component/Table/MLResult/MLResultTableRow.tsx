@@ -57,7 +57,7 @@ const MLImageResult : React.FC<MLResultImageArgs> =({image_name})=>{
         }
         else{
             return (
-                <Alert severity={"warning"}> {image_name} 이미지가 존재하지 않습니다.</Alert>
+                <Alert severity={"warning"}> {image_name} 이미지가 존재하지 않습니다. 업로드한 이미지의 이름과 일치하는지 확인해주세요</Alert>
             )
         }
     }
