@@ -1,6 +1,6 @@
 import * as React from 'react'
 import sample_image from './sample_image.png'
-import {Alert, CircularProgress, Collapse, TableCell} from "@mui/material";
+import {Alert, CircularProgress, Collapse, Stack, TableCell, Typography} from "@mui/material";
 import TableRow from '@mui/material/TableRow';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store";
@@ -22,12 +22,12 @@ interface MLResultTableArgs{
 const MLResultTableRow: React.FC<MLResultTableArgs> = ({image_name,anonymize_id,open})=>{
     return (
         <TableRow>
-            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
                 <Collapse in={open} timeout="auto" unmountOnExit>
-                    <div>
+                    <Stack direction={'row'}>
                         <MLImageResult image_name={image_name}/>
-                        <MLStringResult anonymize_id={anonymize_id}/>
-                    </div>
+                        <MLImageResult image_name={getResultImage(image_name)}/>
+                    </Stack>
                 </Collapse>
             </TableCell>
         </TableRow>
@@ -43,9 +43,23 @@ const MLImageResult : React.FC<MLResultImageArgs> =({image_name})=>{
     const [img,setImg] = useState('' )
     console.log('fileList',fileList)
     if(!fileList.some(file=>file.includes(image_name))){
-        return (
-            <Alert severity={"warning"}> {image_name} 이미지가 존재하지 않습니다.</Alert>
-        )
+        if(image_name.includes("cam")){
+            return (
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                }}>
+                    <Alert severity={"warning"}> cam 이미지가 존재하지 않습니다. 결과를 보기 위해선 원본 이미지 업로드 후, 추론을 진행해주세요</Alert>
+                </div> 
+                
+            )
+        }
+        else{
+            return (
+                <Alert severity={"warning"}> {image_name} 이미지가 존재하지 않습니다.</Alert>
+            )
+        }
     }
     else if(img===''){
         downloadFile(projectId,image_name,
@@ -61,7 +75,13 @@ const MLImageResult : React.FC<MLResultImageArgs> =({image_name})=>{
         )
     }
     else{
-        return (<img src={img} alt="ML original image" width={"80%"}/>)
+        return (
+        <Stack>
+            <img src={img} alt="ML original image" width={'80%'}/>
+            <Typography align='center' width={'80%'}>{image_name.includes("cam")? 'cam result':'original image'}</Typography>
+        </Stack>
+
+        )
     }
 }
 
@@ -72,4 +92,8 @@ const MLStringResult : React.FC<MLStringResultArgs>=({anonymize_id})=>{
     return (<span>ML Result</span>)
 }
 
+const getResultImage=(imageName:string)=>{
+    const index=imageName.indexOf('.')
+    return imageName.substring(0,index)+".cam"+imageName.substring(index)
+}
 export default MLResultTableRow
