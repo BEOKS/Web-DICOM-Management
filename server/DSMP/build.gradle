@@ -65,6 +65,7 @@ dependencies {
     implementation 'io.micrometer:micrometer-registry-prometheus'
 
     implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre' // guava
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
 }
 
 test {

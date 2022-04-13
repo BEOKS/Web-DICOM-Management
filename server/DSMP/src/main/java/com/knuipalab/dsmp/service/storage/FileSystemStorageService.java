@@ -30,7 +30,7 @@ public class FileSystemStorageService implements StorageService {
 
     private final ProjectRepository projectRepository;
     
-    private final Path rootLocation;
+    public final Path rootLocation;
 
     public FileSystemStorageService(StorageProperties properties, StorageRepository storageRepository, ProjectRepository projectRepository) {
         this.rootLocation = Paths.get(properties.getLocation());
@@ -116,18 +116,25 @@ public class FileSystemStorageService implements StorageService {
         }
     }
 
-    @Override
-    public void serveFile(String projectId, String fileName, HttpServletRequest request, HttpServletResponse response) {
-
+    /**
+     * 파일을 로드하는 인터페이스를 분리
+     * @param projectId
+     * @param fileName
+     * @return
+     */
+    public File serveFile(String projectId,String fileName){
         projectRepository.findById(projectId)
                 .orElseThrow(()->new ProjectNotFoundException(ErrorCode.PROJECT_NOT_FOUND));
-
-        // globals.properties
         Path filePath = this.rootLocation
                 .resolve(Paths.get(String.format("%s/%s",projectId,fileName)))
                 .normalize().toAbsolutePath();
-
         File file = new File(filePath.toString());
+        return  file;
+    }
+    @Override
+    public void serveFile(String projectId, String fileName, HttpServletRequest request, HttpServletResponse response) {
+
+        File file = serveFile(projectId,fileName);
 
         if(!file.exists()){
             throw new FileNotFoundException(ErrorCode.FILE_NOT_FOUND);
