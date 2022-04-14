@@ -99,6 +99,8 @@ export default function DicomRow(props) {
                 image_name={row.body[IMAGE_NAME]}
                 anonymize_id={row.body[ANONYMIZED_ID]}
                 open={openCollapse}
+                pred={row.body['pred']}
+                prob={row.body['prob']}
             />
         </React.Fragment>
     );

@@ -34,8 +34,8 @@ export default function DicomTable(props) {
     const projectId=useSelector((state)=>state.ParticipantInfoReducer.participants.projectId)
     
     const rows = [...props.data];
+    console.log('data',rows)
     const isNonReferenced = props.isNonReferenced;
-    console.log(projectId)
     // 메타 데이터 형식 변경으로 인한 임시 키
     const STUDY_KEY_NAME = "StudyInstanceUID";
     const dispatch=useDispatch()

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import sample_image from './sample_image.png'
-import {Alert, CircularProgress, Collapse, Stack, TableCell, Typography} from "@mui/material";
+import {Alert, Chip, Grid, Collapse, Skeleton, Stack, TableCell, Typography} from "@mui/material";
 import TableRow from '@mui/material/TableRow';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../store";
@@ -9,6 +9,8 @@ import {downloadFile} from "../../../api/StorageAPI";
 interface MLResultTableArgs{
     image_name : string,
     anonymize_id : string,
+    pred :string,
+    prob :string,
     open : boolean,
 }
 
@@ -19,14 +21,15 @@ interface MLResultTableArgs{
  * @param anonymize_id
  * @constructor
  */
-const MLResultTableRow: React.FC<MLResultTableArgs> = ({image_name,anonymize_id,open})=>{
+const MLResultTableRow: React.FC<MLResultTableArgs> = ({image_name,anonymize_id,open,pred,prob})=>{
     return (
         <TableRow>
-            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
+            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     <Stack direction={'row'}>
-                        <MLImageResult image_name={image_name}/>
-                        <MLImageResult image_name={getResultImage(image_name)}/>
+                        <MLImageResult image_name={image_name} pred={pred} prob={prob}/>
+                        <MLImageResult image_name={getCropImage(image_name)} pred={pred} prob={prob}/>
+                        <MLImageResult image_name={getResultImage(image_name)} pred={pred} prob={prob}/>
                     </Stack>
                 </Collapse>
             </TableCell>
@@ -35,9 +38,12 @@ const MLResultTableRow: React.FC<MLResultTableArgs> = ({image_name,anonymize_id,
 }
 
 interface MLResultImageArgs{
-    image_name: string
+    image_name: string,
+    pred :string,
+    prob :string
+
 }
-const MLImageResult : React.FC<MLResultImageArgs> =({image_name})=>{
+const MLImageResult : React.FC<MLResultImageArgs> =({image_name,pred,prob})=>{
     const fileList : string[]=useSelector((state:RootState)=>state.MLResultReducer.imageFileNames)
     const projectId : string=useSelector((state:RootState)=>state.ParticipantInfoReducer.participants.projectId)
     const [img,setImg] = useState('' )
@@ -50,14 +56,13 @@ const MLImageResult : React.FC<MLResultImageArgs> =({image_name})=>{
                     alignItems: 'center',
                     flexWrap: 'wrap',
                 }}>
-                    <Alert severity={"warning"}> cam 이미지가 존재하지 않습니다. 결과를 보기 위해선 원본 이미지 업로드 후, 추론을 진행해주세요</Alert>
                 </div> 
                 
             )
         }
         else{
             return (
-                <Alert severity={"warning"}> {image_name} 이미지가 존재하지 않습니다. 업로드한 이미지의 이름과 일치하는지 확인해주세요</Alert>
+                <Alert severity={"warning"}> No Image : {image_name} </Alert>
             )
         }
     }
@@ -66,20 +71,43 @@ const MLImageResult : React.FC<MLResultImageArgs> =({image_name})=>{
             (image: any)=>{setImg(image)},
             (error: any)=>setImg('error'))
         return (
-            <Alert severity={"info"}> {image_name} 이미지를 다운로드 중입니다. <CircularProgress/></Alert>
+            <Skeleton variant="rectangular" width={210} height={210} />
         )
     }
     else if(img==='error'){
         return(
-            <Alert severity={"error"}> {image_name} 이미지를 가져오는데 실패했습니다.</Alert>
+            <Alert severity={"error"}> {image_name} Fail loading image</Alert>
         )
+    }
+    else if(img=='data:'){
+        return (<div></div>)
     }
     else{
         return (
-        <Stack>
-            <img src={img} alt="ML original image" width={'80%'}/>
-            <Typography align='center' width={'80%'}>{image_name.includes("cam")? 'cam result':'original image'}</Typography>
-        </Stack>
+            <Grid
+                container
+                spacing={0}
+                direction="column"
+                alignItems="center"
+                justify="center"
+                >
+
+                <Grid item xs={3}>
+                    <img src={img} alt=" image" width={'80%'}/>
+                    <Chip label= {image_name.includes("cam")? `${pred} : ${prob}`:
+                            (image_name.includes("crop")? 'Cropped image':'Original image')} style={{width:'80%'}}/>
+                </Grid>   
+
+            </Grid> 
+        // <Stack>
+        //     <img src={img} alt=" image" width={'80%'}/>
+        //     <Chip label= {image_name.includes("cam")? 'Cam Result':
+        //             (image_name.includes("crop")? 'Cropped image':'Original image')} style={{width:'80%'}}/>
+        //     {/* <Typography align='center' width={'80%'}>
+        //         {image_name.includes("cam")? img:
+        //             (image_name.includes("crop")? 'Cropped image':'Original image')}
+        //     </Typography> */}
+        // </Stack>
 
         )
     }
@@ -95,5 +123,9 @@ const MLStringResult : React.FC<MLStringResultArgs>=({anonymize_id})=>{
 const getResultImage=(imageName:string)=>{
     const index=imageName.indexOf('.')
     return imageName.substring(0,index)+".cam"+imageName.substring(index)
+}
+const getCropImage=(imageName:string)=>{
+    const index=imageName.indexOf('.')
+    return imageName.substring(0,index)+".crop"+imageName.substring(index)
 }
 export default MLResultTableRow

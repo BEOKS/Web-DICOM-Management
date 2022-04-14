@@ -73,18 +73,21 @@ class MalignancyModelHandler(BaseHandler):
         # convert it to list
         for index,value in enumerate(preds):
             prob,pred,cam=value
+            img=self.original
+            buffered = BytesIO()
+            img.save(buffered, format="PNG")
+            crop=base64.b64encode(buffered.getvalue()).decode('utf-8')
             if pred:
-                img=self.original
                 heatmap = cv2.applyColorMap(cam.numpy(), cv2.COLORMAP_JET) # colormap 때문에 numpy 변환 후 post-processing
                 heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGBA)
                 heatmap = Image.fromarray(heatmap).resize(img.size)
-            
-                result = Image.blend(img.convert("RGBA"), heatmap, 0.3)
+
                 buffered = BytesIO()
+                result = Image.blend(img.convert("RGBA"), heatmap, 0.3)
                 result.save(buffered, format="PNG")
                 cam= base64.b64encode(buffered.getvalue()).decode('utf-8')
             else:
                 cam=''
             pred = 'Malignancy' if pred else 'Non-malignancy'
-            res.append({'prob' : prob, 'pred': pred,'cam':cam })
+            res.append({'prob' : prob, 'pred': pred,'crop': crop,'cam':cam })
         return res
