@@ -1,6 +1,9 @@
 package com.knuipalab.dsmp.service.machineLearning;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.knuipalab.dsmp.service.storage.FileSystemStorageService;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -41,19 +44,30 @@ public class BasicMalignancyServerMessenger implements MalignancyServerMessenger
             return null;
         }
     }
-
+    private JsonNode parseJson(String json){
+        ObjectMapper objectMapper=new ObjectMapper();
+        JsonNode jsonNode=null;
+        try {
+            jsonNode = objectMapper.readTree(json);
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return jsonNode;
+    }
     @Override
     public JsonNode requestMalignancyInference(String projectId, String imageName) {
         File imageFile=this.fileSystemStorageService.serveFile(projectId,imageName);
         HttpResponse httpResponse=postImageToServer(URL,imageFile);
         try {
             String json = EntityUtils.toString(httpResponse.getEntity());
-            System.out.println("asdf"+json);
+            JsonNode jsonNode=parseJson(json);
+            return jsonNode;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-        return null;
     }
 
     @Override

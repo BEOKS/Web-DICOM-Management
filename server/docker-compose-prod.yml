@@ -28,6 +28,8 @@ services:
       innerNetwork:
         aliases:
           - middleware
+    extra_hosts:
+      - host.docker.internal:host-gateway
     depends_on:
       - mongodb
       - orthanc
@@ -44,8 +46,8 @@ services:
       innerNetwork:
         aliases:
           - mongodb
-    # ports:
-    #  - 27017:27017 
+    ports: #한시적으로 해제
+     - 27017:27017 
   orthanc:
     image: jodogne/orthanc-plugins:1.9.7
     volumes:

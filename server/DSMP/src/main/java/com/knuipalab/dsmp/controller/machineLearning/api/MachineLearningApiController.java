@@ -1,10 +1,13 @@
 package com.knuipalab.dsmp.controller.machineLearning.api;
 
 import com.knuipalab.dsmp.httpResponse.BasicResponse;
+import com.knuipalab.dsmp.httpResponse.success.SuccessDataResponse;
 import com.knuipalab.dsmp.httpResponse.success.SuccessResponse;
 import com.knuipalab.dsmp.service.machineLearning.AsyncMetaDataSampler;
+import com.knuipalab.dsmp.service.machineLearning.BasicMalignancyServerMessenger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class MachineLearningApiController {
 
     private final AsyncMetaDataSampler asyncMetaDataSampler;
+    private final BasicMalignancyServerMessenger basicMalignancyServerMessenger;
+    /**
+     * 머신러닝 추론을 테스트하기 위한 임시 API 입니다.
+     * @return
+     */
+    @GetMapping("api/ML/sampleRequest")
+    public ResponseEntity<? extends BasicResponse> sampleRequest(){
+        return ResponseEntity.ok().body(new SuccessDataResponse<String>(basicMalignancyServerMessenger.requestMalignancyInference("62552fea40ddf80e5b77eb49",
+                "c_116627_m_l_1_1.jpg").toString()));
+    }
 
     @PutMapping("api/MetaData/Sampling/{projectId}")
     public ResponseEntity<? extends BasicResponse> typeSampling(@PathVariable String projectId) {
