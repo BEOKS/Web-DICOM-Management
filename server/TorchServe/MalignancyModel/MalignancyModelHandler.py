@@ -1,15 +1,21 @@
 import io
 from PIL import Image
+from requests import head
 import torch
 from ts.torch_handler.base_handler import BaseHandler
 from torchvision import transforms
 import base64
 import sys
-print("asdf",sys.version)
 from io import BytesIO
 import json
 import cv2 
+import numpy as np
 from CropUltrasound import cropImage
+def base64Encoding(image):
+    buffered = BytesIO()
+    image.save(buffered, format="PNG")
+    cam= base64.b64encode(buffered.getvalue()).decode('utf-8')
+    return cam
 class MalignancyModelHandler(BaseHandler):
     """
     MalignancyModel의 전처리, 추론, 후처리를 진행하기 위한
@@ -40,6 +46,7 @@ class MalignancyModelHandler(BaseHandler):
         image = self.transform(image)
         # add batch dim
         image = image.unsqueeze(0)
+        image=(image-image.mean())/image.std()
         return image
 
     def preprocess(self, requests):
@@ -56,9 +63,10 @@ class MalignancyModelHandler(BaseHandler):
         We return the predicted label for each image.
         """
         output_dict = self.model(x)
-        prob = output_dict["prob"].item() # Malignancy 확률값
-        pred = output_dict["pred"].item() # 0: Non-malignancy, 1: Malignancy
-        cam = output_dict["cam"] # cam
+        prob = output_dict["output"].item() # Malignancy 확률값
+        pred = 'Malignancy' if prob > 0.5 else 'Non-malignancy' # 0: Non-malignancy, 1: Malignancy
+        cam = output_dict["mask"].squeeze().cpu().numpy() # cam
+        cam = np.uint8(cam*255)
         return [[prob,pred,cam]]
 
     def postprocess(self, preds):
@@ -74,20 +82,25 @@ class MalignancyModelHandler(BaseHandler):
         for index,value in enumerate(preds):
             prob,pred,cam=value
             img=self.original
-            buffered = BytesIO()
-            img.save(buffered, format="PNG")
-            crop=base64.b64encode(buffered.getvalue()).decode('utf-8')
-            if pred:
-                heatmap = cv2.applyColorMap(cam.numpy(), cv2.COLORMAP_JET) # colormap 때문에 numpy 변환 후 post-processing
-                heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGBA)
-                heatmap = Image.fromarray(heatmap).resize(img.size)
+            # if pred:
+            #     heatmap = cv2.applyColorMap(cam.numpy(), cv2.COLORMAP_JET) # colormap 때문에 numpy 변환 후 post-processing
+            #     heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGBA)
+            #     heatmap = Image.fromarray(heatmap).resize(img.size)
 
-                buffered = BytesIO()
-                result = Image.blend(img.convert("RGBA"), heatmap, 0.3)
-                result.save(buffered, format="PNG")
-                cam= base64.b64encode(buffered.getvalue()).decode('utf-8')
-            else:
-                cam=''
-            pred = 'Malignancy' if pred else 'Non-malignancy'
+            #     buffered = BytesIO()
+            #     result = Image.blend(img.convert("RGBA"), heatmap, 0.3)
+            #     result.save(buffered, format="PNG")
+            #     cam= base64.b64encode(buffered.getvalue()).decode('utf-8')
+            # else:
+            #     cam=''
+            # pred = 'Malignancy' if pred else 'Non-malignancy'
+            prob=round(float(prob),3)
+            heatmap = cv2.applyColorMap(cam, cv2.COLORMAP_JET) # colormap 때문에 numpy 변환 후 post-processing
+            heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGBA)
+            heatmap = Image.fromarray(heatmap).resize(img.size)
+
+            crop= base64Encoding(img)
+            heatmap=Image.blend(img.convert("RGBA"), heatmap, 0.3)
+            cam = base64Encoding(heatmap)
             res.append({'prob' : prob, 'pred': pred,'crop': crop,'cam':cam })
         return res
