@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
-
+import logo from './logo.png'
 export const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
@@ -47,9 +47,11 @@ export default function BaseAppBar(props) {
                 <Button
                     color="inherit"
                     href="logout"
+                    width={40}
                 >
                     Logout
                 </Button>
+                <img src={logo} height={40} marginLeft={40}/>
             </Toolbar>
         </AppBar>
     );

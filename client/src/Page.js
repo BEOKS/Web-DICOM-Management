@@ -12,6 +12,7 @@ import axios from 'axios';
 import {useDispatch} from "react-redux";
 import {ParticipantInfoAction} from "./component/Toolbar/ProjectParticipant/ParticipantInfoReducer";
 import VisualTable from './component/VisualTable/VisualTable';
+import logo from './component/AppBar/logo.png'
 axios.defaults.maxRedirects=0;
 
 const VIEW_NAME={
