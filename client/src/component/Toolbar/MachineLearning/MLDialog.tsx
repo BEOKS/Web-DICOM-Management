@@ -35,9 +35,9 @@ const MLDialog: React.FC<MLDialogProps> = ({ getMetaData }) => {
 
     return (
         <Dialog open={open}>
-            <DialogTitle>머신러닝 추론</DialogTitle>
+            <DialogTitle> Machine Learning Inference</DialogTitle>
             <DialogContent>
-                <Alert severity='info'>이 프로젝트의 데이터 셋에 대해 <strong>머신러닝 추론</strong>을 진행합니다.</Alert>
+                <Alert severity='info'>Process all ML Inference for this project images</Alert>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClickOK}>확인</Button>

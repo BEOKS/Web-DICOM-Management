@@ -30,7 +30,7 @@ export default function DicomTable(props) {
 
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState(25);
     const projectId=useSelector((state)=>state.ParticipantInfoReducer.participants.projectId)
     
     const rows = [...props.data];
@@ -194,7 +194,7 @@ export default function DicomTable(props) {
                     </Table>
                 </TableContainer>
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={[25, 10, 5]}
                     component="div"
                     count={rows.length}
                     rowsPerPage={rowsPerPage}

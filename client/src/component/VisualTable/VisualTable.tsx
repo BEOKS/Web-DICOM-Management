@@ -71,7 +71,7 @@ const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
 
         for (let i = 0; i < keys.length; i++) {
             const key = keys[i];
-            if(key.includes("나이")){
+            if(key.includes("Age")){
                 uniqEachData[i].sort((a:any,b:any)=>{
                     return parseFloat(a[Object.keys(uniqEachData[i][0])[0]])-parseFloat(b[Object.keys(uniqEachData[i][0])[0]])
                 })
@@ -94,8 +94,9 @@ const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
                     </Grid>
                 );
             }
-            else if(key.includes("machine")||key.includes("라벨")||key.includes("Tissue composition")
-            ||key.includes("mass")||key.includes("pred")){
+            else if(key.includes("US Device")||key.includes("Label")||key.includes("Acquisition Year")
+            ||key.includes("Lesion Type")||key.includes("pred")||key.includes("Tissue Composition")
+            ||key.includes("Palpability")||key.includes("Biopsy")){
                 result.push(
                     <Grid item xs={4}>
                         <Chart key={key} data={uniqEachData[i]}>

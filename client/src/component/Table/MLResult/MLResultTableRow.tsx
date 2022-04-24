@@ -47,9 +47,8 @@ const MLImageResult : React.FC<MLResultImageArgs> =({image_name,pred,prob})=>{
     const fileList : string[]=useSelector((state:RootState)=>state.MLResultReducer.imageFileNames)
     const projectId : string=useSelector((state:RootState)=>state.ParticipantInfoReducer.participants.projectId)
     const [img,setImg] = useState('' )
-    console.log('fileList',fileList)
     if(!fileList.some(file=>file.includes(image_name))){
-        if(image_name.includes("cam")){
+        if(image_name.includes("cam")||image_name.includes("crop")){
             return (
                 <div style={{
                     display: 'flex',
@@ -71,7 +70,7 @@ const MLImageResult : React.FC<MLResultImageArgs> =({image_name,pred,prob})=>{
             (image: any)=>{setImg(image)},
             (error: any)=>setImg('error'))
         return (
-            <Skeleton variant="rectangular" width={210} height={210} />
+            <Skeleton variant="rectangular" width={300} height={210} />
         )
     }
     else if(img==='error'){
@@ -89,15 +88,12 @@ const MLImageResult : React.FC<MLResultImageArgs> =({image_name,pred,prob})=>{
                 spacing={0}
                 direction="column"
                 alignItems="center"
-                justify="center"
                 >
-
                 <Grid item xs={3}>
                     <img src={img} alt=" image" width={'80%'}/>
                     <Chip label= {image_name.includes("cam")? `${pred} : ${prob}`:
                             (image_name.includes("crop")? 'Cropped image':'Original image')} style={{width:'80%'}}/>
                 </Grid>   
-
             </Grid> 
         // <Stack>
         //     <img src={img} alt=" image" width={'80%'}/>
