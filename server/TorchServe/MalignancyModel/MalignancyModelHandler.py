@@ -11,6 +11,12 @@ import json
 import cv2 
 import numpy as np
 from CropUltrasound import cropImage
+from scipy.stats import norm
+
+MEAN = 0.498750471
+STD = 0.33493005
+T = 0.4
+
 def base64Encoding(image):
     buffered = BytesIO()
     image.save(buffered, format="PNG")
@@ -64,9 +70,14 @@ class MalignancyModelHandler(BaseHandler):
         """
         output_dict = self.model(x)
         prob = output_dict["output"].item() # Malignancy 확률값
-        pred = 'Malignancy' if prob > 0.5 else 'Non-malignancy' # 0: Non-malignancy, 1: Malignancy
+        prob = (prob - MEAN) / STD
+        prob = norm.cdf(prob)           # 최종 확률값
+
+        pred = 'Malignancy' if prob > T else 'Non-malignancy' # 0: Non-malignancy, 1: Malignancy
         cam = output_dict["mask"].squeeze().cpu().numpy() # cam
-        cam = np.uint8(cam*255)
+        cam *=prob
+        cam = cv2.resize(np.uint8(cam*255), self.original.size, interpolation=cv2.INTER_LINEAR) 
+        cam[0,0] = 255
         return [[prob,pred,cam]]
 
     def postprocess(self, preds):
@@ -94,10 +105,10 @@ class MalignancyModelHandler(BaseHandler):
             # else:
             #     cam=''
             # pred = 'Malignancy' if pred else 'Non-malignancy'
-            prob=round(float(prob),3)
+            prob=str(round(float(prob)*100,1))+'%'
             heatmap = cv2.applyColorMap(cam, cv2.COLORMAP_JET) # colormap 때문에 numpy 변환 후 post-processing
             heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGBA)
-            heatmap = Image.fromarray(heatmap).resize(img.size)
+            heatmap = Image.fromarray(heatmap)
 
             crop= base64Encoding(img)
             heatmap=Image.blend(img.convert("RGBA"), heatmap, 0.3)
