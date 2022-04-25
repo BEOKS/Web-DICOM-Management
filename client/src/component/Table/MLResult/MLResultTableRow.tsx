@@ -61,7 +61,7 @@ const MLImageResult : React.FC<MLResultImageArgs> =({image_name,pred,prob})=>{
         }
         else{
             return (
-                <Alert severity={"warning"}> No Image : {image_name} </Alert>
+                <Alert severity={"info"}> Please update image file for preview </Alert>
             )
         }
     }
