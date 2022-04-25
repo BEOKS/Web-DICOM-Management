@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
 import logo from './logo.png'
+import { Box } from '@mui/material';
 export const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
@@ -41,17 +42,19 @@ export default function BaseAppBar(props) {
                 >
                     <MenuIcon />
                 </IconButton>
-                <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+                <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 2 }}>
                     {props.presentProjectName}
                 </Typography>
                 <Button
                     color="inherit"
                     href="logout"
                     width={40}
+                    marginLeft={30}
                 >
                     Logout
                 </Button>
-                <img src={logo} height={40} marginLeft={40}/>
+                <Box width={20}></Box>
+                <img src={logo} height={40} />
             </Toolbar>
         </AppBar>
     );
