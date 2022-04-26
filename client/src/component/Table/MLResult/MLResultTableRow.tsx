@@ -91,7 +91,7 @@ const MLImageResult : React.FC<MLResultImageArgs> =({image_name,pred,prob})=>{
                 >
                 <Grid item xs={3}>
                     <img src={img} alt=" image" width={'80%'}/>
-                    <Chip label= {image_name.includes("cam")? `${pred} : ${prob}`:
+                    <Chip label= {image_name.includes("cam")? `MI-BUS score : ${prob}`:
                             (image_name.includes("crop")? 'Cropped image':'Original image')} style={{width:'80%'}}/>
                 </Grid>   
             </Grid> 
