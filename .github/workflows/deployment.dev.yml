@@ -32,9 +32,6 @@ jobs:
           git checkout dev
           git fetch --all
           git reset --hard origin/dev
-          cd client
-          yarn install
-          echo ${{ secrets.PASSWORD }} | sudo yarn start:prod
-          cd ../server
-          echo ${{ secrets.PASSWORD }}  | sudo -S sh run_docker.sh prod
+          echo ${{ secrets.PASSWORD }} | sudo -S bash install_project.sh
+          echo ${{ secrets.PASSWORD }} | sudo -S bash run_project.sh prod
           

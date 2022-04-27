@@ -32,11 +32,10 @@ export default function FileUploadDialog(){
     }
 
     print(csvFile)
-
     const uploadImageHandler=(filename:string, percentage : number)=>{
         dispatch(SnackbarAction.setProgress(percentage))
         if(percentage===100){
-            dispatch(SnackbarAction.setMessage("Upload Image Complete"))
+            dispatch(SnackbarAction.setMessage("Upload Image Complete "))
         }
         else{
             dispatch(SnackbarAction.setMessage(`Uploading ${filename}...`))
@@ -58,7 +57,16 @@ export default function FileUploadDialog(){
                 dispatch(SnackbarAction.setProgress(false))
                 dispatch(SnackbarAction.showCloseButton())
             })
-        await uploadImageFile(projectId,imageFiles,uploadImageHandler)
+        await uploadImageFile(projectId,imageFiles,
+            (filename: string,percentage:number)=> {
+                dispatch(SnackbarAction.setMessage(`Uploading ${filename}`))
+                dispatch(SnackbarAction.setProgress(percentage))
+            },
+            (filename,error)=>{
+                dispatch(SnackbarAction.setMessage(`Upload Error! for ${filename} :${error}`))
+                dispatch(SnackbarAction.setProgress(false))
+                dispatch(SnackbarAction.showCloseButton())
+            })
         dispatch(FileUploadDialogAction.closeDialog())
         // dispatch(SnackbarAction.closeSnackbar())
     }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class DummyMalignancyServerMessenger implements MalignancyServerMessenger{
 
     @Override
-    public JsonNode getClassificationData(String instanceID) {
+    public JsonNode requestMalignancyInference(String projectId, String imageName) {
         String strJsonNode = "{\n" +
                 "   \"classification1\": 11.12,\n" +
                 "    \"classification2\": 57.8\n" +
@@ -27,10 +27,6 @@ public class DummyMalignancyServerMessenger implements MalignancyServerMessenger
         return jsonNode;
     }
 
-    @Override
-    public JsonNode getSegmentationData(String instanceID) {
-        return null;
-    }
 
     @Override
     public boolean isServerAvailable() {

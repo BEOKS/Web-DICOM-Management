@@ -24,20 +24,21 @@ export default function EnhancedTableToolbar(props) {
 
     const handleDicomDownloadButtonClick = () => {
         //download files
-        const selectedMetadataList=metadata.filter(it => selected.includes(it.metadataId)).map(it=>it.body)
-        selectedMetadataList.forEach(selectedMetadataList => {
-            const studyUID=selectedMetadataList.StudyInstanceUID
-            axios.get(`http://${hostLocation}:8080/api/study/${studyUID}/dicom`,{responseType : 'blob'})
-                .then((response) => {
-                    const url = window.URL.createObjectURL(new Blob([response.data]));
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.setAttribute('download', `${studyUID}.zip`); //or any other extension
-                    document.body.appendChild(link);
-                    link.click();
-                });
+        alert('현재 이미지 파일 시스템 개발을 위해 일시적으로 Dicom 서비스를 중단하였습니다. 추후 복구 예정입니다.')
+        // const selectedMetadataList=metadata.filter(it => selected.includes(it.metadataId)).map(it=>it.body)
+        // selectedMetadataList.forEach(selectedMetadataList => {
+        //     const studyUID=selectedMetadataList.StudyInstanceUID
+        //     axios.get(`http://${hostLocation}:8080/api/study/${studyUID}/dicom`,{responseType : 'blob'})
+        //         .then((response) => {
+        //             const url = window.URL.createObjectURL(new Blob([response.data]));
+        //             const link = document.createElement('a');
+        //             link.href = url;
+        //             link.setAttribute('download', `${studyUID}.zip`); //or any other extension
+        //             document.body.appendChild(link);
+        //             link.click();
+        //         });
 
-        });
+        // });
     };
     const handleCSVDownloadButtonClick=()=>{
         const selectedMetadataList=metadata.filter(it => selected.includes(it.metadataId)).map(it=>it.body)

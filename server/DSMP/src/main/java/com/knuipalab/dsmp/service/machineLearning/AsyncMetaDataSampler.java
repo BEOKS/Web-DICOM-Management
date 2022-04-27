@@ -55,9 +55,16 @@ public class AsyncMetaDataSampler implements MetaDataSampler {
         executor.shutdown();
 
     }
-
+    /**
+     * 프로젝트 아이디를 통해서 요청하면,
+     * 해당 프로젝트에 포함된 이미지 데이터들에 대한 머신러닝 추론이 시작됩니다.
+     * 수치형 데이터결과는 메타데이터에 추가되며, 이미지 데이터 결과는 .cam 확장자가
+     * 중간에 삽입되어서 이미지 데이터에 저장됩니다.(ex. 123.jpg -> 123.cam.png)
+     * @param projectId
+     * @return
+     */
     @Override
-    public void setMalignancyClassification(String projectId) {
+    public void requestMLInferenceToTorchServe(String projectId) {
 
         List<MetaData> metaDataList = metaDataRepository.findByProjectId(projectId);
 
@@ -66,7 +73,7 @@ public class AsyncMetaDataSampler implements MetaDataSampler {
 
         List<Future<Runnable>> futures = new ArrayList<Future<Runnable>>();
         for ( MetaData metadata : metaDataList ) {
-            Future f = executor.submit(new getAndSetMalignancyClassificationDataThread(metadata.getMetadataId(),metadata.getImageNameFromBody()));
+            Future f = executor.submit(new getAndSetMalignancyClassificationDataThread(metadata.getMetadataId(),projectId,metadata.getImageNameFromBody()));
             futures.add(f);
         }
         // wait for all tasks to complete before continuing
@@ -87,16 +94,17 @@ public class AsyncMetaDataSampler implements MetaDataSampler {
     class getAndSetMalignancyClassificationDataThread implements Runnable {
 
         private String metadataId;
-        private String imageName;
+        private String projectId,imageName;
 
-        public getAndSetMalignancyClassificationDataThread(String metadataId,String imageName){
+        public getAndSetMalignancyClassificationDataThread(String metadataId,String projectId,String imageName){
             this.metadataId = metadataId;
+            this.projectId=projectId;
             this.imageName = imageName;
         }
 
         @Override
         public void run() {
-            JsonNode jsonNode = malignancyServerMessenger.getClassificationData(imageName);
+            JsonNode jsonNode = malignancyServerMessenger.requestMalignancyInference(projectId, imageName);
             if(jsonNode == null) {
                 throw new NullPointerException();
             }

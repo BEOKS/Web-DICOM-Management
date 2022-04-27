@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import { CircularProgress,Stack,Typography } from '@mui/material';
+import { ButtonGroup, CircularProgress,Stack,Typography,Button } from '@mui/material';
 import DicomTable from "./component/Table/DicomTable";
 import UpDownloadToolbar from "./component/Toolbar/UpDownloadToolbar";
 import { DrawerHeader } from './component/Drawer/ProjectDrawer';
@@ -11,7 +11,14 @@ import LoadingPage from './component/Login/Loading';
 import axios from 'axios';
 import {useDispatch} from "react-redux";
 import {ParticipantInfoAction} from "./component/Toolbar/ProjectParticipant/ParticipantInfoReducer";
+import VisualTable from './component/VisualTable/VisualTable';
+import logo from './component/AppBar/logo.png'
 axios.defaults.maxRedirects=0;
+
+const VIEW_NAME={
+    DICOM_TABLE: 'DicomTable',
+    CHART: 'chart'
+}
 export default function Page() {
     const [open, setOpen] = React.useState(false);
     const [projects, setProjects] = React.useState([]);
@@ -22,6 +29,7 @@ export default function Page() {
     const [metaDataUpdated, setMetaDataUpdated] = React.useState(false);
     const [checkFirst, setCheckFirst] = React.useState(true);
     const [loading,setLoading] =React.useState(true);
+    const [selectedView,setSelectedView]=React.useState(VIEW_NAME.DICOM_TABLE)
 
     const dispatch=useDispatch()
     dispatch(ParticipantInfoAction.setProjectId(presentProject.projectId))
@@ -138,29 +146,37 @@ export default function Page() {
             />
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader/>
-                
+                <ButtonGroup variant="outlined" aria-label="outlined button group">
+                    <Button onClick={()=>setSelectedView(VIEW_NAME.DICOM_TABLE)}>Data</Button>
+                    <Button onClick={()=>setSelectedView(VIEW_NAME.CHART)}>Graph</Button>
+                </ButtonGroup>
                 {
-                    presentProject.projectId ?
-                    <div>
-                        <UpDownloadToolbar projects={presentProject} getMetaData={getMetaData} metaData={metaData} isInvitedProject={isInvitedProject}/>
-                        {
-                            metaData==='loading'?
-                            <Stack alignItems="center" marginTop={2}>
-                                <CircularProgress margin={2}/>
-                                <Typography margin={2}>
-                                    {'Loading Metadata...'}
-                                </Typography>
-                            </Stack>
-                            :<DicomTable 
-                                data={metaData} 
-                                metaDataUpdated={metaDataUpdated}
-                                setMetaDataUpdated={setMetaDataUpdated}
-                                isNonReferenced={presentProject.projectName === 'Non-Reference Dicom' ? true : false}
-                                project={presentProject}
-                            />
-                        }
-                    </div>
-                    :<div></div>
+                    selectedView===VIEW_NAME.CHART?
+                    <VisualTable metaData={metaData}/>
+                    :
+                    
+                        presentProject.projectId ?
+                        <div>
+                            <UpDownloadToolbar projects={presentProject} getMetaData={getMetaData} metaData={metaData} isInvitedProject={isInvitedProject}/>
+                            {
+                                metaData==='loading'?
+                                <Stack alignItems="center" marginTop={2}>
+                                    <CircularProgress margin={2}/>
+                                    <Typography margin={2}>
+                                        {'Loading Metadata...'}
+                                    </Typography>
+                                </Stack>
+                                :<DicomTable 
+                                    data={metaData} 
+                                    metaDataUpdated={metaDataUpdated}
+                                    setMetaDataUpdated={setMetaDataUpdated}
+                                    isNonReferenced={presentProject.projectName === 'Non-Reference Dicom' ? true : false}
+                                    project={presentProject}
+                                />
+                            }
+                        </div>
+                        :<div></div>
+                    
                 }
             </Box>
         </Box>
