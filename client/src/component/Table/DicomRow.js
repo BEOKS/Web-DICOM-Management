@@ -3,16 +3,21 @@ import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import { useState } from 'react';
-import { Tooltip } from '@mui/material';
+import {IconButton, Tooltip} from '@mui/material';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import MLResultTableRow from "./MLResult/MLResultTableRow";
 
 const MAX_CELL_STRING_LENGTH=100
 export default function DicomRow(props) {
     const { isItemSelected, labelId, handleClick, row, keys, isNonReferenced } = props;
     const [dragged, setDragged] = useState(false);
+    const [openCollapse,setOpenCollapse]=useState(false)
 
     // 메타 데이터 형식 변경으로 인한 임시 키
     const STUDY_KEY_NAME = "StudyInstanceUID";
-
+    const ANONYMIZED_ID ="anonymized_id"
+    const IMAGE_NAME ="image_name"
     const createTableCell = (rowBody) => {
         const elements = [];
         for (let i = 1; i < keys.length; i++) {
@@ -52,10 +57,20 @@ export default function DicomRow(props) {
                 aria-checked={isItemSelected}
                 tabIndex={-1}
                 selected={isItemSelected}
-                onMouseDown={() => setDragged(false)}
-                onMouseMove={() => setDragged(true)}
-                onMouseUp={redirectViewer}
+                // MLResultTable을 보기 위해서 일시적으로 비활성화
+                // onMouseDown={() => setDragged(false)}
+                // onMouseMove={() => setDragged(true)}
+                // onMouseUp={redirectViewer}
             >
+                <TableCell>
+                    <IconButton
+                        aria-label="expand row"
+                        size="small"
+                        onClick={() => setOpenCollapse(!openCollapse)}
+                    >
+                        {openCollapse ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                    </IconButton>
+                </TableCell>
                 <TableCell padding="checkbox">
                     <Checkbox
                         color="primary"
@@ -80,6 +95,13 @@ export default function DicomRow(props) {
                 </TableCell>
                 {createTableCell(row.body)}
             </TableRow>
+            <MLResultTableRow
+                image_name={row.body[IMAGE_NAME]}
+                anonymize_id={row.body[ANONYMIZED_ID]}
+                open={openCollapse}
+                pred={row.body['pred']}
+                prob={row.body['prob']}
+            />
         </React.Fragment>
     );
 }

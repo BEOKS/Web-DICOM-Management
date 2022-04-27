@@ -93,18 +93,13 @@ const ImageFileUploadBox: React.FC<BoxInput>=({csvFile,imageFiles,setImageFiles}
     else{
         //dispatch(SnackbarAction.closeSnackbar())
     }
-    if (csvFile===undefined){
-        return(<IntroduceMessage/>)
-    }
-    else{
-        return (
-            <FileListBox
-                imageFiles={imageFiles}
-                setImageFiles={setImageFiles}
-                setFileLoadingFromLocalStatus={setFileLoadingFromLocalStatus}
-            />
-        )
-    }
+    return (
+        <FileListBox
+            imageFiles={imageFiles}
+            setImageFiles={setImageFiles}
+            setFileLoadingFromLocalStatus={setFileLoadingFromLocalStatus}
+        />
+    )
 }
 
 export default ImageFileUploadBox;

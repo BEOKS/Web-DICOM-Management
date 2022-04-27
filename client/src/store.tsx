@@ -7,6 +7,7 @@ import MLReducer from "./component/Toolbar/MachineLearning/MLReducer";
 import FormatChooseReducer from "./component/Toolbar/Upload/FormatChooseDialog/FormatChooseDialogReducer";
 import FileUploadDialogReducer from "./component/Toolbar/Upload/FileUploadDialog/FileUploadDialogReducer";
 import SnackbarReducer from "./component/Toolbar/Upload/SnackbarReducer";
+import MLResultReducer from "./component/Table/MLResult/MLResultRedux";
 const rootReducer=combineReducers({
     ColumnTypeDecisionDialogReducer,
     ParticipantInfoReducer,
@@ -14,7 +15,8 @@ const rootReducer=combineReducers({
     MLReducer,
     FormatChooseReducer,
     FileUploadDialogReducer,
-    SnackbarReducer
+    SnackbarReducer,
+    MLResultReducer
 })
 
 export default rootReducer;

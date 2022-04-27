@@ -7,7 +7,7 @@ public class StorageProperties {
     /**
      * Folder location for storing files
      */
-    String rootPath = System.getProperty("user.dir");
+    String rootPath = System.getProperty("user.home");
 
     private String location = rootPath+"/Storage";
 
