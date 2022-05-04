@@ -5,9 +5,9 @@ import TableCell from "@mui/material/TableCell";
 import Checkbox from "@mui/material/Checkbox";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Box from "@mui/material/Box";
-import {visuallyHidden} from "@mui/utils";
+import { visuallyHidden } from "@mui/utils";
 import PropTypes from "prop-types";
-import {Tooltip} from "@mui/material";
+import { Tooltip } from "@mui/material";
 
 /**
  * 입력받은 string이 최대 사이즈를 초과할 경우 요약후
@@ -15,18 +15,18 @@ import {Tooltip} from "@mui/material";
  * @param string
  * @constructor
  */
-const SummarizeComponent=({str, MAX_SIZE = 10})=>{
+const SummarizeComponent = ({ str, MAX_SIZE = 10 }) => {
     // str=String(str)
-    if (str.length<=MAX_SIZE){
+    if (str.length <= MAX_SIZE) {
         return (<span>{str}</span>)
     }
-    else{
+    else {
         return (
             <Tooltip
-                     title={
-                         <div style={{ whiteSpace: 'pre-line' }}>{str}</div>
-                     }>
-                <span>{str.slice(0,MAX_SIZE)+"..."}</span>
+                title={
+                    <div style={{ whiteSpace: 'pre-line' }}>{str}</div>
+                }>
+                <span>{str.slice(0, MAX_SIZE) + "..."}</span>
             </Tooltip>
         )
     }
@@ -42,11 +42,13 @@ export default function EnhancedTableHead(props) {
     const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, rows, keys } =
         props;
     const createSortHandler = (property) => (event) => {
-        onRequestSort(event, property);
+        if (property !== 'Edit') {
+            onRequestSort(event, property);
+        }
     };
 
     const createHeadCell = (id, numeric, disablePadding, label) => {
-        if (!isNaN(rows[0].body[id])) {
+        if (id !== 'Edit' && !isNaN(rows[0].body[id])) {
             numeric = true;
         }
 
@@ -63,6 +65,7 @@ export default function EnhancedTableHead(props) {
             const disablePadding = i === 0 ? true : false;
             headCells[i] = createHeadCell(keys[i], false, disablePadding, keys[i]);
         }
+        headCells.push(createHeadCell('Edit', false, false, 'Edit'));
     };
     pushHeadCells();
 
@@ -93,8 +96,9 @@ export default function EnhancedTableHead(props) {
                             active={orderBy === headCell.id}
                             direction={orderBy === headCell.id ? order : 'asc'}
                             onClick={createSortHandler(headCell.id)}
+                            hideSortIcon={headCell.id === 'Edit'}
                         >
-                            <SummarizeComponent str={headCell.label}/>
+                            <SummarizeComponent str={headCell.label} />
                             {orderBy === headCell.id ? (
                                 <Box component="span" sx={visuallyHidden}>
                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
