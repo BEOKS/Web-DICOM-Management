@@ -79,12 +79,12 @@ const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
                 continue;
             }
 
-            if (key === "age") {
+            if (isNumeric(uniqEachData[i], key)) { // Bar Chart
                 uniqEachData[i].sort((a: any, b: any) => {
                     return parseFloat(a[Object.keys(uniqEachData[i][0])[0]]) - parseFloat(b[Object.keys(uniqEachData[i][0])[0]])
                 })
                 result.push(
-                    <Grid item xs={12}>
+                    <Grid item key={key} xs={12}>
                         <Chart key={key} data={uniqEachData[i]}>
                             <ArgumentAxis />
                             <ValueAxis />
@@ -102,9 +102,9 @@ const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
                     </Grid>
                 );
             }
-            else {
+            else { // Doughnut Chart
                 result.push(
-                    <Grid item xs={3}>
+                    <Grid item key={key} xs={3}>
                         <Chart key={key} data={uniqEachData[i]}>
                             <PieSeries
                                 name={key}
