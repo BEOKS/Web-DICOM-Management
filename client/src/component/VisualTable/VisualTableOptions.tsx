@@ -2,9 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { VisualTableAction } from './VisualTableReducer';
-import { ToggleButton, ToggleButtonGroup, Typography, Stack, Alert } from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
-import '../Toolbar/UpDownloadToolbar.css';
+import { ToggleButton, ToggleButtonGroup, Stack, Alert } from '@mui/material';
 
 type VisualTableOptionsProps = {
     keys: string[]
@@ -22,7 +20,7 @@ const VisualTableOptions: React.FC<VisualTableOptionsProps> = ({ keys }) => {
     };
 
     return (
-        <Stack>
+        <Stack spacing={2}>
             <Alert variant="outlined" severity="info">
                 Please select the options to see the graph.
             </Alert>
@@ -32,7 +30,6 @@ const VisualTableOptions: React.FC<VisualTableOptionsProps> = ({ keys }) => {
                 aria-label="text formatting"
                 size="small"
                 color="info"
-                sx={{ mt: 2 }}
             >
                 {keys.map(key => <ToggleButton value={key} aria-label={key} key={key}>{key}</ToggleButton>)}
             </ToggleButtonGroup>

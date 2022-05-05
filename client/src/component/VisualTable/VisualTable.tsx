@@ -1,4 +1,6 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 import _ from "lodash";
 import { Grid, Stack } from '@mui/material';
 import { Chart, BarSeries, ArgumentAxis, ValueAxis, Title, Tooltip, PieSeries } from '@devexpress/dx-react-chart-material-ui';
@@ -22,7 +24,7 @@ type VisualTableProps = {
 };
 
 const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
-
+    const options = useSelector((state: RootState) => state.VisualTableReducer.options);
     const data = extractData(metaData);
     const keys = getKeysFromData(data);
 
@@ -72,7 +74,12 @@ const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
 
         for (let i = 0; i < keys.length; i++) {
             const key = keys[i];
-            if (key.includes("Age")) {
+
+            if (!options.includes(key)) {
+                continue;
+            }
+
+            if (key === "age") {
                 uniqEachData[i].sort((a: any, b: any) => {
                     return parseFloat(a[Object.keys(uniqEachData[i][0])[0]]) - parseFloat(b[Object.keys(uniqEachData[i][0])[0]])
                 })
@@ -95,11 +102,9 @@ const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
                     </Grid>
                 );
             }
-            else if (key.includes("US Device") || key.includes("Label") || key.includes("Acquisition Year")
-                || key.includes("Lesion Type") || key.includes("pred") || key.includes("Tissue Composition")
-                || key.includes("Palpability") || key.includes("Biopsy")) {
+            else {
                 result.push(
-                    <Grid item xs={4}>
+                    <Grid item xs={3}>
                         <Chart key={key} data={uniqEachData[i]}>
                             <PieSeries
                                 name={key}
@@ -116,9 +121,6 @@ const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
                         </Chart>
                     </Grid>
                 );
-            }
-            else {
-                continue
             }
 
         }
