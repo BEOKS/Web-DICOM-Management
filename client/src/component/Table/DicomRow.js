@@ -12,7 +12,7 @@ import MLResultTableRow from "./MLResult/MLResultTableRow";
 
 const MAX_CELL_STRING_LENGTH = 100
 export default function DicomRow(props) {
-    const { isItemSelected, labelId, handleClick, row, keys, isNonReferenced } = props;
+    const { isItemSelected, labelId, handleClick, row, rowIndex, keys, isNonReferenced } = props;
     const [dragged, setDragged] = useState(false);
     const [openCollapse, setOpenCollapse] = useState(false)
     const [editMode, setEditMode] = useState(false);
@@ -20,7 +20,8 @@ export default function DicomRow(props) {
     const handleEdit = () => {
         setEditMode(true);
     };
-    const handleSave = () => {
+    const handleSave = (index) => {
+        console.log(index);
         setEditMode(false);
     }
 
@@ -35,8 +36,8 @@ export default function DicomRow(props) {
             if (!editMode) { // Text mode
                 if (i === keys.length) { // Edit button
                     elements[i - 1] =
-                        <TableCell style={{ whiteSpace: 'pre-wrap' }} key={keys[i]}>
-                            <IconButton aria-label="edit" onClick={handleEdit}>
+                        <TableCell style={{ whiteSpace: 'pre-wrap' }} key="editButton">
+                            <IconButton aria-label="edit" onClick={() => handleEdit()}>
                                 <EditIcon />
                             </IconButton>
                         </TableCell>;
@@ -61,8 +62,8 @@ export default function DicomRow(props) {
             } else { // Edit mode
                 if (i === keys.length) { // Save button
                     elements[i - 1] =
-                        <TableCell style={{ whiteSpace: 'pre-wrap' }} key={keys[i]}>
-                            <IconButton aria-label="edit" onClick={handleSave}>
+                        <TableCell style={{ whiteSpace: 'pre-wrap' }} key="saveButton">
+                            <IconButton aria-label="edit" onClick={() => handleSave(rowIndex)}>
                                 <SaveIcon />
                             </IconButton>
                         </TableCell>;
