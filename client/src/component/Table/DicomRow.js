@@ -49,7 +49,7 @@ export default function DicomRow(props) {
                                     <div style={{ whiteSpace: 'pre-line' }}>{rowBody[keys[i]]}</div>
                                 }>
                                 <TableCell style={{ whiteSpace: 'pre-wrap' }} key={keys[i]}>
-                                    {rowBody[keys[i]].slice(0, 20) + "..."}
+                                    {rowBody[keys[i]].slice(0, MAX_CELL_STRING_LENGTH) + "..."}
                                 </TableCell>
                             </Tooltip>;
                     }
