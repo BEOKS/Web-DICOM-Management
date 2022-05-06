@@ -117,7 +117,7 @@ const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
                             <HoverState />
                             <Animation />
                             <Tooltip />
-                            <Legend />
+                            <Legend position="bottom" />
                         </Chart>
                     </Grid>
                 );
@@ -130,7 +130,7 @@ const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
     return (
         <Stack mt={3} mx={3}>
             <VisualTableOptions keys={keys} />
-            <Grid container rowSpacing={10}>
+            <Grid container rowSpacing={5} pt={5}>
                 {chartRendering()}
             </Grid>
         </Stack>
