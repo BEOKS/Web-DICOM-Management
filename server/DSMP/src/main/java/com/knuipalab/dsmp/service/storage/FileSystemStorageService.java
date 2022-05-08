@@ -67,6 +67,7 @@ public class FileSystemStorageService implements StorageService {
             if (!Files.exists(destinationFile.getParent())) {
                 Files.createDirectories(destinationFile.getParent());
             }
+            // java.nio.file.FileAlreadyExistsException 발생시, REPLACE를 기본으로 한다.
             Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
