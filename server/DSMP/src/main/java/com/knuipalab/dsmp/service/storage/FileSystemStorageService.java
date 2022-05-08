@@ -83,7 +83,7 @@ public class FileSystemStorageService implements StorageService {
 
         Path projectPath = this.rootLocation.resolve(Paths.get(projectId)).normalize().toAbsolutePath();
         try {
-            FileSystemUtils.deleteRecursively(projectPath);
+            FileSystemUtils.deleteRecursively(projectPath); // 현재 디렉토리 및 자식 파일 삭제
         } catch (IOException e) {
             e.printStackTrace();
             throw new FileIOException(ErrorCode.FILE_IO_EXCEPTION);

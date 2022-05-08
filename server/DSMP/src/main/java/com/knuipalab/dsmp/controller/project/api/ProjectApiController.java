@@ -1,21 +1,25 @@
 package com.knuipalab.dsmp.controller.project.api;
 
-import com.knuipalab.dsmp.dto.project.*;
+import com.knuipalab.dsmp.dto.project.ProjectInviteRequestDto;
+import com.knuipalab.dsmp.dto.project.ProjectOustRequestDto;
+import com.knuipalab.dsmp.dto.project.ProjectRequestDto;
+import com.knuipalab.dsmp.dto.project.ProjectResponseDto;
 import com.knuipalab.dsmp.httpResponse.BasicResponse;
 import com.knuipalab.dsmp.httpResponse.success.SuccessDataResponse;
 import com.knuipalab.dsmp.httpResponse.success.SuccessResponse;
 import com.knuipalab.dsmp.service.project.ProjectService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 public class ProjectApiController {
 
-    @Autowired
-    ProjectService projectService;
+
+    private final ProjectService projectService;
 
     // DB에 존재하는 모든 프로젝트 종류를 반환
     @GetMapping("api/Project")
@@ -51,7 +55,7 @@ public class ProjectApiController {
         return ResponseEntity.ok().body(new SuccessResponse());
     }
 
-    // projectId를 기반으로 Project 삭제 -> 관련 metadata들을 cascade하게 삭제
+    // projectId를 기반으로 Project 삭제 -> 관련 metadata들, 이미지 파일들을 cascade하게 삭제
     @DeleteMapping("api/Project/{projectId}")
     public ResponseEntity<? extends  BasicResponse> delete(@PathVariable String projectId){
         projectService.deleteById(projectId);
