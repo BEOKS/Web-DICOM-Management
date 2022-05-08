@@ -5,16 +5,20 @@ import com.knuipalab.dsmp.domain.project.Project;
 import com.knuipalab.dsmp.domain.project.ProjectRepository;
 import com.knuipalab.dsmp.domain.user.User;
 import com.knuipalab.dsmp.domain.user.UserRepository;
-import com.knuipalab.dsmp.dto.project.*;
+import com.knuipalab.dsmp.dto.project.ProjectInviteRequestDto;
+import com.knuipalab.dsmp.dto.project.ProjectOustRequestDto;
+import com.knuipalab.dsmp.dto.project.ProjectRequestDto;
+import com.knuipalab.dsmp.dto.project.ProjectResponseDto;
 import com.knuipalab.dsmp.httpResponse.error.ErrorCode;
 import com.knuipalab.dsmp.httpResponse.error.handler.exception.ProjectNotFoundException;
 import com.knuipalab.dsmp.httpResponse.error.handler.exception.UnAuthorizedAccessException;
 import com.knuipalab.dsmp.httpResponse.error.handler.exception.UserEmailBadRequestException;
 import com.knuipalab.dsmp.httpResponse.error.handler.exception.UserNotFoundException;
 import com.knuipalab.dsmp.service.metadata.MetaDataService;
+import com.knuipalab.dsmp.service.storage.StorageService;
 import com.knuipalab.dsmp.service.user.UserService;
+import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,23 +28,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class ProjectService {
 
-    @Autowired
-    private HttpSession httpSession;
+    private final HttpSession httpSession;
 
-    @Autowired
-    private ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository;
 
-    @Autowired
-    private MetaDataService metaDataService;
+    private final MetaDataService metaDataService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final StorageService storageService;
 
 
     @Transactional (readOnly = true)
@@ -122,6 +124,8 @@ public class ProjectService {
         }
 
         metaDataService.deleteAllByProjectId(projectId);
+
+        storageService.deleteAll(projectId);
 
         projectRepository.delete(project);
     }
