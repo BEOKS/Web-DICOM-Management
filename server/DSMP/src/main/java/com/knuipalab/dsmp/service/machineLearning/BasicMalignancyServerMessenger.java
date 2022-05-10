@@ -27,7 +27,7 @@ import java.util.Base64;
 @Primary
 @Service
 public class BasicMalignancyServerMessenger implements MalignancyServerMessenger {
-    private final String URL = "http://host.docker.internal:8098/predictions/Malignancy";
+    private final String URL = "http://host.docker.internal:8098/predictions/";
     private final String TORCHSERVE_MANAGEMENT_URL="http://host.docker.internal:8099/models";
     String charset = "UTF-8";
     private FileSystemStorageService fileSystemStorageService;
@@ -37,10 +37,10 @@ public class BasicMalignancyServerMessenger implements MalignancyServerMessenger
     }
 
     @Override
-    public JsonNode requestMalignancyInference(String projectId, String imageName) {
+    public JsonNode requestMalignancyInference(String projectId, String imageName,String modelName) {
         try {
             File imageFile = this.fileSystemStorageService.serveFile(projectId, imageName);
-            HttpResponse httpResponse = postImageToServer(URL, imageFile);
+            HttpResponse httpResponse = postImageToServer(URL+modelName, imageFile);
             String json = EntityUtils.toString(httpResponse.getEntity());
             JsonNode jsonNode = parseJson(json);
             storeImageFile(projectId, addMiddleExtension(imageName, ".crop"), jsonNode.get("crop").asText());

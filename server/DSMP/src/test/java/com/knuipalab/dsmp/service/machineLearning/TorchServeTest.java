@@ -10,6 +10,6 @@ public class TorchServeTest {
     BasicMalignancyServerMessenger basicMalignancyServerMessenger;
     @Test
     public void test12(){
-        basicMalignancyServerMessenger.requestMalignancyInference("624e58d849d5a375a491fef7","c_3503506123_n.jpg");
+        basicMalignancyServerMessenger.requestMalignancyInference("624e58d849d5a375a491fef7","c_3503506123_n.jpg","");
     }
 }
