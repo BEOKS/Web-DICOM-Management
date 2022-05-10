@@ -101,7 +101,7 @@ public class AsyncMetaDataSampler implements MetaDataSampler {
             this.metadataId = metadataId;
             this.projectId=projectId;
             this.imageName = imageName;
-            this.modelName=modelName
+            this.modelName=modelName;
         }
 
         @Override
