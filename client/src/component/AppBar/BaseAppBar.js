@@ -49,12 +49,12 @@ export default function BaseAppBar(props) {
                     color="inherit"
                     href="logout"
                     width={40}
-                    ml={30}
+                    marginLeft={30}
                 >
                     Logout
                 </Button>
                 <Box width={20}></Box>
-                <img src={logo} height={40} alt="logo"/>
+                <img src={logo} height={40} />
             </Toolbar>
         </AppBar>
     );

@@ -17,11 +17,8 @@ export const getKeysFromData = (data: any[]) => {
         return Object.keys(data[0]);
     }
 };
-// 특정 속성에 대해 모든 데이터가 number인지 검사
-export function isNumeric(allData: any, key: string) {
-    for(let i = 0; i < allData.length; i++){
-        if (isNaN(parseFloat(allData[i][key])))
-            return false;
-    }
-    return true;
+export function isNumeric(str:any) {
+    if (typeof str != "string")
+        return false; // we only process strings!  
+    return !isNaN(parseFloat(str)); // ...and ensure strings of whitespace fail
 }

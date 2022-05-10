@@ -1,13 +1,10 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
 import _ from "lodash";
-import { Grid, Stack } from '@mui/material';
+import { Grid } from '@mui/material';
 import { Chart, BarSeries, ArgumentAxis, ValueAxis, Title, Tooltip, PieSeries } from '@devexpress/dx-react-chart-material-ui';
 import { EventTracker, HoverState, Animation } from '@devexpress/dx-react-chart';
-import { extractData, getKeysFromData, isNumeric } from './Utils'
+import {extractData,getKeysFromData,isNumeric} from './Utils'
 import { Legend } from '@devexpress/dx-react-chart-material-ui';
-import VisualTableOptions from './VisualTableOptions';
 
 type Body = {
     [key: string]: string | number
@@ -24,7 +21,7 @@ type VisualTableProps = {
 };
 
 const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
-    const options = useSelector((state: RootState) => state.VisualTableReducer.options);
+
     const data = extractData(metaData);
     const keys = getKeysFromData(data);
 
@@ -48,6 +45,7 @@ const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
             return { [key]: value };
         }));
     }
+    console.log(freq);
 
     // object 중복 제거
     const uniqEachData: any[] = [];
@@ -67,24 +65,18 @@ const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
         }
     }
     addPercent();
-
     // return문 안에서는 반복문 사용이 불가하므로 차트 만드는 함수 따로 생성
     const chartRendering = () => {
         const result = [];
 
         for (let i = 0; i < keys.length; i++) {
             const key = keys[i];
-
-            if (!options.includes(key)) {
-                continue;
-            }
-
-            if (isNumeric(uniqEachData[i], key)) { // Bar Chart
-                uniqEachData[i].sort((a: any, b: any) => {
-                    return parseFloat(a[Object.keys(uniqEachData[i][0])[0]]) - parseFloat(b[Object.keys(uniqEachData[i][0])[0]])
+            if(key.includes("Age")){
+                uniqEachData[i].sort((a:any,b:any)=>{
+                    return parseFloat(a[Object.keys(uniqEachData[i][0])[0]])-parseFloat(b[Object.keys(uniqEachData[i][0])[0]])
                 })
                 result.push(
-                    <Grid item key={key} xs={12}>
+                    <Grid item xs={12}>
                         <Chart key={key} data={uniqEachData[i]}>
                             <ArgumentAxis />
                             <ValueAxis />
@@ -102,9 +94,11 @@ const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
                     </Grid>
                 );
             }
-            else { // Doughnut Chart
+            else if(key.includes("US Device")||key.includes("Label")||key.includes("Acquisition Year")
+            ||key.includes("Lesion Type")||key.includes("pred")||key.includes("Tissue Composition")
+            ||key.includes("Palpability")||key.includes("Biopsy")){
                 result.push(
-                    <Grid item key={key} xs={3}>
+                    <Grid item xs={4}>
                         <Chart key={key} data={uniqEachData[i]}>
                             <PieSeries
                                 name={key}
@@ -117,10 +111,13 @@ const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
                             <HoverState />
                             <Animation />
                             <Tooltip />
-                            <Legend position="bottom" />
+                            <Legend/>
                         </Chart>
                     </Grid>
                 );
+            }
+            else{
+                continue
             }
 
         }
@@ -128,12 +125,9 @@ const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
     };
 
     return (
-        <Stack mt={3} mx={3}>
-            <VisualTableOptions keys={keys} />
-            <Grid container rowSpacing={5} pt={5}>
-                {chartRendering()}
-            </Grid>
-        </Stack>
+        <Grid container rowSpacing={10}>
+            {chartRendering()}
+        </Grid>
     );
 };
 
