@@ -37,8 +37,13 @@ const MLDialog: React.FC<MLDialogProps> = ({ getMetaData }) => {
         //         alert(error);
         //         console.log(error);
         //     });
-
-        inference(selectedModel);
+        dispatch(MLAction.openSnackbar());
+        inference(projectId,selectedModel,
+            (response : any)=>{
+                dispatch(MLAction.updateSnackbar)
+            }, (error : any)=> {
+                dispatch(MLAction.closeSnackbar())
+            });
     };
 
     const handleClickCancel = () => {
