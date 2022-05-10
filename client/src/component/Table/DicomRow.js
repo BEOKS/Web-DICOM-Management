@@ -9,6 +9,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import MLResultTableRow from "./MLResult/MLResultTableRow";
+import { updateMetaData } from '../../api/metadata';
 
 const MAX_CELL_STRING_LENGTH = 100
 export default function DicomRow(props) {
@@ -16,12 +17,18 @@ export default function DicomRow(props) {
     const [dragged, setDragged] = useState(false);
     const [openCollapse, setOpenCollapse] = useState(false)
     const [editMode, setEditMode] = useState(false);
+    let selectedBody
+    if (editMode){
+        selectedBody=row.body
+    }
 
-    const handleEdit = () => {
+    const handleEdit = (index) => {
         setEditMode(true);
     };
     const handleSave = (index) => {
-        console.log(index);
+        const metadataId = row['metadataId']
+        console.log(selectedBody,metadataId);
+        updateMetaData(selectedBody,metadataId)
         setEditMode(false);
     }
 
@@ -29,7 +36,6 @@ export default function DicomRow(props) {
     const STUDY_KEY_NAME = "StudyInstanceUID";
     const ANONYMIZED_ID = "anonymized_id"
     const IMAGE_NAME = "image_name"
-
     const createTableCell = (rowBody) => {
         const elements = [];
         for (let i = 1; i < keys.length + 1; i++) {
@@ -37,7 +43,7 @@ export default function DicomRow(props) {
                 if (i === keys.length) { // Edit button
                     elements[i - 1] =
                         <TableCell style={{ whiteSpace: 'pre-wrap' }} key="editButton">
-                            <IconButton aria-label="edit" onClick={() => handleEdit()}>
+                            <IconButton aria-label="edit" onClick={() => handleEdit(i)}>
                                 <EditIcon />
                             </IconButton>
                         </TableCell>;
@@ -71,7 +77,11 @@ export default function DicomRow(props) {
                 } else { // Other columns (TextField)
                     elements[i - 1] =
                         <TableCell style={{ whiteSpace: 'pre-wrap' }} key={keys[i]}>
-                            <TextField id={labelId} size="small" variant="outlined" defaultValue={rowBody[keys[i]]} />
+                            <TextField 
+                            id={labelId} size="small" variant="outlined" 
+                            defaultValue={rowBody[keys[i]]}
+                            onChange={(event)=>{selectedBody[keys[i]]=event.target.value}}
+                            />
                         </TableCell>;
                 }
             }
