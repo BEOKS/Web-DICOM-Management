@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-public class MachineLearningApiController {
+public class MachineLearningApiController implements MLManagementAPIController{
 
     private final AsyncMetaDataSampler asyncMetaDataSampler;
     private final BasicMalignancyServerMessenger basicMalignancyServerMessenger;
@@ -46,10 +46,15 @@ public class MachineLearningApiController {
      * @param projectId
      * @return
      */
-    @PutMapping("api/MetaData/MalignancyClassification/{projectId}")
-    public ResponseEntity<? extends BasicResponse> requestMLInference(@PathVariable String projectId) {
+    @PutMapping("api/MetaData/MalignancyClassification/{projectId}/{modelName}")
+    public ResponseEntity<? extends BasicResponse> requestMLInference(@PathVariable String projectId, @PathVariable String modelName) {
         asyncMetaDataSampler.requestMLInferenceToTorchServe(projectId);
         return ResponseEntity.ok().body(new SuccessResponse());
     }
 
+    @Override
+    @GetMapping("api/ML/getModelList")
+    public ResponseEntity<String> getModelList() {
+        return basicMalignancyServerMessenger.getRunningModelList();
+    }
 }

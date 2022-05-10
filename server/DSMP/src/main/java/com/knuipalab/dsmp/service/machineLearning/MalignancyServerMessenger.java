@@ -1,6 +1,7 @@
 package com.knuipalab.dsmp.service.machineLearning;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.http.ResponseEntity;
 
 /**
  * Pytorch Server에서 Malignancy
@@ -16,4 +17,12 @@ public interface MalignancyServerMessenger extends TorchServerMessenger{
      * @return 수치형 데이터가 JsonNode 형태로 반환됩니다.
      */
     public JsonNode requestMalignancyInference(String projectId,String imageName);
+
+    /**
+     * 현재 토치서버에서 실행하고 있는 머신러닝 모델의 정보를 가져옵니다.
+     * @return
+     */
+    default public ResponseEntity<String> getRunningModelList(){
+        return null;
+    };
 }

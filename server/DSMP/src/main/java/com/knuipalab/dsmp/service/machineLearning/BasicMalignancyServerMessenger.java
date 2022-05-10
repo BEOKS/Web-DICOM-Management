@@ -15,7 +15,9 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,6 +28,7 @@ import java.util.Base64;
 @Service
 public class BasicMalignancyServerMessenger implements MalignancyServerMessenger {
     private final String URL = "http://host.docker.internal:8098/predictions/Malignancy";
+    private final String TORCHSERVE_MANAGEMENT_URL="http://host.docker.internal:8099/models";
     String charset = "UTF-8";
     private FileSystemStorageService fileSystemStorageService;
 
@@ -56,7 +59,12 @@ public class BasicMalignancyServerMessenger implements MalignancyServerMessenger
             return null;
         }
     }
-
+    @Override
+    public ResponseEntity<String> getRunningModelList(){
+        RestTemplate restTemplate=new RestTemplate();
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(TORCHSERVE_MANAGEMENT_URL,String.class);
+        return responseEntity;
+    }
     @Override
     public boolean isServerAvailable() {
         return false;
@@ -67,6 +75,12 @@ public class BasicMalignancyServerMessenger implements MalignancyServerMessenger
         return null;
     }
 
+    /**
+     * 파일을 지정된 url에 post형식으로 전달하고 수행 결과를 반환합니다.
+     * @param url
+     * @param file
+     * @return
+     */
     private HttpResponse postImageToServer(String url, File file) {
         HttpEntity entity = MultipartEntityBuilder.create()
                 .addPart("data", new FileBody(file))
@@ -82,6 +96,11 @@ public class BasicMalignancyServerMessenger implements MalignancyServerMessenger
         }
     }
 
+    /**
+     * String으로 반환된 json 결과를 JsonNode로 파싱합니다.
+     * @param json
+     * @return
+     */
     private JsonNode parseJson(String json) {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = null;
