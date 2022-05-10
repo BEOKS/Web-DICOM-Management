@@ -1,5 +1,6 @@
 package com.knuipalab.dsmp.service.machineLearning;
 
+import com.knuipalab.dsmp.machineLearning.service.BasicMalignancyServerMessenger;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
