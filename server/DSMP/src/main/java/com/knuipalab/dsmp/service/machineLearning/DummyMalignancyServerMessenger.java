@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class DummyMalignancyServerMessenger implements MalignancyServerMessenger{
 
     @Override
-    public JsonNode requestMalignancyInference(String projectId, String imageName) {
+    public JsonNode requestMalignancyInference(String projectId, String imageName,String modelName) {
         String strJsonNode = "{\n" +
                 "   \"classification1\": 11.12,\n" +
                 "    \"classification2\": 57.8\n" +

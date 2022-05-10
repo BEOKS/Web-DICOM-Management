@@ -16,7 +16,7 @@ public interface MalignancyServerMessenger extends TorchServerMessenger{
      * @param projectId
      * @return 수치형 데이터가 JsonNode 형태로 반환됩니다.
      */
-    public JsonNode requestMalignancyInference(String projectId,String imageName);
+    public JsonNode requestMalignancyInference(String projectId,String imageName,String modelName);
 
     /**
      * 현재 토치서버에서 실행하고 있는 머신러닝 모델의 정보를 가져옵니다.

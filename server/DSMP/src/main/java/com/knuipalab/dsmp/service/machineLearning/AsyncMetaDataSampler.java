@@ -64,7 +64,7 @@ public class AsyncMetaDataSampler implements MetaDataSampler {
      * @return
      */
     @Override
-    public void requestMLInferenceToTorchServe(String projectId) {
+    public void requestMLInferenceToTorchServe(String projectId,String modelName) {
 
         List<MetaData> metaDataList = metaDataRepository.findByProjectId(projectId);
 
@@ -73,7 +73,8 @@ public class AsyncMetaDataSampler implements MetaDataSampler {
 
         List<Future<Runnable>> futures = new ArrayList<Future<Runnable>>();
         for ( MetaData metadata : metaDataList ) {
-            Future f = executor.submit(new getAndSetMalignancyClassificationDataThread(metadata.getMetadataId(),projectId,metadata.getImageNameFromBody()));
+            Future f = executor.submit(new getAndSetMalignancyClassificationDataThread(
+                    metadata.getMetadataId(),projectId,metadata.getImageNameFromBody(),modelName));
             futures.add(f);
         }
         // wait for all tasks to complete before continuing
@@ -94,17 +95,18 @@ public class AsyncMetaDataSampler implements MetaDataSampler {
     class getAndSetMalignancyClassificationDataThread implements Runnable {
 
         private String metadataId;
-        private String projectId,imageName;
+        private String projectId,imageName,modelName;
 
-        public getAndSetMalignancyClassificationDataThread(String metadataId,String projectId,String imageName){
+        public getAndSetMalignancyClassificationDataThread(String metadataId,String projectId,String imageName,String modelName){
             this.metadataId = metadataId;
             this.projectId=projectId;
             this.imageName = imageName;
+            this.modelName=modelName;
         }
 
         @Override
         public void run() {
-            JsonNode jsonNode = malignancyServerMessenger.requestMalignancyInference(projectId, imageName);
+            JsonNode jsonNode = malignancyServerMessenger.requestMalignancyInference(projectId, imageName,modelName);
             if(jsonNode == null) {
                 throw new NullPointerException();
             }

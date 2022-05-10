@@ -28,7 +28,7 @@ public class MachineLearningApiController implements MLManagementAPIController{
     public ResponseEntity<? extends BasicResponse> sampleRequest(@PathVariable String projectId,
             @PathVariable String imageName) {
         return ResponseEntity.ok().body(new SuccessDataResponse<String>(
-                basicMalignancyServerMessenger.requestMalignancyInference(projectId, imageName).toString()));
+                basicMalignancyServerMessenger.requestMalignancyInference(projectId, imageName,"").toString()));
     }
 
     @PutMapping("api/MetaData/Sampling/{projectId}")
@@ -48,7 +48,7 @@ public class MachineLearningApiController implements MLManagementAPIController{
      */
     @PutMapping("api/MetaData/MalignancyClassification/{projectId}/{modelName}")
     public ResponseEntity<? extends BasicResponse> requestMLInference(@PathVariable String projectId, @PathVariable String modelName) {
-        asyncMetaDataSampler.requestMLInferenceToTorchServe(projectId);
+        asyncMetaDataSampler.requestMLInferenceToTorchServe(projectId,modelName);
         return ResponseEntity.ok().body(new SuccessResponse());
     }
 
