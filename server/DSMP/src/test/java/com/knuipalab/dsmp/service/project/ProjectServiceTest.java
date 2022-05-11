@@ -1,19 +1,19 @@
 package com.knuipalab.dsmp.service.project;
 
 
-import com.knuipalab.dsmp.project.domain.Project;
-import com.knuipalab.dsmp.project.domain.ProjectRepository;
-import com.knuipalab.dsmp.user.domain.User;
-import com.knuipalab.dsmp.user.domain.UserRepository;
-import com.knuipalab.dsmp.project.dto.ProjectInviteRequestDto;
-import com.knuipalab.dsmp.project.dto.ProjectOustRequestDto;
-import com.knuipalab.dsmp.project.dto.ProjectRequestDto;
-import com.knuipalab.dsmp.project.dto.ProjectResponseDto;
+import com.knuipalab.dsmp.project.Project;
+import com.knuipalab.dsmp.project.ProjectRepository;
+import com.knuipalab.dsmp.user.User;
+import com.knuipalab.dsmp.user.UserRepository;
+import com.knuipalab.dsmp.project.ProjectInviteRequestDto;
+import com.knuipalab.dsmp.project.ProjectOustRequestDto;
+import com.knuipalab.dsmp.project.ProjectRequestDto;
+import com.knuipalab.dsmp.project.ProjectResponseDto;
 import com.knuipalab.dsmp.http.httpResponse.error.ErrorCode;
 import com.knuipalab.dsmp.http.httpResponse.error.handler.exception.UnAuthorizedAccessException;
 import com.knuipalab.dsmp.http.httpResponse.error.handler.exception.UserEmailBadRequestException;
-import com.knuipalab.dsmp.metadata.service.MetaDataService;
-import com.knuipalab.dsmp.user.service.UserService;
+import com.knuipalab.dsmp.metadata.MetaDataService;
+import com.knuipalab.dsmp.user.UserService;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

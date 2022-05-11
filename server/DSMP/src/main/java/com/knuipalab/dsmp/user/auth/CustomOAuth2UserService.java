@@ -1,9 +1,7 @@
 package com.knuipalab.dsmp.user.auth;
 
-import com.knuipalab.dsmp.user.auth.dto.OAuthAttributes;
-import com.knuipalab.dsmp.user.auth.dto.SessionUser;
-import com.knuipalab.dsmp.user.domain.User;
-import com.knuipalab.dsmp.user.domain.UserRepository;
+import com.knuipalab.dsmp.user.User;
+import com.knuipalab.dsmp.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
