@@ -30,6 +30,7 @@ const VisualTableOptions: React.FC<VisualTableOptionsProps> = ({ keys }) => {
                 aria-label="text formatting"
                 size="small"
                 color="info"
+                fullWidth
             >
                 {keys.map(key => <ToggleButton value={key} aria-label={key} key={key}>{key}</ToggleButton>)}
             </ToggleButtonGroup>
