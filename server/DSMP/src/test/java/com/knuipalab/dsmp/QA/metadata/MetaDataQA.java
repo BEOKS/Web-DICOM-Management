@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import com.google.common.collect.Lists;
+import com.knuipalab.dsmp.metadata.CustomizedMetaDataRepository;
 import com.knuipalab.dsmp.metadata.MetaData;
 import com.knuipalab.dsmp.metadata.MetaDataRepository;
 import com.knuipalab.dsmp.project.Project;
@@ -35,6 +36,9 @@ public class MetaDataQA {
 
     @SpyBean
     MetaDataRepository metaDataRepository;
+
+    @SpyBean
+    CustomizedMetaDataRepository customizedMetaDataRepository;
 
     Logger log = (Logger) LoggerFactory.getLogger(MetaDataQA.class);
 
@@ -75,7 +79,7 @@ public class MetaDataQA {
 
         long beforeTime = System.currentTimeMillis();
 
-        long METADATA_SIZE = 1000;
+        long METADATA_SIZE = 100;
 
         Faker faker = new Faker();
         StringBuilder strBodyList = new StringBuilder();
@@ -188,8 +192,14 @@ public class MetaDataQA {
 
         long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
         long secDiffTime = (afterTime - beforeTime); //두 시간에 차 계산
-
+        log.info("findAll 개수 : "+metaDataList.size());
         log.info("findAll QA 실행 시간(m) : "+secDiffTime);
+    }
+
+    @Profile("QA")
+    @Test
+    public void findByProjectIdWithPagingAndFiltering() {
+        customizedMetaDataRepository.findByProjectIdWithPagingAndFiltering("54321",0,10);
     }
 
 
