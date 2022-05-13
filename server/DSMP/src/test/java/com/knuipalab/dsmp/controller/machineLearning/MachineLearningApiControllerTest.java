@@ -1,8 +1,8 @@
 package com.knuipalab.dsmp.controller.machineLearning;
 
-import com.knuipalab.dsmp.configuration.auth.CustomOAuth2UserService;
-import com.knuipalab.dsmp.controller.machineLearning.api.MachineLearningApiController;
-import com.knuipalab.dsmp.service.machineLearning.AsyncMetaDataSampler;
+import com.knuipalab.dsmp.user.auth.CustomOAuth2UserService;
+import com.knuipalab.dsmp.machineLearning.MachineLearningApiController;
+import com.knuipalab.dsmp.machineLearning.TrainTypeSampling.AsyncMetaDataSampler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
