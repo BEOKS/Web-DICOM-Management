@@ -13,6 +13,7 @@ import {useDispatch} from "react-redux";
 import {ParticipantInfoAction} from "./component/Toolbar/ProjectParticipant/ParticipantInfoReducer";
 import VisualTable from './component/VisualTable/VisualTable';
 import logo from './component/AppBar/logo.png'
+import MetaDataGrid from './component/Table/MetaDataGrid';
 axios.defaults.maxRedirects=0;
 
 const VIEW_NAME={
@@ -166,13 +167,19 @@ export default function Page() {
                                         {'Loading Metadata...'}
                                     </Typography>
                                 </Stack>
-                                :<DicomTable 
-                                    data={metaData} 
-                                    metaDataUpdated={metaDataUpdated}
-                                    setMetaDataUpdated={setMetaDataUpdated}
-                                    isNonReferenced={presentProject.projectName === 'Non-Reference Dicom' ? true : false}
-                                    project={presentProject}
-                                />
+                                :
+                                <Stack>
+                                    <DicomTable 
+                                        data={metaData} 
+                                        metaDataUpdated={metaDataUpdated}
+                                        setMetaDataUpdated={setMetaDataUpdated}
+                                        isNonReferenced={presentProject.projectName === 'Non-Reference Dicom' ? true : false}
+                                        project={presentProject}
+                                    />
+                                    <MetaDataGrid
+                                        metaData={metaData}
+                                    />
+                                </Stack>
                             }
                         </div>
                         :<div></div>
