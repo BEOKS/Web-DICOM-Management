@@ -169,15 +169,15 @@ export default function Page() {
                                 </Stack>
                                 :
                                 <Stack>
+                                    <MetaDataGrid
+                                        metaData={metaData}
+                                    />
                                     <DicomTable 
                                         data={metaData} 
                                         metaDataUpdated={metaDataUpdated}
                                         setMetaDataUpdated={setMetaDataUpdated}
                                         isNonReferenced={presentProject.projectName === 'Non-Reference Dicom' ? true : false}
                                         project={presentProject}
-                                    />
-                                    <MetaDataGrid
-                                        metaData={metaData}
                                     />
                                 </Stack>
                             }

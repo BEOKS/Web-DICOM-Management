@@ -1,5 +1,5 @@
 import React from "react"
-import DataGrid from 'devextreme-react/data-grid';
+import DataGrid, { Selection, FilterRow } from 'devextreme-react/data-grid';
 import { Box } from "@mui/material";
 import { extractBody, extractColumns } from "./Utils/extractMetaData";
 
@@ -27,7 +27,14 @@ const MetaDataGrid: React.FC<MetaDataGridProps> = ({ metaData }) => {
                 dataSource={body}
                 defaultColumns={columns}
                 showBorders={true}
-            />
+            >
+                <Selection
+                    mode="multiple"
+                    selectAllMode="allPages"
+                    showCheckBoxesMode="always"
+                />
+                <FilterRow visible={true} />
+            </DataGrid>
         </Box>
     );
 };
