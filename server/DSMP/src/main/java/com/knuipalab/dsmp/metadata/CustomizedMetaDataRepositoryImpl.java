@@ -13,6 +13,7 @@ import org.springframework.util.Assert;
 
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class CustomizedMetaDataRepositoryImpl implements CustomizedMetaDataRepository{
@@ -43,8 +44,15 @@ public class CustomizedMetaDataRepositoryImpl implements CustomizedMetaDataRepos
         mongoTemplate.updateFirst(query,update,"metadata");
     }
 
+    //        Iterator<String> keys = parmMap.keySet().iterator();
+    //        while (keys.hasNext()){
+    //            String key = keys.next();
+    //            System.out.println(key);
+    //        }
+
+
     @Override
-    public void findByProjectIdWithPagingAndFiltering(String projectId, int page, int size) {
+    public Page<MetaData> findByProjectIdWithPagingAndFiltering(String projectId,int page, int size, HashMap parmMap) {
 
         Pageable pageable = PageRequest.of(page,size, Sort.unsorted());
 
@@ -64,6 +72,7 @@ public class CustomizedMetaDataRepositoryImpl implements CustomizedMetaDataRepos
                 // query.skip(-1).limit(-1)의 이유는 현재 쿼리가 페이징 하려고 하는 offset 까지만 보기에 이를 맨 처음부터 끝까지러 set 해줘 정확한 도큐먼트 개수를 구한다.
         );
 
+        return metaDataPage;
     }
 
 
