@@ -21,9 +21,11 @@ import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoCo
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @SpringBootTest
@@ -79,7 +81,7 @@ public class MetaDataQA {
 
         long beforeTime = System.currentTimeMillis();
 
-        long METADATA_SIZE = 100;
+        long METADATA_SIZE = 200;
 
         Faker faker = new Faker();
         StringBuilder strBodyList = new StringBuilder();
@@ -106,9 +108,9 @@ public class MetaDataQA {
         strBodyList.append("]");
 
         long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
-        long secDiffTime = (afterTime - beforeTime)/1000; //두 시간에 차 계산
+        long secDiffTime = (afterTime - beforeTime); //두 시간에 차 계산
 
-        log.info("createMockStrBodyList 실행 시간(m) : "+secDiffTime);
+        log.info("createMockStrBodyList 실행 시간(ms) : "+secDiffTime);
 
         return strBodyList.toString();
     }
@@ -179,7 +181,7 @@ public class MetaDataQA {
         long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
         long secDiffTime = (afterTime - beforeTime); //두 시간에 차 계산
 
-        log.info("saveAll QA 실행 시간(m) : "+secDiffTime);
+        log.info("saveAll QA 실행 시간(ms) : "+secDiffTime);
 
     }
 
@@ -193,13 +195,19 @@ public class MetaDataQA {
         long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
         long secDiffTime = (afterTime - beforeTime); //두 시간에 차 계산
         log.info("findAll 개수 : "+metaDataList.size());
-        log.info("findAll QA 실행 시간(m) : "+secDiffTime);
+        log.info("findAll QA 실행 시간(ms) : "+secDiffTime);
     }
 
     @Profile("QA")
     @Test
     public void findByProjectIdWithPagingAndFiltering() {
-        customizedMetaDataRepository.findByProjectIdWithPagingAndFiltering("54321",0,10);
+        long beforeTime = System.currentTimeMillis();
+        HashMap<String,Object> parmMap = new HashMap<>();
+        Page<MetaData> metaDataPage = customizedMetaDataRepository.findByProjectIdWithPagingAndFiltering("54321",11123,20,parmMap);
+        long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
+        long secDiffTime = (afterTime - beforeTime); //두 시간에 차 계산
+        log.info("findByProjectIdWithPagingAndFiltering 개수 : "+metaDataPage.getContent().size());
+        log.info("findByProjectIdWithPagingAndFiltering QA 실행 시간(ms) : "+secDiffTime);
     }
 
 

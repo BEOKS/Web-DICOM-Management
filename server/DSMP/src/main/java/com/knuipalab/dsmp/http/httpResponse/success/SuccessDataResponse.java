@@ -12,7 +12,7 @@ public class SuccessDataResponse<T> extends BasicResponse {
 
     private LocalDateTime timestamp ;
 
-    private int count;
+    private int count; // 바디 값이 리스트인 경우 리스트 개수
 
     private int status;
 

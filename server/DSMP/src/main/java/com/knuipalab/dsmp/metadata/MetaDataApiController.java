@@ -6,10 +6,13 @@ import com.knuipalab.dsmp.http.httpResponse.success.SuccessResponse;
 
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 @RestController
@@ -20,9 +23,9 @@ public class MetaDataApiController {
 
     // projectId가 같은 metadata를 모두 반환
     @GetMapping("api/MetaData/{projectId}")
-    public ResponseEntity< ? extends BasicResponse> findByProjectId(@PathVariable String projectId, MultipartFile multipartFile){
-        List<MetaDataResponseDto> metaDataResponseDtos = metaDataService.findByProjectId(projectId);
-        return ResponseEntity.ok().body(new SuccessDataResponse<List<MetaDataResponseDto>>(metaDataResponseDtos));
+    public ResponseEntity< ? extends BasicResponse> findByProjectIdWithPagingAndFiltering(@PathVariable String projectId, @RequestParam HashMap<String,Object> parmMap){
+        Page<MetaData> metaDataPage = metaDataService.findByProjectIdWithPagingAndFiltering(projectId,parmMap);
+        return ResponseEntity.ok().body(new SuccessDataResponse<Page<MetaData>>(metaDataPage));
     }
 
     // metatdata를 projectId와 함께 저장
@@ -62,5 +65,6 @@ public class MetaDataApiController {
         metaDataService.deleteById(metadataId);
         return ResponseEntity.ok().body(new SuccessResponse());
     }
+
 
 }
