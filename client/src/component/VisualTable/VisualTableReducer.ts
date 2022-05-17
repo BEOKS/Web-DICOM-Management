@@ -25,7 +25,7 @@ const INIT_VISUALTABLE_STATE: VisualTableStateType = {
 
 
 // reducer
-export default function SamplingReducer(state: VisualTableStateType = INIT_VISUALTABLE_STATE, action: VisualTableActionType): VisualTableStateType {
+export default function VisualTableReducer(state: VisualTableStateType = INIT_VISUALTABLE_STATE, action: VisualTableActionType): VisualTableStateType {
     switch (action.type) {
         case TYPE.SET_OPTIONS:
             return { ...state, options: action.payload };

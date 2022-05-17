@@ -9,6 +9,7 @@ import FileUploadDialogReducer from "./component/Toolbar/Upload/FileUploadDialog
 import SnackbarReducer from "./component/Toolbar/Upload/SnackbarReducer";
 import MLResultReducer from "./component/Table/MLResult/MLResultRedux";
 import VisualTableReducer from "./component/VisualTable/VisualTableReducer";
+import MetaDataGridReducer from "./component/Table/MetaDataGridReducer";
 
 const rootReducer=combineReducers({
     ColumnTypeDecisionDialogReducer,
@@ -19,7 +20,8 @@ const rootReducer=combineReducers({
     FileUploadDialogReducer,
     SnackbarReducer,
     MLResultReducer,
-    VisualTableReducer
+    VisualTableReducer,
+    MetaDataGridReducer
 })
 
 export default rootReducer;

@@ -171,6 +171,7 @@ export default function Page() {
                                 <Stack>
                                     <MetaDataGrid
                                         metaData={metaData}
+                                        project={presentProject}
                                     />
                                     <DicomTable 
                                         data={metaData} 
