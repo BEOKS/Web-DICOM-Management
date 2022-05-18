@@ -3,6 +3,7 @@ package com.knuipalab.dsmp.machineLearning;
 import com.knuipalab.dsmp.http.httpResponse.BasicResponse;
 import com.knuipalab.dsmp.http.httpResponse.success.SuccessDataResponse;
 import com.knuipalab.dsmp.http.httpResponse.success.SuccessResponse;
+import com.knuipalab.dsmp.machineLearning.MachineLearningInference.AsyncMLInferenceService;
 import com.knuipalab.dsmp.machineLearning.TrainTypeSampling.AsyncMetaDataSampler;
 import com.knuipalab.dsmp.machineLearning.MachineLearningInference.BasicMalignancyServerMessenger;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class MachineLearningApiController implements MLManagementAPIController{
 
     private final AsyncMetaDataSampler asyncMetaDataSampler;
     private final BasicMalignancyServerMessenger basicMalignancyServerMessenger;
+    private final AsyncMLInferenceService asyncMLInferenceService;
 
     /**
      * 머신러닝 추론을 테스트하기 위한 임시 API 입니다.
@@ -48,7 +50,7 @@ public class MachineLearningApiController implements MLManagementAPIController{
      */
     @PutMapping("api/MetaData/MalignancyClassification/{projectId}/{modelName}")
     public ResponseEntity<? extends BasicResponse> requestMLInference(@PathVariable String projectId, @PathVariable String modelName) {
-        asyncMetaDataSampler.requestMLInferenceToTorchServe(projectId,modelName);
+        asyncMLInferenceService.requestMLInferenceToTorchServe(projectId,modelName);
         return ResponseEntity.ok().body(new SuccessResponse());
     }
 
