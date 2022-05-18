@@ -12,12 +12,10 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
-    - name: Move To Spring Boot Dir
-      run: cd server/DSMP && ls;
     - name: Give excute permission
-      run: ls && chmod +x /gradlew
+      run: chmod +x server/DSMP/gradlew
     - name: Test Spring Boot
-      run: ./gradlew --info test
+      run: cd server/DSMP/gradlew && ./gradlew --info test
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
       if: ${{ always() }} 
