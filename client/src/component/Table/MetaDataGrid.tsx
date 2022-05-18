@@ -3,6 +3,7 @@ import './MetaDataGrid.css';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from '../../store';
 import { MetaDataGridAction } from './MetaDataGridReducer';
+import { MLResultReduxAction } from "./MLResult/MLResultRedux";
 import DataGrid, { Selection, FilterRow, Toolbar, Item, Editing, Column, Button, MasterDetail } from 'devextreme-react/data-grid';
 import { Box, Tooltip, IconButton, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -10,6 +11,7 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { extractBody, extractColumns } from "./Utils/extractMetaData";
 import exportCSVFile from "./Utils/exportCSVFile"
+import { getFileListAPI } from "../../api/StorageAPI";
 import axios from 'axios'
 import DeleteRowDialog from "./DeleteTestDialog";
 import CollapsingRow from "./CollapsingRow";
@@ -54,6 +56,13 @@ const MetaDataGrid: React.FC<MetaDataGridProps> = ({ metaData, project }) => {
 
     const dispatch = useDispatch();
     const selectedRow = useSelector((state: RootState) => state.MetaDataGridReducer.selectedRow);
+    const projectId = useSelector((state: RootState) => state.ParticipantInfoReducer.participants.projectId);
+
+    getFileListAPI(
+        projectId,
+        fileList => dispatch(MLResultReduxAction.setImageFileNames(fileList)),
+        error => console.log('이미지 파일 리스트 다운로드 실패' + error.message)
+    );
 
     // StudyUID 필드명이 바뀔 수 있으므로 따로 기재
     const STUDY_UID_NAME = "StudyInstanceUID";
@@ -121,7 +130,7 @@ const MetaDataGrid: React.FC<MetaDataGridProps> = ({ metaData, project }) => {
         } else {
             alert('삭제할 행을 선택해주세요.');
         }
-    }
+    };
 
     return (
         <Box m={3} >
