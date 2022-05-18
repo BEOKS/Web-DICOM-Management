@@ -3,7 +3,7 @@ import './MetaDataGrid.css';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from '../../store';
 import { MetaDataGridAction } from './MetaDataGridReducer';
-import DataGrid, { Selection, FilterRow, Toolbar, Item } from 'devextreme-react/data-grid';
+import DataGrid, { Selection, FilterRow, Toolbar, Item, Editing, Column, Button } from 'devextreme-react/data-grid';
 import { Box, Tooltip, IconButton, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
@@ -57,10 +57,23 @@ const MetaDataGrid: React.FC<MetaDataGridProps> = ({ metaData, project }) => {
     // StudyUID 필드명이 바뀔 수 있으므로 따로 기재
     const STUDY_UID_NAME = "StudyInstanceUID";
 
+    // 행 선택
     const onSelectionChanged = ({ selectedRowsData }: { selectedRowsData: Body[] }) => {
         dispatch(MetaDataGridAction.setSelectedRow(selectedRowsData));
         dispatch(MetaDataGridAction.setSelectedMetaDataID(selectedRowsData.map((row: Body) => row.metadataId)));
         dispatch(MetaDataGridAction.setSelectedStudyUID(selectedRowsData.map((row: Body) => row[STUDY_UID_NAME])));
+    };
+
+    // 메타 데이터 수정 후 저장
+    const onSaved = (e: any) => {
+        const data = e.changes[0].data;
+        const metadataId = data.metadataId;
+        delete data.metadataId;
+        const url = `api/MetaData/${metadataId}`;
+
+        axios.put(url, data)
+            .then(response => console.log(response))
+            .catch(error => console.log(error));
     };
 
     const handleCSVDownloadButtonClick = () => {
@@ -118,6 +131,7 @@ const MetaDataGrid: React.FC<MetaDataGridProps> = ({ metaData, project }) => {
                 showBorders={true}
                 hoverStateEnabled={true}
                 onSelectionChanged={onSelectionChanged}
+                onSaved={onSaved}
             >
                 <Selection
                     mode="multiple"
@@ -125,7 +139,13 @@ const MetaDataGrid: React.FC<MetaDataGridProps> = ({ metaData, project }) => {
                     showCheckBoxesMode="always"
                 />
                 <FilterRow visible={true} />
-
+                <Editing
+                    mode="row"
+                    useIcons={true}
+                    allowUpdating={true} />
+                <Column type="buttons" width={110}>
+                    <Button name="edit" />
+                </Column>
                 {/* Toolbar를 다른 컴포넌트로 분리했더니 화면에 나타나지 않아서 그대로 둠 */}
                 <Toolbar>
                     <Item location="before">
