@@ -13,9 +13,9 @@ jobs:
       with:
         java-version: 11
     - name: Move To Spring Boot Dir
-      run: cd server/DSMP
+      run: cd server/DSMP && ls;
     - name: Give excute permission
-      run: chmod +x gradlew
+      run: chmod +x ./gradlew
     - name: Test Spring Boot
       run: ./gradlew --info test
     - name: Publish Unit Test Results
