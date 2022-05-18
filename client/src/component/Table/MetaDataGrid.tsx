@@ -3,7 +3,7 @@ import './MetaDataGrid.css';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from '../../store';
 import { MetaDataGridAction } from './MetaDataGridReducer';
-import DataGrid, { Selection, FilterRow, Toolbar, Item, Editing, Column, Button } from 'devextreme-react/data-grid';
+import DataGrid, { Selection, FilterRow, Toolbar, Item, Editing, Column, Button, MasterDetail } from 'devextreme-react/data-grid';
 import { Box, Tooltip, IconButton, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
@@ -12,6 +12,7 @@ import { extractBody, extractColumns } from "./Utils/extractMetaData";
 import exportCSVFile from "./Utils/exportCSVFile"
 import axios from 'axios'
 import DeleteRowDialog from "./DeleteTestDialog";
+import CollapsingRow from "./CollapsingRow";
 
 const hostLocation = process.env.SERVER_HOST ? process.env.SERVER_HOST : 'localhost'
 
@@ -146,6 +147,10 @@ const MetaDataGrid: React.FC<MetaDataGridProps> = ({ metaData, project }) => {
                 <Column type="buttons" width={110}>
                     <Button name="edit" />
                 </Column>
+                <MasterDetail
+                    enabled={true}
+                    render={CollapsingRow}
+                />
                 {/* Toolbar를 다른 컴포넌트로 분리했더니 화면에 나타나지 않아서 그대로 둠 */}
                 <Toolbar>
                     <Item location="before">
