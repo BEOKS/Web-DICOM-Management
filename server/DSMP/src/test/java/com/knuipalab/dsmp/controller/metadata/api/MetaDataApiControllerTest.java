@@ -3,6 +3,7 @@ package com.knuipalab.dsmp.controller.metadata.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.knuipalab.dsmp.http.httpResponse.success.SuccessDataResponse;
 import com.knuipalab.dsmp.metadata.*;
 import com.knuipalab.dsmp.user.auth.CustomOAuth2UserService;
 import org.bson.Document;
@@ -13,14 +14,21 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -134,32 +142,33 @@ class MetaDataApiControllerTest {
     }
 
     @WithMockUser
-    @DisplayName("Find by ProjectId - Success")
+    @DisplayName("Find by ProjectId with Paging - Success")
     @Test
-    void findByProjectIdTest() throws Exception {
+    void findByProjectIdWithPaging() throws Exception {
 
         //given
         List<MetaData> metaDataList = createMockMetaDataList();
 
-        List<MetaDataResponseDto> metaDataResponseDtoList = metaDataList.stream()
-                .map(metaData -> new MetaDataResponseDto(metaData))
-                .collect(Collectors.toList());
+        HashMap<String,Object> parmMap = new HashMap<String,Object>();
+        parmMap.put("page",0);
+        parmMap.put("size",2);
+
+        Pageable pageable = PageRequest.of(0,2, Sort.unsorted());
+        Page<MetaData> metaDataPage = PageableExecutionUtils.getPage(
+                metaDataList,
+                pageable,
+                () -> 5
+        );
 
         //when
-        given(metaDataService.findByProjectId("54321"))
-                .willReturn(metaDataResponseDtoList);
+        given(metaDataService.findByProjectIdWithPaging("54321",parmMap))
+                .willReturn(metaDataPage);
 
         mvc.perform(get("/api/MetaData/54321"))
                 .andExpect(status().isOk()) // status 200
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON)) //JSON 반환
                 .andExpect(jsonPath("$.status",is(200)))
-                .andExpect(jsonPath("$.count",is(2)))
-                .andExpect(jsonPath("$.body.[0].metadataId", is("12345")))
-                .andExpect(jsonPath("$.body.[0].projectId", is("54321")))
-                .andExpect(jsonPath("$.body.[0].body.age", is(53))) // body 확인
-                .andExpect(jsonPath("$.body.[1].metadataId", is("12346")))
-                .andExpect(jsonPath("$.body.[1].projectId", is("54321")))
-                .andExpect(jsonPath("$.body.[1].body.age", is(54))) // body 확인
+                .andExpect(jsonPath("$.count",is(1)))
                 .andDo(print())
                 ;
     }

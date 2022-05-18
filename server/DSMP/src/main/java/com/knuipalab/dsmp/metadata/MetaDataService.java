@@ -40,7 +40,7 @@ public class MetaDataService {
     }
 
     @Transactional (readOnly = true)
-    public Page<MetaData> findByProjectIdWithPagingAndFiltering(String projectId, HashMap parmMap) {
+    public Page<MetaData> findByProjectIdWithPaging(String projectId, HashMap parmMap) {
 
         //default page and size
         int page = 0;
@@ -56,7 +56,7 @@ public class MetaDataService {
 
         projectService.findById(projectId);
 
-        return metaDataRepository.findByProjectIdWithPagingAndFiltering(projectId, page, size, parmMap);
+        return metaDataRepository.findByProjectIdWithPaging(projectId, page, size, parmMap);
 
     }
 

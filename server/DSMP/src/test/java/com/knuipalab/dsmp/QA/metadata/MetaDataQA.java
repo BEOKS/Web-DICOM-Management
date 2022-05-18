@@ -200,14 +200,14 @@ public class MetaDataQA {
 
     @Profile("QA")
     @Test
-    public void findByProjectIdWithPagingAndFiltering() {
+    public void findByProjectIdWithPaging() {
         long beforeTime = System.currentTimeMillis();
         HashMap<String,Object> parmMap = new HashMap<>();
-        Page<MetaData> metaDataPage = customizedMetaDataRepository.findByProjectIdWithPagingAndFiltering("54321",11123,20,parmMap);
+        Page<MetaData> metaDataPage = customizedMetaDataRepository.findByProjectIdWithPaging("54321",11123,20,parmMap);
         long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
         long secDiffTime = (afterTime - beforeTime); //두 시간에 차 계산
-        log.info("findByProjectIdWithPagingAndFiltering 개수 : "+metaDataPage.getContent().size());
-        log.info("findByProjectIdWithPagingAndFiltering QA 실행 시간(ms) : "+secDiffTime);
+        log.info("findByProjectIdWithPaging 개수 : "+metaDataPage.getContent().size());
+        log.info("findByProjectIdWithPaging QA 실행 시간(ms) : "+secDiffTime);
     }
 
 

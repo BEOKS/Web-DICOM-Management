@@ -52,7 +52,7 @@ public class CustomizedMetaDataRepositoryImpl implements CustomizedMetaDataRepos
 
 
     @Override
-    public Page<MetaData> findByProjectIdWithPagingAndFiltering(String projectId,int page, int size, HashMap parmMap) {
+    public Page<MetaData> findByProjectIdWithPaging(String projectId,int page, int size, HashMap parmMap) {
 
         Pageable pageable = PageRequest.of(page,size, Sort.unsorted());
 

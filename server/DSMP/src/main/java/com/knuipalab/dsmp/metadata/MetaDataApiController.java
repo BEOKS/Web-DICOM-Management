@@ -23,8 +23,8 @@ public class MetaDataApiController {
 
     // projectId가 같은 metadata를 모두 반환
     @GetMapping("api/MetaData/{projectId}")
-    public ResponseEntity< ? extends BasicResponse> findByProjectIdWithPagingAndFiltering(@PathVariable String projectId, @RequestParam HashMap<String,Object> parmMap){
-        Page<MetaData> metaDataPage = metaDataService.findByProjectIdWithPagingAndFiltering(projectId,parmMap);
+    public ResponseEntity< ? extends BasicResponse> findByProjectIdWithPaging(@PathVariable String projectId, @RequestParam HashMap<String,Object> parmMap){
+        Page<MetaData> metaDataPage = metaDataService.findByProjectIdWithPaging(projectId,parmMap);
         return ResponseEntity.ok().body(new SuccessDataResponse<Page<MetaData>>(metaDataPage));
     }
 

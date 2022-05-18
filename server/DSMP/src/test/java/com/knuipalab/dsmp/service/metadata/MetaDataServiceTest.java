@@ -17,9 +17,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -156,28 +162,36 @@ public class MetaDataServiceTest {
     }
 
     @Test
-    @DisplayName("Find by ProjectId - Success")
-    public void findByProjectIdTest() {
+    @DisplayName("Find by ProjectId with Paging - Success")
+    public void findByProjectIdWithPaging() {
 
         // given
         String projectId = "54321";
+        int page = 0;
+        int size = 20;
         List<MetaData> mockedMetaDataList = createMockMetaDataList();
 
+        HashMap<String,Object> parmMap = new HashMap<String,Object>();
+
+        Pageable pageable = PageRequest.of(0,2, Sort.unsorted());
+        Page<MetaData> metaDataPage = PageableExecutionUtils.getPage(
+                mockedMetaDataList,
+                pageable,
+                () -> 5
+        );
+
         // mocking
-        given(metaDataRepository.findByProjectId(projectId))
-                .willReturn(mockedMetaDataList);
+        given(metaDataRepository.findByProjectIdWithPaging(projectId,page,size,parmMap))
+                .willReturn(metaDataPage);
 
         //when
-        List<MetaDataResponseDto> mockedMetaDataResponseDtoList = metaDataRepository.findByProjectId(projectId)
-                .stream()
-                .map( metaData -> new MetaDataResponseDto(metaData) )
-                .collect(Collectors.toList());
+        Page<MetaData> mockedMetaDataPage = metaDataRepository.findByProjectIdWithPaging(projectId,page,size,parmMap);
 
         //then
-        Assertions.assertEquals(mockedMetaDataResponseDtoList.get(0).getProjectId(),projectId);
-        Assertions.assertEquals(mockedMetaDataResponseDtoList.get(0).getMetadataId(),"12345");
-        Assertions.assertEquals(mockedMetaDataResponseDtoList.get(1).getProjectId(),projectId);
-        Assertions.assertEquals(mockedMetaDataResponseDtoList.get(1).getMetadataId(),"12346");
+        Assertions.assertEquals(mockedMetaDataPage.getTotalElements(),5);
+        Assertions.assertEquals(mockedMetaDataPage.getTotalPages(),3);
+        Assertions.assertEquals(mockedMetaDataPage.getContent().size(),mockedMetaDataList.size());
+
 
     }
 
