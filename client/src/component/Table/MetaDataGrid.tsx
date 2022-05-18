@@ -13,8 +13,8 @@ import { extractBody, extractColumns } from "./Utils/extractMetaData";
 import exportCSVFile from "./Utils/exportCSVFile"
 import { getFileListAPI } from "../../api/StorageAPI";
 import axios from 'axios'
-import DeleteRowDialog from "./DeleteTestDialog";
-import CollapsingRow from "./CollapsingRow";
+import DeleteRowDialog from "./DeleteRowDialog";
+import MLResultTableRow from "./MLResult/MLResultTableRow";
 
 const hostLocation = process.env.SERVER_HOST ? process.env.SERVER_HOST : 'localhost'
 
@@ -158,7 +158,7 @@ const MetaDataGrid: React.FC<MetaDataGridProps> = ({ metaData, project }) => {
                 </Column>
                 <MasterDetail
                     enabled={true}
-                    render={CollapsingRow}
+                    render={MLResultTableRow}
                 />
                 {/* Toolbar를 다른 컴포넌트로 분리했더니 화면에 나타나지 않아서 그대로 둠 */}
                 <Toolbar>
