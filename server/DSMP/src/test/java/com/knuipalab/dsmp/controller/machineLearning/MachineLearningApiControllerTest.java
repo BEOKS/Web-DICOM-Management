@@ -1,5 +1,6 @@
 package com.knuipalab.dsmp.controller.machineLearning;
 
+import com.knuipalab.dsmp.machineLearning.MachineLearningInference.AsyncMLInferenceService;
 import com.knuipalab.dsmp.machineLearning.MachineLearningInference.BasicMalignancyServerMessenger;
 import com.knuipalab.dsmp.user.auth.CustomOAuth2UserService;
 import com.knuipalab.dsmp.machineLearning.MachineLearningApiController;
@@ -33,6 +34,8 @@ public class MachineLearningApiControllerTest {
     @MockBean
     private BasicMalignancyServerMessenger basicMalignancyServerMessenger;
     @MockBean
+    private AsyncMLInferenceService asyncMLInferenceService;
+    @MockBean
     private AsyncMetaDataSampler asyncMetaDataSampler;
     @Autowired
     private WebApplicationContext context;
@@ -46,7 +49,6 @@ public class MachineLearningApiControllerTest {
                 .apply(springSecurity())
                 .build();
     }
-
 
     @WithMockUser
     @DisplayName("Type Sampling Test by ProjectId")
@@ -64,7 +66,7 @@ public class MachineLearningApiControllerTest {
     @DisplayName("Set Malignancy Classification Test by ProjectId and Model Name")
     @Test
     void setMalignancyClassificationTest() throws Exception {
-        mvc.perform(put("/api/MetaData/MalignancyClassification/54321/Basic"))
+        mvc.perform(put("/api/MetaData/MalignancyClassification/54321/124214"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status",is(200)))
                 .andDo(print())
