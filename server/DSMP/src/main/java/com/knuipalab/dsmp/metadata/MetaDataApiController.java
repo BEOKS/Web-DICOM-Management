@@ -9,10 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 @RestController
@@ -23,6 +21,13 @@ public class MetaDataApiController {
 
     // projectId가 같은 metadata를 모두 반환
     @GetMapping("api/MetaData/{projectId}")
+    public ResponseEntity< ? extends BasicResponse> findByProjectId(@PathVariable String projectId){
+        List<MetaDataResponseDto> metaDataResponseDtos = metaDataService.findByProjectId(projectId);
+        return ResponseEntity.ok().body(new SuccessDataResponse<List<MetaDataResponseDto>>(metaDataResponseDtos));
+    }
+
+    // projectId가 같은 metadata를 반환 with paging
+    @GetMapping("api/MetaData/{projectId}/pagination")
     public ResponseEntity< ? extends BasicResponse> findByProjectIdWithPaging(@PathVariable String projectId, @RequestParam HashMap<String,Object> parmMap){
         Page<MetaData> metaDataPage = metaDataService.findByProjectIdWithPaging(projectId,parmMap);
         return ResponseEntity.ok().body(new SuccessDataResponse<Page<MetaData>>(metaDataPage));

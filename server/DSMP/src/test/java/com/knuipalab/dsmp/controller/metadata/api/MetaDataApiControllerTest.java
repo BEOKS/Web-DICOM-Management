@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.internal.matchers.Any;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -142,36 +144,50 @@ class MetaDataApiControllerTest {
     }
 
     @WithMockUser
-    @DisplayName("Find by ProjectId with Paging - Success")
+    @DisplayName("Find by ProjectId - Success")
     @Test
-    void findByProjectIdWithPaging() throws Exception {
+    void findByProjectIdTest() throws Exception {
 
         //given
         List<MetaData> metaDataList = createMockMetaDataList();
 
-        HashMap<String,Object> parmMap = new HashMap<String,Object>();
-        parmMap.put("page",0);
-        parmMap.put("size",2);
-
-        Pageable pageable = PageRequest.of(0,2, Sort.unsorted());
-        Page<MetaData> metaDataPage = PageableExecutionUtils.getPage(
-                metaDataList,
-                pageable,
-                () -> 5
-        );
+        List<MetaDataResponseDto> metaDataResponseDtoList = metaDataList.stream()
+                .map(metaData -> new MetaDataResponseDto(metaData))
+                .collect(Collectors.toList());
 
         //when
-        given(metaDataService.findByProjectIdWithPaging("54321",parmMap))
-                .willReturn(metaDataPage);
+        given(metaDataService.findByProjectId("54321"))
+                .willReturn(metaDataResponseDtoList);
 
         mvc.perform(get("/api/MetaData/54321"))
                 .andExpect(status().isOk()) // status 200
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON)) //JSON 반환
                 .andExpect(jsonPath("$.status",is(200)))
-                .andExpect(jsonPath("$.count",is(1)))
+                .andExpect(jsonPath("$.count",is(2)))
+                .andExpect(jsonPath("$.body.[0].metadataId", is("12345")))
+                .andExpect(jsonPath("$.body.[0].projectId", is("54321")))
+                .andExpect(jsonPath("$.body.[0].body.age", is(53))) // body 확인
+                .andExpect(jsonPath("$.body.[1].metadataId", is("12346")))
+                .andExpect(jsonPath("$.body.[1].projectId", is("54321")))
+                .andExpect(jsonPath("$.body.[1].body.age", is(54))) // body 확인
+                .andDo(print())
+        ;
+    }
+
+    @WithMockUser
+    @DisplayName("Find by ProjectId with Paging - Success")
+    @Test
+    void findByProjectIdWithPaging() throws Exception {
+
+        //when
+        mvc.perform(get("/api/MetaData/54321/pagination?page=0&size=2"))
+                .andExpect(status().isOk()) // status 200
+                .andExpect(jsonPath("$.status",is(200)))
                 .andDo(print())
                 ;
     }
+
+
 
     @WithMockUser
     @DisplayName("Insert by ProjectId - Success")

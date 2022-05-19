@@ -162,6 +162,30 @@ public class MetaDataServiceTest {
     }
 
     @Test
+    @DisplayName("Find by ProjectId - Success")
+    public void findByProjectIdTest() {
+        // given
+        String projectId = "54321";
+        List<MetaData> mockedMetaDataList = createMockMetaDataList();
+
+        // mocking
+        given(metaDataRepository.findByProjectId(projectId))
+                .willReturn(mockedMetaDataList);
+        //when
+        List<MetaDataResponseDto> mockedMetaDataResponseDtoList = metaDataRepository.findByProjectId(projectId)
+                .stream()
+                .map( metaData -> new MetaDataResponseDto(metaData) )
+                .collect(Collectors.toList());
+
+        //then
+        Assertions.assertEquals(mockedMetaDataResponseDtoList.get(0).getProjectId(),projectId);
+        Assertions.assertEquals(mockedMetaDataResponseDtoList.get(0).getMetadataId(),"12345");
+        Assertions.assertEquals(mockedMetaDataResponseDtoList.get(1).getProjectId(),projectId);
+        Assertions.assertEquals(mockedMetaDataResponseDtoList.get(1).getMetadataId(),"12346");
+
+    }
+
+    @Test
     @DisplayName("Find by ProjectId with Paging - Success")
     public void findByProjectIdWithPaging() {
 
