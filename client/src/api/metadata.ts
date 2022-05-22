@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-const url='/MetaData';
+const updateMetaData = (body: any, metadataId: string) => {
+    const url = 'api/MetaData/' + metadataId;
 
-const updateMetaData=(body : any, metadataId : string)=>{
-    axios.put(`api/MetaData/${metadataId}`,body)
-        .catch(error =>{
+    axios.put(url, body)
+        .catch(error => {
             alert('Metadata Update Fail')
-        })
-}
+        });
+};
 
-export {updateMetaData};
+export { updateMetaData };
