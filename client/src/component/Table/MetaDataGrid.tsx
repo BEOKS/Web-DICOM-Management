@@ -77,11 +77,13 @@ const MetaDataGrid: React.FC<MetaDataGridProps> = ({ metaData, project }) => {
 
     // 메타 데이터 수정 후 저장
     const onSaved = (e: any) => {
-        const data = e.changes[0].data;
-        const metadataId = data.metadataId;
-        delete data.metadataId;
+        if (e.changes.length !== 0) {
+            const data = e.changes[0].data;
+            const metadataId = data.metadataId;
+            delete data.metadataId;
 
-        updateMetaData(data, metadataId);
+            updateMetaData(data, metadataId);
+        }
     };
 
     const handleCSVDownloadButtonClick = () => {
