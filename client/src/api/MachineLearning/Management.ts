@@ -14,6 +14,10 @@ export const getModelList = (callback: (modelList: string[]) => void) => {
 };
 
 // dummy API
-export const inference = (modelName: string) => {
-    alert(modelName + ' inference start!');
+export const inference = (projectId : string, modelName: string,
+    callbackSuccess : (response:any) =>void,
+    callbackError : (error:any) => void) => {
+    axios.put(`api/MetaData/MalignancyClassification/${projectId}/${modelName}`)
+            .then(callbackSuccess)
+            .catch(callbackError)
 };

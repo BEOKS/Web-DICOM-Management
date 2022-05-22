@@ -1,7 +1,6 @@
 package com.knuipalab.dsmp;
 
-import com.knuipalab.dsmp.configuration.auth.dto.SessionUser;
-import com.knuipalab.dsmp.util.log.ExeTimer;
+import com.knuipalab.dsmp.user.auth.SessionUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

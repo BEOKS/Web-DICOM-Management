@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import './MetaDataGrid.css';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from '../../store';
@@ -12,11 +12,12 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { extractBody, extractColumns } from "./Utils/extractMetaData";
 import exportCSVFile from "./Utils/exportCSVFile"
 import { getFileListAPI } from "../../api/StorageAPI";
-import axios from 'axios'
+import { updateMetaData } from "../../api/metadata";
+import axios from 'axios';
 import DeleteRowDialog from "./DeleteRowDialog";
 import MLResultTableRow from "./MLResult/MLResultTableRow";
 
-const hostLocation = process.env.SERVER_HOST ? process.env.SERVER_HOST : 'localhost'
+const hostLocation = process.env.SERVER_HOST ? process.env.SERVER_HOST : 'localhost';
 
 export type Body = {
     [key: string]: string
@@ -79,11 +80,8 @@ const MetaDataGrid: React.FC<MetaDataGridProps> = ({ metaData, project }) => {
         const data = e.changes[0].data;
         const metadataId = data.metadataId;
         delete data.metadataId;
-        const url = `api/MetaData/${metadataId}`;
 
-        axios.put(url, data)
-            .then(response => console.log(response))
-            .catch(error => console.log(error));
+        updateMetaData(data, metadataId);
     };
 
     const handleCSVDownloadButtonClick = () => {

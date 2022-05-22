@@ -1,6 +1,6 @@
 package com.knuipalab.dsmp.mock;
 
-import com.knuipalab.dsmp.domain.user.User;
+import com.knuipalab.dsmp.user.User;
 import lombok.Getter;
 
 @Getter
