@@ -3,7 +3,7 @@ import { RootState } from '../../store';
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import axios from 'axios';
 import { MetaDataGridAction } from './MetaDataGridReducer';
-import { Project } from '../Drawer/ProjectDrawerReducer';
+import { getMetaData } from '../../api/metadata';
 
 const DeleteRowDialog = () => {
     const dispatch = useDispatch();
@@ -52,7 +52,7 @@ const DeleteRowDialog = () => {
     const handleSubmit = () => {
         deleteMetaData();
         deleteDicom();
-        //setMetaDataUpdated(!metaDataUpdated);
+        getMetaData(project, dispatch);
         onClose();
     };
 
