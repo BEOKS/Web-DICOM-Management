@@ -8,8 +8,14 @@ import DeleteButton from './DeleteUser/DeleteButton';
 import ParticipantInfo from "./ProjectParticipant/ParticipantInfo";
 import SamplingButton from './Sampling/SamplingButton';
 import MLButton from './MachineLearning/MLButton';
+import { useSelector } from 'react-redux';
+import { getMetaData } from '../../api/metadata';
 
-export default function UpDownloadToolbar({ projects, getMetaData, metaData, isInvitedProject }) {
+export default function UpDownloadToolbar() {
+    const project = useSelector(state => state.ProjectDrawerReducer.project);
+    const isInvitedProject = useSelector(state=>state.ProjectDrawerReducer.isInvitedProject);
+    const metaData = useSelector(state=>state.MetaDataGridReducer.metaData);
+
     return (
         <Box
             sx={{
@@ -30,28 +36,28 @@ export default function UpDownloadToolbar({ projects, getMetaData, metaData, isI
             >
                 {!isInvitedProject && (
                     <Grid item xs='auto'>
-                        <InviteButton projectID={projects.projectId} project={projects} />
+                        <InviteButton projectID={project.projectId} project={project} />
                     </Grid>
                 )}
                 <Grid item xs='auto'>
-                    <DeleteButton project={projects} isInvitedProject={isInvitedProject} />
+                    <DeleteButton project={project} isInvitedProject={isInvitedProject} />
                 </Grid>
                 <Grid item xs='auto'>
                     <ParticipantInfo />
                 </Grid>
                 <Grid item xs />
                 <Grid item xs='auto'>
-                    <UploadButton projects={projects} getMetaData={getMetaData} metaData={metaData} />
+                    <UploadButton projects={project} getMetaData={getMetaData} metaData={metaData} />
                 </Grid>
                 <Grid item xs='auto'>
-                    <SamplingButton getMetaData={getMetaData}/>
+                    <SamplingButton />
                 </Grid>
                 <Grid item xs='auto'>
                     <MLButton getMetaData={getMetaData}/>
                 </Grid>
                 {!isInvitedProject && (
                     <Grid item xs='auto'>
-                        <DeleteProjectButton projectID={projects.projectId} />
+                        <DeleteProjectButton projectID={project.projectId} />
                     </Grid>
                 )}
             </Grid>

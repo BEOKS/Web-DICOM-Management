@@ -5,17 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { MLAction } from "./MLReducer";
 import { inference } from '../../../api/MachineLearning/Management';
+import { getMetaData } from "../../../api/metadata";
 
-
-interface MLDialogProps {
-    getMetaData: () => {}
-}
-
-const MLDialog: React.FC<MLDialogProps> = ({ getMetaData }) => {
+const MLDialog = () => {
     const dispatch = useDispatch();
 
     const open = useSelector((state: RootState) => state.MLReducer.dialogOpen);
-    const projectId = useSelector((state: RootState) => state.ParticipantInfoReducer.participants.projectId);
+    const project = useSelector((state: RootState) => state.ProjectDrawerReducer.project);
     const modelList = useSelector((state: RootState) => state.MLReducer.modelList);
     const selectedModel = useSelector((state: RootState) => state.MLReducer.selectedModel);
 
@@ -27,21 +23,21 @@ const MLDialog: React.FC<MLDialogProps> = ({ getMetaData }) => {
         dispatch(MLAction.closeDialog());
         // dispatch(MLAction.openSnackbar());
 
-        // const url = `api/MetaData/MalignancyClassification/${projectId}`;
+        // const url = `api/MetaData/MalignancyClassification/${project.projectId}`;
         // axios.put(url)
         //     .then(response => {
         //         console.log(response);
         //         dispatch(MLAction.updateSnackbar());
-        //         getMetaData();
+        //         getMetaData(project, dispatch);
         //     }).catch(error => {
         //         alert(error);
         //         console.log(error);
         //     });
         dispatch(MLAction.openSnackbar());
-        inference(projectId,selectedModel,
-            (response : any)=>{
+        inference(project.projectId, selectedModel,
+            (response: any) => {
                 dispatch(MLAction.updateSnackbar)
-            }, (error : any)=> {
+            }, (error: any) => {
                 dispatch(MLAction.closeSnackbar())
             });
     };

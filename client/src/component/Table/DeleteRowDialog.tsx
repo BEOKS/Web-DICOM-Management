@@ -1,19 +1,16 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { Project } from './MetaDataGrid';
 import axios from 'axios';
 import { MetaDataGridAction } from './MetaDataGridReducer';
+import { Project } from '../Drawer/ProjectDrawerReducer';
 
-type DeleteRowDialogProps = {
-    project: Project
-}
-
-const DeleteRowDialog: React.FC<DeleteRowDialogProps> = ({ project }) => {
+const DeleteRowDialog = () => {
     const dispatch = useDispatch();
     const selectedMetaDataID = useSelector((state: RootState) => state.MetaDataGridReducer.selectedMetaDataID);
     const selectedStudyUID = useSelector((state: RootState) => state.MetaDataGridReducer.selectedStudyUID);
     const deleteRowDialogOpen = useSelector((state: RootState) => state.MetaDataGridReducer.deleteRowDialogOpen);
+    const project = useSelector((state: RootState) => state.ProjectDrawerReducer.project);
 
     const deleteMetaData = () => {
         const url = `api/MetaDataList/delete/${project.projectId}`;

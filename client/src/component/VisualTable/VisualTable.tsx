@@ -7,21 +7,8 @@ import VisualTableOptions from './VisualTableOptions';
 import BarChart from './Chart/BarChart';
 import DoughnutChart from './Chart/DoughnutChart';
 
-export type Body = {
-    [key: string]: string | number
-};
-
-export type MetaData = {
-    metadataId: string,
-    projectId: string,
-    body: Body
-};
-
-type VisualTableProps = {
-    metaData: MetaData[] | string // metaData가 'loading'일 경우엔 string type
-};
-
-const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
+const VisualTable = () => {
+    const metaData = useSelector((state: RootState) => state.MetaDataGridReducer.metaData);
     const options = useSelector((state: RootState) => state.VisualTableReducer.options);
     const data = extractBody(metaData);
     const keys = extractKeys(data);

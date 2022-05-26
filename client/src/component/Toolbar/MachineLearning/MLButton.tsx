@@ -2,17 +2,12 @@ import React from 'react';
 import { Button, CircularProgress, IconButton, Snackbar } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { MLAction } from './MLReducer';
-import SamplingDialog from './MLDialog';
+import MLDialog from './MLDialog';
 import { RootState } from '../../../store';
 import CloseIcon from '@mui/icons-material/Close';
 import { getModelList } from '../../../api/MachineLearning/Management';
 
-
-interface MLButtonProps {
-    getMetaData: () => {}
-}
-
-const MLButton: React.FC<MLButtonProps> = ({ getMetaData }) => {
+const MLButton = () => {
     const dispatch = useDispatch();
     const snackbarInfo = useSelector((state: RootState) => state.MLReducer.snackbarInfo);
 
@@ -43,7 +38,7 @@ const MLButton: React.FC<MLButtonProps> = ({ getMetaData }) => {
     return (
         <div>
             <Button onClick={handleMLButtonClick} variant="outlined" sx={{ ml: 1 }}>ML</Button>
-            <SamplingDialog getMetaData={getMetaData} />
+            <MLDialog />
             <Snackbar
                 key='MLMessenger'
                 open={snackbarInfo.open}

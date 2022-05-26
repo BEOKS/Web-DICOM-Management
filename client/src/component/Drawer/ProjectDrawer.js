@@ -4,7 +4,7 @@ import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
+import { ListItemButton } from '@mui/material';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
@@ -17,8 +17,10 @@ import { Dialog,DialogTitle,DialogContent,DialogContentText,DialogActions,TextFi
 import React, {useRef, useState} from 'react';
 import { createProject } from './Utils/ProjectUtils';
 import './ProjectDrawer.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { MetaDataGridAction } from './../Table/MetaDataGridReducer';
+import { ProjectDrawerAction } from './ProjectDrawerReducer';
+import { VisualTableAction } from './../VisualTable/VisualTableReducer';
 
 const SUCCESS=1,FAIL=0;
 
@@ -72,11 +74,15 @@ export const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 
 );
 
 
-export default function ProjectDrawer({open,setOpen,projects,invitedProjects,setIsInvitedProject,others,presentProject,setPresentProject,setMetaData,openCreateProjectDialog}) {
+export default function ProjectDrawer({open,setOpen,openCreateProjectDialog}) {
     const theme = useTheme();
     const [dialogOpen,setDialogOpen]=useState(openCreateProjectDialog);
     const [projectName,setProjectName]=useState();
     const dispatch = useDispatch();
+
+    const presentProject = useSelector(state=>state.ProjectDrawerReducer.project);
+    const createdProjects = useSelector(state=>state.ProjectDrawerReducer.createdProjects);
+    const invitedProjects = useSelector(state=>state.ProjectDrawerReducer.invitedProjects);
 
     React.useEffect(()=>{
         setDialogOpen(openCreateProjectDialog)
@@ -108,67 +114,56 @@ export default function ProjectDrawer({open,setOpen,projects,invitedProjects,set
                 </IconButton>
             </DrawerHeader>
             <Divider />
-            {open && projects.length > 0 && (
+            {open && createdProjects.length > 0 && (
             <Typography className="category" variant="subtitle2" component="div">Created Projects</Typography>
             )}
             
             <List sx={{py: 0}}>
-                {projects.map((project) => (
-                    <ListItem 
-                    selected={presentProject===project}
-                    button 
-                    key={project.projectName}
+                {createdProjects.map((project) => (
+                    <ListItemButton 
+                    selected={presentProject.projectId===project.projectId}
+                    key={project.projectId}
                     onClick={()=>{
                         dispatch(MetaDataGridAction.setSelectedRow([]));
                         dispatch(MetaDataGridAction.setSelectedMetaDataID([]));
                         dispatch(MetaDataGridAction.setSelectedStudyUID([]));
-                        setPresentProject(project);
-                        setIsInvitedProject(false);
+                        dispatch(ProjectDrawerAction.setProject(project));
+                        dispatch(ProjectDrawerAction.markInvitedProject(false));
+                        dispatch(VisualTableAction.setOptions([]));
                         }}>
                         <ListItemIcon>
                             <FolderOpenIcon />
                         </ListItemIcon>
                         <ListItemText primary={project.projectName} />
-                    </ListItem>
+                    </ListItemButton>
                 ))}
             </List>
-            {projects.length > 0 && <Divider />}
+            {createdProjects.length > 0 && <Divider />}
             {open && invitedProjects.length > 0 && (
             <Typography className="category" variant="subtitle2" component="div">Invited Projects</Typography>
             )}
             <List sx={{py: 0}}>
                 {invitedProjects.map((project) => (
-                    <ListItem 
-                    selected={presentProject===project}
-                    button 
-                    key={project.projectName}
+                    <ListItemButton 
+                    selected={presentProject.projectId===project.projectId}
+                    key={project.projectId}
                     onClick={()=>{
-                        setPresentProject(project);
-                        setIsInvitedProject(true);
+                        dispatch(MetaDataGridAction.setSelectedRow([]));
+                        dispatch(MetaDataGridAction.setSelectedMetaDataID([]));
+                        dispatch(MetaDataGridAction.setSelectedStudyUID([]));
+                        dispatch(ProjectDrawerAction.setProject(project));
+                        dispatch(ProjectDrawerAction.markInvitedProject(true));
+                        dispatch(VisualTableAction.setOptions([]));
+
                         }}>
                         <ListItemIcon>
                             <FolderOpenIcon />
                         </ListItemIcon>
                         <ListItemText primary={project.projectName} />
-                    </ListItem>
+                    </ListItemButton>
                 ))}
             </List>
             {invitedProjects.length > 0 && <Divider />}
-            {/* <Divider />
-            <List>
-                {others.map((text) => (
-                    <ListItem 
-                        button 
-                        key={text}
-                        onClick={()=>setPresentProject({projectName: 'Non-Reference Dicom'})}
-                        >
-                        <ListItemIcon>
-                            <MoreIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={text} />
-                    </ListItem>
-                ))}
-            </List> */}
             <Grid
                 container
                 height='100%'
@@ -181,12 +176,12 @@ export default function ProjectDrawer({open,setOpen,projects,invitedProjects,set
                         fontWeight: 'bold'
                     }}
                 >
-                    <ListItem button key='Add Project' onClick={()=>setDialogOpen(true)}>
+                    <ListItemButton key='Add Project' onClick={()=>setDialogOpen(true)}>
                         <ListItemIcon>
                             <AddCircleIcon color='primary' />
                         </ListItemIcon>
                         <ListItemText primary='Add Project' />
-                    </ListItem>
+                    </ListItemButton>
                 </List>
             </Grid>
         </Drawer>

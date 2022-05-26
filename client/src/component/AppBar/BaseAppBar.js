@@ -8,6 +8,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
 import logo from './logo.png'
 import { Box } from '@mui/material';
+
+import { useSelector } from 'react-redux';
+
 export const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
@@ -26,24 +29,26 @@ export const AppBar = styled(MuiAppBar, {
     }),
 }));
 
-export default function BaseAppBar(props) {
+export default function BaseAppBar({open, handleDrawerOpen}) {
+    const project = useSelector(state => state.ProjectDrawerReducer.project);
+
     return (
-        <AppBar position="fixed" open={props.open}>
+        <AppBar position="fixed" open={open}>
             <Toolbar>
                 <IconButton
                     color="inherit"
                     aria-label="open drawer"
-                    onClick={props.handleDrawerOpen}
+                    onClick={handleDrawerOpen}
                     edge="start"
                     sx={{
                         marginRight: '36px',
-                        ...(props.open && { display: 'none' }),
+                        ...(open && { display: 'none' }),
                     }}
                 >
                     <MenuIcon />
                 </IconButton>
                 <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 2 }}>
-                    {props.presentProjectName}
+                    {project.projectName}
                 </Typography>
                 <Button
                     color="inherit"
