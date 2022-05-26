@@ -1,15 +1,11 @@
 import { styled } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
-import { drawerWidth } from '../Drawer/ProjectDrawer';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+import { Box, Toolbar, Typography, IconButton, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Button from '@mui/material/Button';
 import logo from './logo.png'
-import { Box } from '@mui/material';
-
-import { useSelector } from 'react-redux';
+import { drawerWidth } from "../Drawer/ProjectDrawerStyling";
+import { useDispatch, useSelector } from 'react-redux';
+import { ProjectDrawerAction } from './../Drawer/ProjectDrawerReducer';
 
 export const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
@@ -29,20 +25,26 @@ export const AppBar = styled(MuiAppBar, {
     }),
 }));
 
-export default function BaseAppBar({open, handleDrawerOpen}) {
+export default function BaseAppBar() {
+    const dispatch = useDispatch();
     const project = useSelector(state => state.ProjectDrawerReducer.project);
+    const openDrawer = useSelector(state => state.ProjectDrawerReducer.openDrawer);
+
+    const onClickMenuButton = () => {
+        dispatch(ProjectDrawerAction.openDrawer());
+    };
 
     return (
-        <AppBar position="fixed" open={open}>
+        <AppBar position="fixed" open={openDrawer}>
             <Toolbar>
                 <IconButton
                     color="inherit"
                     aria-label="open drawer"
-                    onClick={handleDrawerOpen}
+                    onClick={() => onClickMenuButton()}
                     edge="start"
                     sx={{
                         marginRight: '36px',
-                        ...(open && { display: 'none' }),
+                        ...(openDrawer && { display: 'none' }),
                     }}
                 >
                     <MenuIcon />
@@ -59,7 +61,7 @@ export default function BaseAppBar({open, handleDrawerOpen}) {
                     Logout
                 </Button>
                 <Box width={20}></Box>
-                <img src={logo} height={40} alt="logo"/>
+                <img src={logo} height={40} alt="logo" />
             </Toolbar>
         </AppBar>
     );
