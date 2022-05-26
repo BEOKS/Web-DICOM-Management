@@ -28,4 +28,21 @@ const updateMetaData = (body: Body, metadataId: string) => {
         });
 };
 
-export { getMetaData, updateMetaData };
+const deleteMetaData = (project: Project, selectedMetaDataID: string[]) => {
+    const url = `api/MetaDataList/delete/${project.projectId}`;
+    const data = selectedMetaDataID;
+
+    axios.post(url, data)
+        .then(response => console.log(response))
+        .catch(error => {
+            if (error.response) {
+                alert(error.response.data.message);
+                console.log(error.response.data);
+            } else {
+                alert(error.message);
+                console.log(error);
+            }
+        });
+};
+
+export { getMetaData, updateMetaData, deleteMetaData };

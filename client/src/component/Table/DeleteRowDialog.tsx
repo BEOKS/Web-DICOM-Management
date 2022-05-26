@@ -1,9 +1,9 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import axios from 'axios';
 import { MetaDataGridAction } from './MetaDataGridReducer';
-import { getMetaData } from '../../api/metadata';
+import { getMetaData, deleteMetaData } from '../../api/metadata';
+import { deleteDicom } from '../../api/dicom';
 
 const DeleteRowDialog = () => {
     const dispatch = useDispatch();
@@ -12,46 +12,9 @@ const DeleteRowDialog = () => {
     const deleteRowDialogOpen = useSelector((state: RootState) => state.MetaDataGridReducer.deleteRowDialogOpen);
     const project = useSelector((state: RootState) => state.ProjectDrawerReducer.project);
 
-    const deleteMetaData = () => {
-        const url = `api/MetaDataList/delete/${project.projectId}`;
-        const data = selectedMetaDataID;
-        axios.post(url, data)
-            .then(response => console.log(response))
-            .catch(error => {
-                if (error.response) {
-                    alert(error.response.data.message);
-                    console.log(error.response.data);
-                } else {
-                    alert(error.message);
-                    console.log(error);
-                }
-            });
-    };
-
-    const deleteDicom = () => {
-        console.log(selectedStudyUID.length);
-        console.log(selectedStudyUID);
-        if (selectedStudyUID.length > 0) {
-            selectedStudyUID.forEach(studyUID => {
-                const url = `api/study/${studyUID}`;
-                axios.delete(url)
-                    .then(response => console.log(response))
-                    .catch(error => {
-                        if (error.response) {
-                            alert(error.response.data.message);
-                            console.log(error.response.data);
-                        } else {
-                            alert(error.message);
-                            console.log(error);
-                        }
-                    });
-            });
-        }
-    };
-
     const handleSubmit = () => {
-        deleteMetaData();
-        deleteDicom();
+        deleteMetaData(project, selectedMetaDataID);
+        deleteDicom(selectedStudyUID);
         getMetaData(project, dispatch);
         onClose();
     };
