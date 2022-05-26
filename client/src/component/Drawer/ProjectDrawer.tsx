@@ -5,11 +5,12 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useDispatch, useSelector } from 'react-redux';
-import { MetaDataGridAction } from './../Table/MetaDataGridReducer';
-import { ProjectDrawerAction } from './ProjectDrawerReducer';
-import { VisualTableAction } from './../VisualTable/VisualTableReducer';
+import { MetaDataGridAction } from '../Table/MetaDataGridReducer';
+import { Project, ProjectDrawerAction } from './ProjectDrawerReducer';
+import { VisualTableAction } from '../VisualTable/VisualTableReducer';
 import CreateProjectDialog from './CreateProjectDialog';
 import { Drawer, DrawerHeader } from './ProjectDrawerStyling';
+import { RootState } from '../../store';
 
 const CREATED = false, INVITED = true;
 
@@ -17,12 +18,12 @@ export default function ProjectDrawer() {
     const theme = useTheme();
     const dispatch = useDispatch();
 
-    const openDrawer = useSelector(state => state.ProjectDrawerReducer.openDrawer);
-    const presentProject = useSelector(state => state.ProjectDrawerReducer.project);
-    const createdProjects = useSelector(state => state.ProjectDrawerReducer.createdProjects);
-    const invitedProjects = useSelector(state => state.ProjectDrawerReducer.invitedProjects);
+    const openDrawer = useSelector((state: RootState) => state.ProjectDrawerReducer.openDrawer);
+    const presentProject = useSelector((state: RootState) => state.ProjectDrawerReducer.project);
+    const createdProjects = useSelector((state: RootState) => state.ProjectDrawerReducer.createdProjects);
+    const invitedProjects = useSelector((state: RootState) => state.ProjectDrawerReducer.invitedProjects);
 
-    const createListItemButton = (project, type) => {
+    const createListItemButton = (project: Project, type: boolean) => {
         return (
             <ListItemButton
                 selected={presentProject.projectId === project.projectId}
