@@ -36,8 +36,8 @@ const CreateProjectDialog = () => {
         }
         if (status === SUCCESS) {
             dispatch(ProjectDrawerAction.closeCreateProjectDialog());
-            dispatch(ProjectDrawerAction.closeDrawer());
-            dispatch(ProjectDrawerAction.openDrawer());
+            dispatch(ProjectDrawerAction.closeProjectDrawer());
+            dispatch(ProjectDrawerAction.openProjectDrawer());
         }
     };
 

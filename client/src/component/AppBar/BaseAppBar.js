@@ -28,14 +28,14 @@ export const AppBar = styled(MuiAppBar, {
 export default function BaseAppBar() {
     const dispatch = useDispatch();
     const project = useSelector(state => state.ProjectDrawerReducer.project);
-    const openDrawer = useSelector(state => state.ProjectDrawerReducer.openDrawer);
+    const openProjectDrawer = useSelector(state => state.ProjectDrawerReducer.openProjectDrawer);
 
     const onClickMenuButton = () => {
-        dispatch(ProjectDrawerAction.openDrawer());
+        dispatch(ProjectDrawerAction.openProjectDrawer());
     };
 
     return (
-        <AppBar position="fixed" open={openDrawer}>
+        <AppBar position="fixed" open={openProjectDrawer}>
             <Toolbar>
                 <IconButton
                     color="inherit"
@@ -44,7 +44,7 @@ export default function BaseAppBar() {
                     edge="start"
                     sx={{
                         marginRight: '36px',
-                        ...(openDrawer && { display: 'none' }),
+                        ...(openProjectDrawer && { display: 'none' }),
                     }}
                 >
                     <MenuIcon />

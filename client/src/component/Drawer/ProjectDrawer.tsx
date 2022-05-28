@@ -18,7 +18,7 @@ export default function ProjectDrawer() {
     const theme = useTheme();
     const dispatch = useDispatch();
 
-    const openDrawer = useSelector((state: RootState) => state.ProjectDrawerReducer.openDrawer);
+    const openDrawer = useSelector((state: RootState) => state.ProjectDrawerReducer.openProjectDrawer);
     const presentProject = useSelector((state: RootState) => state.ProjectDrawerReducer.project);
     const createdProjects = useSelector((state: RootState) => state.ProjectDrawerReducer.createdProjects);
     const invitedProjects = useSelector((state: RootState) => state.ProjectDrawerReducer.invitedProjects);
@@ -48,7 +48,7 @@ export default function ProjectDrawer() {
         <div>
             <Drawer variant="permanent" open={openDrawer}>
                 <DrawerHeader>
-                    <IconButton onClick={() => dispatch(ProjectDrawerAction.closeDrawer())}>
+                    <IconButton onClick={() => dispatch(ProjectDrawerAction.closeProjectDrawer())}>
                         {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                     </IconButton>
                 </DrawerHeader>
