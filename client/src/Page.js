@@ -2,7 +2,6 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ButtonGroup, CircularProgress,Stack,Typography,Button } from '@mui/material';
-import DicomTable from "./component/Table/DicomTable";
 import UpDownloadToolbar from "./component/Toolbar/UpDownloadToolbar";
 import { DrawerHeader } from './component/Drawer/ProjectDrawer';
 import ProjectDrawer from './component/Drawer/ProjectDrawer'
@@ -13,6 +12,7 @@ import {useDispatch} from "react-redux";
 import {ParticipantInfoAction} from "./component/Toolbar/ProjectParticipant/ParticipantInfoReducer";
 import VisualTable from './component/VisualTable/VisualTable';
 import logo from './component/AppBar/logo.png'
+import MetaDataGrid from './component/Table/MetaDataGrid';
 axios.defaults.maxRedirects=0;
 
 const VIEW_NAME={
@@ -166,11 +166,9 @@ export default function Page() {
                                         {'Loading Metadata...'}
                                     </Typography>
                                 </Stack>
-                                :<DicomTable 
-                                    data={metaData} 
-                                    metaDataUpdated={metaDataUpdated}
-                                    setMetaDataUpdated={setMetaDataUpdated}
-                                    isNonReferenced={presentProject.projectName === 'Non-Reference Dicom' ? true : false}
+                                :
+                                <MetaDataGrid
+                                    metaData={metaData}
                                     project={presentProject}
                                 />
                             }

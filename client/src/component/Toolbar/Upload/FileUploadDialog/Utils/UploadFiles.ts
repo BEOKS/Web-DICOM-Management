@@ -1,6 +1,7 @@
 import axios from "axios";
 import {parse} from "csv-parse/lib/sync";
-import {uploadFileAPI} from "../../../../../api/StorageAPI";
+import { concurrencyPOSTHandler } from "./UploadController";
+import { uploadFileAPI } from "../../../../../api/StorageAPI";
 
 const DEBUG=true
 const print=(msg:any)=>{
@@ -13,7 +14,7 @@ const ANONYMIZED_ID='anonymized_id'
 export async function uploadCsvFile(projectId : string,
                                     csvFile: File|undefined,
                                     callStart:()=>void,
-                                    callback:()=>void,
+                                    callback:(additionalProgress : number)=>void,
                                     callError:(error : string)=>void){
     callStart()
     if(csvFile===undefined){
@@ -25,13 +26,24 @@ export async function uploadCsvFile(projectId : string,
         callError(`CSV 속성에는 ${ANONYMIZED_ID}와 ${IMAGE_NAME} 속성이 존재해야합니다.`)
         return
     }
-    await axios.post(`api/MetaDataList/insert/${projectId}`,csvJson)
-        .then(response=>{
-            callback()
-        })
-        .catch(error=>{
+    const chunkSize=1000
+    const concurrency=10
+    concurrencyPOSTHandler(csvJson,
+        (data : any[])=> axios.post(`api/MetaDataList/insert/${projectId}`,data),
+        (completeAPICount :number,apiNumber : number)=>{
+            callback(1/apiNumber*100)
+        },
+        (apiNumber : number, error : any)=>{
             callError(error)
-        })
+        },
+        concurrency,chunkSize)
+    // await axios.post(`api/MetaDataList/insert/${projectId}`,csvJson)
+    //     .then(response=>{
+    //         callback()
+    //     })
+    //     .catch(error=>{
+    //         callError(error)
+    //     })
 }
 function checkValidCsv(csvJson:any): boolean{
     if(csvJson.length===0){
@@ -49,6 +61,7 @@ function checkValidCsv(csvJson:any): boolean{
 function csv2json(csv :any){
     const data= parse (csv,{
         columns: true,
+        cast: true,
         skip_empty_lines: true
     });
     return data

@@ -17,6 +17,8 @@ import { Dialog,DialogTitle,DialogContent,DialogContentText,DialogActions,TextFi
 import React, {useRef, useState} from 'react';
 import { createProject } from './Utils/ProjectUtils';
 import './ProjectDrawer.css';
+import { useDispatch } from 'react-redux';
+import { MetaDataGridAction } from './../Table/MetaDataGridReducer';
 
 const SUCCESS=1,FAIL=0;
 
@@ -74,6 +76,8 @@ export default function ProjectDrawer({open,setOpen,projects,invitedProjects,set
     const theme = useTheme();
     const [dialogOpen,setDialogOpen]=useState(openCreateProjectDialog);
     const [projectName,setProjectName]=useState();
+    const dispatch = useDispatch();
+
     React.useEffect(()=>{
         setDialogOpen(openCreateProjectDialog)
     },[openCreateProjectDialog])
@@ -115,6 +119,9 @@ export default function ProjectDrawer({open,setOpen,projects,invitedProjects,set
                     button 
                     key={project.projectName}
                     onClick={()=>{
+                        dispatch(MetaDataGridAction.setSelectedRow([]));
+                        dispatch(MetaDataGridAction.setSelectedMetaDataID([]));
+                        dispatch(MetaDataGridAction.setSelectedStudyUID([]));
                         setPresentProject(project);
                         setIsInvitedProject(false);
                         }}>

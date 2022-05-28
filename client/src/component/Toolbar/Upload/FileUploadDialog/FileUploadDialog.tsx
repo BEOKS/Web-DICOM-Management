@@ -47,10 +47,8 @@ export default function FileUploadDialog(){
                 dispatch(SnackbarAction.setMessage("Uploading CSV Files..."))
                 dispatch(SnackbarAction.setProgress(0))
             },
-            ()=>{
-                dispatch(SnackbarAction.setMessage("Upload CSV complete!"))
-                dispatch(SnackbarAction.setProgress(false))
-                dispatch(SnackbarAction.showCloseButton())
+            (additionalProgress : number)=>{
+                dispatch(SnackbarAction.increaseProgress(additionalProgress))
             },
             (error)=>{
                 dispatch(SnackbarAction.setMessage(`Upload CSV error :${error}`))
