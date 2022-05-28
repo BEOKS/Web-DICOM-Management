@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { Project } from '../component/Drawer/ProjectDrawerReducer';
-import { Body, MetaDataGridAction } from '../component/Table/MetaDataGridReducer';
+import { Body, MetaData } from '../component/Table/MetaDataGridReducer';
 
-const getMetaData = (project: Project, dispatch: any) => {
+const getMetaData = (project: Project, onSuccess: (metaData: MetaData[]) => void) => {
     const url = `api/MetaData/${project.projectId}`;
 
     axios.get(url)
         .then(response => {
-            dispatch(MetaDataGridAction.setMetaData(response.data.body));
+            onSuccess(response.data.body);
         }).catch(error => {
             if (error.response) {
                 alert(error.response.data.message);

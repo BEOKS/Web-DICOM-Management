@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ParticipantInfoAction } from "./component/Toolbar/ProjectParticipant/ParticipantInfoReducer";
 import MetadataStatisticInsightView from './component/VisualTable/VisualTable';
 import MetaDataGrid from './component/Table/MetaDataGrid';
+import { MetaDataGridAction } from './component/Table/MetaDataGridReducer';
 import { getMetaData } from './api/metadata';
 import { getCreatedProjects, getInvitedProjects } from './api/project';
 
@@ -25,7 +26,7 @@ export default function Page() {
     const [selectedView, setSelectedView] = React.useState(VIEW_NAME.DICOM_TABLE)
 
     const dispatch = useDispatch()
-    const openDrawer = useSelector(state => state.ProjectDrawerReducer.openDrawer);
+    const openProjectDrawer = useSelector(state => state.ProjectDrawerReducer.openProjectDrawer);
     const project = useSelector(state => state.ProjectDrawerReducer.project);
     const metaData = useSelector(state => state.MetaDataGridReducer.metaData);
     const isInvitedProject = useSelector(state => state.ProjectDrawerReducer.isInvitedProject);
@@ -33,11 +34,11 @@ export default function Page() {
     React.useEffect(() => {
         getCreatedProjects(dispatch, checkFirst, setCheckFirst, setLoading);
         getInvitedProjects(dispatch, setLoading);
-    }, [openDrawer]);
+    }, [openProjectDrawer]);
 
     React.useEffect(() => {
         if (project.projectId) {
-            getMetaData(project, dispatch);
+            getMetaData(project, (metaData)=>dispatch(MetaDataGridAction.setMetaData(metaData)));
             dispatch(ParticipantInfoAction.setProjectId(project.projectId));
         }
     }, [project]);

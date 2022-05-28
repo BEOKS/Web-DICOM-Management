@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { SamplingAction } from "./SamplingReducer";
 import { getMetaData } from "../../../api/metadata"
+import { MetaDataGridAction } from "../../Table/MetaDataGridReducer";
 
 const SamplingDialog = () => {
     const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const SamplingDialog = () => {
             .then(response => {
                 console.log(response);
                 dispatch(SamplingAction.updateSnackbar());
-                getMetaData(project, dispatch);
+                getMetaData(project, (metaData)=>dispatch(MetaDataGridAction.setMetaData(metaData)));
             }).catch(error => {
                 alert(error);
                 console.log(error);

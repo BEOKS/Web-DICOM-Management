@@ -8,7 +8,9 @@ import DicomUploadBox from './DicomUploadBox/DicomUploadBox';
 import MetaUploadBox from "./MetaUploadBox";
 import {DialogAction} from "../MetadataColumnTypeDecision/ColumnTypeDesicionDialogReducer";
 import FileHandler from '../Utils/FileHandler';
-import {useDispatch} from "react-redux";
+import {useSelector,useDispatch} from "react-redux";
+import {getMetaData} from '../../../../api/metadata';
+import {MetaDataGridAction} from '../../../Table/MetaDataGridReducer';
 
 const dialogContentDescrptionText = "메타데이터는 csv의 'PatientID' 속성에는 업로드하려는 Dicom 파일의 ID가 존재해야 합니다. "
 const dicomUploadErrorMsg = "업로드한 Dicom 파일을 확인해주세요 "
@@ -19,13 +21,13 @@ export default function DicomUploadDialog({
                                          snackbarInfo,
                                          setSnackBarInfo,
                                          fileHandler,
-                                         projects,
-                                         getMetaData,
-                                         metaData
+                                         projects
                                      }) {
     const [dicomFiles, setDicomFiles] = useState([]);
     const [csvFile, setCsvFile] = useState();
     const [updatePossibility, setUpdatePossibility] = useState();
+    const project = useSelector(state=>state.ProjectDrawerReducer.project);
+    const metaData = useSelector(state=>state.MetaDataGridReducer.metaData);
     const dispatch = useDispatch()
     if (fileHandler === undefined) {
         fileHandler = new FileHandler(dicomFiles, csvFile, projects)
@@ -54,7 +56,7 @@ export default function DicomUploadDialog({
                         'open': open,
                         'progress': progress
                     }));
-                    getMetaData();
+                    getMetaData(project, (metaData)=>dispatch(MetaDataGridAction.setMetaData(metaData)));
                     handleClearEvent();
                 } else if (updatePossibility.state === FileHandler.CSV_NOT_CONTAIN_PATIENT_ID) {
                     setSnackBarInfo({

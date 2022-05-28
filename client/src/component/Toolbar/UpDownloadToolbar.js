@@ -9,12 +9,10 @@ import ParticipantInfo from "./ProjectParticipant/ParticipantInfo";
 import SamplingButton from './Sampling/SamplingButton';
 import MLButton from './MachineLearning/MLButton';
 import { useSelector } from 'react-redux';
-import { getMetaData } from '../../api/metadata';
 
 export default function UpDownloadToolbar() {
     const project = useSelector(state => state.ProjectDrawerReducer.project);
     const isInvitedProject = useSelector(state=>state.ProjectDrawerReducer.isInvitedProject);
-    const metaData = useSelector(state=>state.MetaDataGridReducer.metaData);
 
     return (
         <Box
@@ -47,13 +45,13 @@ export default function UpDownloadToolbar() {
                 </Grid>
                 <Grid item xs />
                 <Grid item xs='auto'>
-                    <UploadButton projects={project} getMetaData={getMetaData} metaData={metaData} />
+                    <UploadButton projects={project} />
                 </Grid>
                 <Grid item xs='auto'>
                     <SamplingButton />
                 </Grid>
                 <Grid item xs='auto'>
-                    <MLButton getMetaData={getMetaData}/>
+                    <MLButton />
                 </Grid>
                 {!isInvitedProject && (
                     <Grid item xs='auto'>

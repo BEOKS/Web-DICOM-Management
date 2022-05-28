@@ -15,7 +15,7 @@ const DeleteRowDialog = () => {
     const handleSubmit = () => {
         deleteMetaData(project, selectedMetaDataID);
         deleteDicom(selectedStudyUID);
-        getMetaData(project, dispatch);
+        getMetaData(project, (metaData) => dispatch(MetaDataGridAction.setMetaData(metaData)));
         onClose();
     };
 

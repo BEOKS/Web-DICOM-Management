@@ -8,7 +8,8 @@ import {FileUploadDialogAction} from "./FileUploadDialogReducer";
 import ImageFileUploadBox from "./ImageFileUploadBox";
 import {uploadCsvFile, uploadImageFile} from "./Utils/UploadFiles";
 import {SnackbarAction} from "../SnackbarReducer";
-import { getMetaData } from '../../../../api/metadata';
+import {getMetaData} from '../../../../api/metadata';
+import {MetaDataGridAction} from './../../../Table/MetaDataGridReducer';
 
 /**
  * 이미지 파일을 업르드하기 위한 컴퍼넌트입니다.
@@ -53,7 +54,7 @@ export default function FileUploadDialog(){
                 dispatch(SnackbarAction.setMessage("Upload CSV complete!"))
                 dispatch(SnackbarAction.setProgress(false))
                 dispatch(SnackbarAction.showCloseButton())
-                getMetaData(project, dispatch)
+                getMetaData(project, (metaData)=>dispatch(MetaDataGridAction.setMetaData(metaData)))
             },
             (error)=>{
                 dispatch(SnackbarAction.setMessage(`Upload CSV error :${error}`))

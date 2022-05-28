@@ -28,7 +28,7 @@ const MLDialog = () => {
         //     .then(response => {
         //         console.log(response);
         //         dispatch(MLAction.updateSnackbar());
-        //         getMetaData(project, dispatch);
+        //         getMetaData(project, (metaData)=>dispatch(MetaDataGridAction.setMetaData(metaData)));
         //     }).catch(error => {
         //         alert(error);
         //         console.log(error);

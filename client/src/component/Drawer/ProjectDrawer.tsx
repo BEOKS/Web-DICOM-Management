@@ -18,7 +18,7 @@ export default function ProjectDrawer() {
     const theme = useTheme();
     const dispatch = useDispatch();
 
-    const openDrawer = useSelector((state: RootState) => state.ProjectDrawerReducer.openProjectDrawer);
+    const openProjectDrawer = useSelector((state: RootState) => state.ProjectDrawerReducer.openProjectDrawer);
     const presentProject = useSelector((state: RootState) => state.ProjectDrawerReducer.project);
     const createdProjects = useSelector((state: RootState) => state.ProjectDrawerReducer.createdProjects);
     const invitedProjects = useSelector((state: RootState) => state.ProjectDrawerReducer.invitedProjects);
@@ -46,14 +46,14 @@ export default function ProjectDrawer() {
 
     return (
         <div>
-            <Drawer variant="permanent" open={openDrawer}>
+            <Drawer variant="permanent" open={openProjectDrawer}>
                 <DrawerHeader>
                     <IconButton onClick={() => dispatch(ProjectDrawerAction.closeProjectDrawer())}>
                         {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                     </IconButton>
                 </DrawerHeader>
                 <Divider />
-                {openDrawer && createdProjects.length > 0 && (
+                {openProjectDrawer && createdProjects.length > 0 && (
                     <Typography className="category" variant="subtitle2" component="div">Created Projects</Typography>
                 )}
 
@@ -63,7 +63,7 @@ export default function ProjectDrawer() {
                     ))}
                 </List>
                 {createdProjects.length > 0 && <Divider />}
-                {openDrawer && invitedProjects.length > 0 && (
+                {openProjectDrawer && invitedProjects.length > 0 && (
                     <Typography className="category" variant="subtitle2" component="div">Invited Projects</Typography>
                 )}
                 <List sx={{ py: 0 }}>
