@@ -29,7 +29,6 @@ export default function Page() {
     const openProjectDrawer = useSelector(state => state.ProjectDrawerReducer.openProjectDrawer);
     const project = useSelector(state => state.ProjectDrawerReducer.project);
     const metaData = useSelector(state => state.MetaDataGridReducer.metaData);
-    const isInvitedProject = useSelector(state => state.ProjectDrawerReducer.isInvitedProject);
 
     React.useEffect(() => {
         getCreatedProjects(dispatch, checkFirst, setCheckFirst, setLoading);
@@ -67,7 +66,7 @@ export default function Page() {
     );
     function MetadataTableView() {
         return <div>
-            <UpDownloadToolbar projects={project} metaData={metaData} isInvitedProject={isInvitedProject} />
+            <UpDownloadToolbar />
             {metaData === 'loading' ?
                 <LoadingMessageView message={'Loading Metadata...'} />
                 :
