@@ -16,7 +16,7 @@ const CreateProjectDialog = () => {
     const okButtonRef: React.MutableRefObject<boolean> = useRef(true);
 
     useEffect(() => {
-        if (project.projectName === "현재 선택된 프로젝트가 없습니다.") {
+        if (project.projectName === undefined) {
             dispatch(ProjectDrawerAction.openCreateProjectDialog());
         } else {
             dispatch(ProjectDrawerAction.closeCreateProjectDialog());

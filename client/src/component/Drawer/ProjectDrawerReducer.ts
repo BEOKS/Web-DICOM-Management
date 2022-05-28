@@ -48,7 +48,7 @@ export type User = {
 export type Project = {
     creator: User,
     projectId: string,
-    projectName: string,
+    projectName: string | undefined,
     visitor: User[]
 };
 
@@ -72,7 +72,7 @@ const INIT_PROJECT_DRAWER_STATE: ProjectDrawerState = {
             role: ""
         },
         projectId: "",
-        projectName: "현재 선택된 프로젝트가 없습니다.",
+        projectName: undefined,
         visitor: [],
     },
     createdProjects: [],
