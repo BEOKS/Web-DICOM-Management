@@ -7,7 +7,7 @@ import VisualTableOptions from './VisualTableOptions';
 import BarChart from './Chart/BarChart';
 import DoughnutChart from './Chart/DoughnutChart';
 
-const VisualTable = () => {
+const MetadataStatisticInsightView = () => {
     const metaData = useSelector((state: RootState) => state.MetaDataGridReducer.metaData);
     const options = useSelector((state: RootState) => state.VisualTableReducer.options);
     const data = extractBody(metaData);
@@ -59,4 +59,4 @@ const VisualTable = () => {
     );
 };
 
-export default VisualTable;
+export default MetadataStatisticInsightView;

@@ -8,7 +8,7 @@ import LoadingPage from './component/Login/Loading';
 import axios from 'axios';
 import { useDispatch, useSelector } from "react-redux";
 import { ParticipantInfoAction } from "./component/Toolbar/ProjectParticipant/ParticipantInfoReducer";
-import VisualTable from './component/VisualTable/VisualTable';
+import MetadataStatisticInsightView from './component/VisualTable/VisualTable';
 import MetaDataGrid from './component/Table/MetaDataGrid';
 import { getMetaData } from './api/metadata';
 import { getCreatedProjects, getInvitedProjects } from './api/project';
@@ -58,26 +58,28 @@ export default function Page() {
                 </ButtonGroup>
                 {
                     selectedView === VIEW_NAME.CHART ?
-                        <VisualTable />
-                        :
-                        project.projectId ?
-                            <div>
-                                <UpDownloadToolbar projects={project} metaData={metaData} isInvitedProject={isInvitedProject} />
-                                {
-                                    metaData === 'loading' ?
-                                        <Stack alignItems="center" marginTop={2}>
-                                            <CircularProgress margin={2} />
-                                            <Typography margin={2}>
-                                                {'Loading Metadata...'}
-                                            </Typography>
-                                        </Stack>
-                                        :
-                                        <MetaDataGrid />
-                                }
-                            </div>
-                            : <div></div>
+                        <MetadataStatisticInsightView />
+                        : project.projectId && <MetadataTableView/>
                 }
             </Box>
         </Box>
     );
+    function MetadataTableView() {
+        return <div>
+            <UpDownloadToolbar projects={project} metaData={metaData} isInvitedProject={isInvitedProject} />
+            {metaData === 'loading' ?
+                <LoadingMessageView message={'Loading Metadata...'} />
+                :
+                <MetaDataGrid />}
+        </div>;
+    }
+}
+
+function LoadingMessageView({message}) {
+    return <Stack alignItems="center" marginTop={2}>
+        <CircularProgress margin={2} />
+        <Typography margin={2}>
+            {message}
+        </Typography>
+    </Stack>;
 }
