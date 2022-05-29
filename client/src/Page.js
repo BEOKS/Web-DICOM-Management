@@ -59,22 +59,21 @@ export default function Page() {
                 {
                     selectedView === VIEW_NAME.CHART ?
                         <MetadataStatisticInsightView />
-                        : project.projectId && <MetadataTableView/>
+                        : project.projectId && <MetadataTableView metaData={metaData}/>
                 }
             </Box>
         </Box>
     );
-    function MetadataTableView() {
-        return <div>
-            <UpDownloadToolbar />
-            {metaData === 'loading' ?
-                <LoadingMessageView message={'Loading Metadata...'} />
-                :
-                <MetaDataGrid />}
-        </div>;
-    }
 }
-
+function MetadataTableView({metaData}) {
+    return <div>
+        <UpDownloadToolbar />
+        {metaData === 'loading' ?
+            <LoadingMessageView message={'Loading Metadata...'} />
+            :
+            <MetaDataGrid />}
+    </div>;
+}
 function LoadingMessageView({message}) {
     return <Stack alignItems="center" marginTop={2}>
         <CircularProgress margin={2} />

@@ -27,7 +27,7 @@ export default function FileUploadDialog(){
     const dispatch=useDispatch()
     const project=useSelector((state:RootState)=>state.ProjectDrawerReducer.project)
     const projectId=useSelector((state:RootState)=> state.ParticipantInfoReducer.participants.projectId)
-    const DEBUG=true
+    const DEBUG=false
     const print=(msg : any)=>{
         if(DEBUG){
             console.log("FileUploadDialog",msg)

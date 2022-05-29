@@ -14,7 +14,7 @@ const MetadataStatisticInsightView = () => {
     const keys = extractKeys(data);
     const [eachData, freq] = separateData(data, keys);
     const uniqEachData = deduplication(eachData, keys);
-    
+    console.log('MetadataStatisticInsightView')
     addCount(uniqEachData, freq, keys);
 
     // return문 안에서는 반복문 사용이 불가하므로 차트 만드는 함수 따로 생성
