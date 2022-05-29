@@ -37,7 +37,7 @@ public class MetaDataApiController {
     @PostMapping("api/MetaData/{projectId}")
     public ResponseEntity<? extends  BasicResponse> insert(@PathVariable String projectId,@RequestBody Document body){
         MetaDataCreateRequestDto metaDataCreateRequestDto = new MetaDataCreateRequestDto(projectId,body);
-        metaDataService.insert(metaDataCreateRequestDto);
+        metaDataService.save(metaDataCreateRequestDto);
         return ResponseEntity.ok().body(new SuccessResponse());
     }
 

@@ -5,15 +5,14 @@ import com.knuipalab.dsmp.http.httpResponse.error.ErrorCode;
 import com.knuipalab.dsmp.http.httpResponse.error.handler.exception.MetaDataNotFoundException;
 import com.knuipalab.dsmp.patient.PatientService;
 import com.knuipalab.dsmp.project.ProjectService;
-import org.bson.Document;
+import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,84 +28,90 @@ public class MetaDataService {
     @Autowired
     private PatientService patientService;
 
+    private void throwGlobalExceptionWhenProjectNotExist(String projectId){
+        projectService.findById(projectId);
+    }
     @Transactional (readOnly = true)
     public List<MetaDataResponseDto> findByProjectId(String projectId) {
-
-        projectService.findById(projectId);
-
+        throwGlobalExceptionWhenProjectNotExist(projectId);
         return metaDataRepository.findByProjectId(projectId).stream()
                 .map( metaData -> new MetaDataResponseDto(metaData) )
                 .collect(Collectors.toList());
     }
-
+    @Getter
+    public class PageRequestConfiguration{
+        int pageNumber;
+        int size;
+        PageRequestConfiguration(HashMap parmMap,int defaultPageNumber,int defaultSize){
+            if(parmMap.containsKey("page")){
+                this.pageNumber = Integer.parseInt(parmMap.get("page").toString());
+            }
+            else{
+                this.pageNumber=defaultPageNumber;
+            }
+            if(parmMap.containsKey("size")){
+                this.size = Integer.parseInt(parmMap.get("size").toString());
+            }
+            else{
+                this.size=defaultSize;
+            }
+        }
+    }
     @Transactional (readOnly = true)
-    public Page<MetaData> findByProjectIdWithPaging(String projectId, HashMap parmMap) {
+    public Page<MetaData> findByProjectIdWithPaging(String projectId, HashMap httpRequestParameterMap) {
 
-        //default page and size
-        int page = 0;
-        int size = 20;
-        if(parmMap.containsKey("page")){
-            page = Integer.parseInt(parmMap.get("page").toString());
-            parmMap.remove("page");
+        PageRequestConfiguration pageRequestConfiguration=new PageRequestConfiguration(httpRequestParameterMap,0,20);
+        if(httpRequestParameterMap.containsKey("page")){
+            httpRequestParameterMap.remove("page");
         }
-        if(parmMap.containsKey("size")){
-            size = Integer.parseInt(parmMap.get("size").toString());
-            parmMap.remove("size");
+        if(httpRequestParameterMap.containsKey("size")){
+            httpRequestParameterMap.remove("size");
         }
-
-        projectService.findById(projectId);
-
-        return metaDataRepository.findByProjectIdWithPaging(projectId, page, size, parmMap);
+        throwGlobalExceptionWhenProjectNotExist(projectId);
+        return metaDataRepository.findByProjectIdWithPaging(projectId,
+                pageRequestConfiguration.getPageNumber(), pageRequestConfiguration.getSize(), httpRequestParameterMap);
 
     }
 
     @Transactional
-    public void insert(MetaDataCreateRequestDto metaDataCreateRequestDto){
+    public void save(MetaDataCreateRequestDto metaDataCreateRequestDto){
 
-        projectService.findById(metaDataCreateRequestDto.getProjectId()); // 존재하는 프로젝트 id인지 확인.
+        throwGlobalExceptionWhenProjectNotExist(metaDataCreateRequestDto.getProjectId());
 
         MetaData metaData = new MetaData().builder()
                 .projectId(metaDataCreateRequestDto.getProjectId())
                 .body(metaDataCreateRequestDto.getBody()).build();
 
-        patientService.addProjectCount(metaData.getPatientIdFromBody()); // patient 처리.
+        patientService.addProjectCount(metaData.getPatientIdFromBody());
 
-        metaDataRepository.save(metaData); // 저장
+        metaDataRepository.save(metaData);
     }
 
     @Transactional
     public void insertAllByMetaDataList(MetaDataCreateAllRequestDto metaDataCreateAllRequestDto){
 
-        List<MetaData> metaDataList=new ArrayList<MetaData>();
-
-        projectService.findById(metaDataCreateAllRequestDto.getProjectId()); // 존재하는 프로젝트 id인지 확인.
+        String projectId = metaDataCreateAllRequestDto.getProjectId();
+        throwGlobalExceptionWhenProjectNotExist(projectId);
 
         if(metaDataCreateAllRequestDto.getBodyList() != null){
-
-            List<Document>bodyList = metaDataCreateAllRequestDto.getBodyList();
-
-            String projectId = metaDataCreateAllRequestDto.getProjectId();
-
-            for(Document body : bodyList){
-                MetaData metaData = new MetaData().builder()
-                        .projectId(projectId)
-                        .body(body).build();
-                metaDataList.add(metaData);
-                patientService.addProjectCount(metaData.getPatientIdFromBody());
-            }
-
+            List<MetaData> metaDataList = getMetaDataFromMetaDataCreateAllRequestDto(metaDataCreateAllRequestDto, projectId);
+            metaDataList.forEach(metaData -> patientService.addProjectCount(metaData.getPatientIdFromBody()));
             int chunk_size = 1000;
-            for (List<MetaData> batch : Lists.partition(metaDataList,chunk_size)) {
-                metaDataRepository.saveAll(batch);
-            }
-
+            Lists.partition(metaDataList,chunk_size).forEach(batch -> metaDataRepository.saveAll(batch) );
         }
+    }
+
+    @NotNull
+    private List<MetaData> getMetaDataFromMetaDataCreateAllRequestDto(MetaDataCreateAllRequestDto metaDataCreateAllRequestDto, String projectId) {
+        return metaDataCreateAllRequestDto.getBodyList().stream()
+                .map(body -> new MetaData().builder().projectId(projectId).body(body).build())
+                .collect(Collectors.toList());
     }
 
     @Transactional
     public void deleteAllByMetaDataIdList(MetaDataDeleteAllRequestDto metaDataDeleteAllRequestDto){
 
-        projectService.findById(metaDataDeleteAllRequestDto.getProjectId()); // 존재하는 프로젝트 id인지 확인.
+        throwGlobalExceptionWhenProjectNotExist((metaDataDeleteAllRequestDto.getProjectId()));
 
         List<MetaData> metaDataList = metaDataDeleteAllRequestDto.getMetadataIdList().stream()
                 .map( metadataId ->  metaDataRepository.findById(metadataId).orElseThrow(()-> new MetaDataNotFoundException(ErrorCode.METADATA_NOT_FOUND)))
