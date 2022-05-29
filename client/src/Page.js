@@ -1,182 +1,84 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
-import { ButtonGroup, CircularProgress,Stack,Typography,Button } from '@mui/material';
+import { Box, CssBaseline, ButtonGroup, CircularProgress, Stack, Typography, Button } from '@mui/material';
 import UpDownloadToolbar from "./component/Toolbar/UpDownloadToolbar";
-import { DrawerHeader } from './component/Drawer/ProjectDrawer';
+import { DrawerHeader } from "./component/Drawer/ProjectDrawerStyling";
 import ProjectDrawer from './component/Drawer/ProjectDrawer'
 import BaseAppBar from './component/AppBar/BaseAppBar';
 import LoadingPage from './component/Login/Loading';
 import axios from 'axios';
-import {useDispatch} from "react-redux";
-import {ParticipantInfoAction} from "./component/Toolbar/ProjectParticipant/ParticipantInfoReducer";
-import VisualTable from './component/VisualTable/VisualTable';
-import logo from './component/AppBar/logo.png'
+import { useDispatch, useSelector } from "react-redux";
+import { ParticipantInfoAction } from "./component/Toolbar/ProjectParticipant/ParticipantInfoReducer";
+import MetadataStatisticInsightView from './component/VisualTable/VisualTable';
 import MetaDataGrid from './component/Table/MetaDataGrid';
-axios.defaults.maxRedirects=0;
+import { MetaDataGridAction } from './component/Table/MetaDataGridReducer';
+import { getMetaData } from './api/metadata';
+import { getCreatedProjects, getInvitedProjects } from './api/project';
 
-const VIEW_NAME={
+axios.defaults.maxRedirects = 0;
+
+const VIEW_NAME = {
     DICOM_TABLE: 'DicomTable',
     CHART: 'chart'
 }
 export default function Page() {
-    const [open, setOpen] = React.useState(false);
-    const [projects, setProjects] = React.useState([]);
-    const [invitedProjects, setInvitedProjects] = React.useState([]);
-    const [isInvitedProject, setIsInvitedProject] = React.useState(false);
-    const [presentProject, setPresentProject] = React.useState({ projectName: '현재 선택된 프로젝트가 없습니다.' });
-    const [metaData, setMetaData] = React.useState([]);
-    const [metaDataUpdated, setMetaDataUpdated] = React.useState(false);
     const [checkFirst, setCheckFirst] = React.useState(true);
-    const [loading,setLoading] =React.useState(true);
-    const [selectedView,setSelectedView]=React.useState(VIEW_NAME.DICOM_TABLE)
+    const [loading, setLoading] = React.useState(true);
+    const [selectedView, setSelectedView] = React.useState(VIEW_NAME.DICOM_TABLE)
 
-    const dispatch=useDispatch()
-    dispatch(ParticipantInfoAction.setProjectId(presentProject.projectId))
-
-    const getProjects = () => {
-        axios.get('api/Project',{maxRedirects:0})
-            .then(response => {
-                if (response.data.body.length !== 0) {
-                    setProjects(response.data.body);
-                    if (checkFirst) {
-                        setPresentProject(response.data.body[0]);
-                        setCheckFirst(false);
-                    }
-                }
-                setLoading(false)
-            }).catch(error => {
-                if (error.response) {
-                    alert(error.response.data.message);
-                    console.log(error.response.data);
-                } else {
-                    alert('서버가 응답하지 않습니다.');
-                    console.log(error);
-                }
-            });
-    };
-
-    const getInvitedProjects = () => {
-        axios.get('api/Project/invited',{maxRedirects:0})
-            .then(response => {
-                if (response.data.body.length !== 0) {
-                    setInvitedProjects(response.data.body);
-                }
-                setLoading(false)
-            }).catch(error => {
-                if (error.response) {
-                    alert(error.response.data.message);
-                    console.log(error.response.data);
-                } else {
-                    alert('서버가 응답하지 않습니다.');
-                    console.log(error);
-                }
-            });
-    };
-
-    const getMetaData = () => {
-        const url = `api/MetaData/${presentProject.projectId}`;
-        setMetaData('loading')
-        axios.get(url)
-            .then(response => {
-                setMetaData(response.data.body);
-            }).catch(error => {
-                if (error.response) {
-                    alert(error.response.data.message);
-                    console.log(error.response.data);
-                } else {
-                    alert(error.message);
-                    console.log(error);
-                }
-            });
-    };
-
-    // const getNonReferenced = () => {
-    //     const url = 'api/Patient/nonReferenced'
-    //     axios.get(url)
-    //         .then(response => {
-    //             setMetaData(response.data);
-    //         }).catch(error => {
-    //             console.log(error);
-    //         });
-    // };
+    const dispatch = useDispatch()
+    const openProjectDrawer = useSelector(state => state.ProjectDrawerReducer.openProjectDrawer);
+    const project = useSelector(state => state.ProjectDrawerReducer.project);
+    const metaData = useSelector(state => state.MetaDataGridReducer.metaData);
 
     React.useEffect(() => {
-        getProjects();
-        getInvitedProjects();
-    }, [open]);
-    
+        getCreatedProjects(dispatch, checkFirst, setCheckFirst, setLoading);
+        getInvitedProjects(dispatch, setLoading);
+    }, [openProjectDrawer]);
+
     React.useEffect(() => {
-        if(presentProject.projectId ){
-            getMetaData()
+        if (project.projectId) {
+            getMetaData(project, (metaData)=>dispatch(MetaDataGridAction.setMetaData(metaData)));
+            dispatch(ParticipantInfoAction.setProjectId(project.projectId));
         }
-        //: getNonReferenced();
-    }, [presentProject, metaDataUpdated]);
+    }, [project]);
 
-
-    const handleDrawerOpen = () => {
-        setOpen(true);
-    };
-
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
-    if(loading){
-        return <LoadingPage message={'사용자 정보를 가져오는 중입니다.'}/>
+    if (loading) {
+        return <LoadingPage message={'사용자 정보를 가져오는 중입니다.'} />
     }
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
-            <ProjectDrawer
-                open={open}
-                setOpen={setOpen}
-                projects={projects}
-                invitedProjects={invitedProjects}
-                setIsInvitedProject={setIsInvitedProject}
-                others={['Non-Reference Dicom']}
-                presentProject={presentProject}
-                setPresentProject={setPresentProject}
-                setMetaData={setMetaData}
-                openCreateProjectDialog={presentProject.projectName==='현재 선택된 프로젝트가 없습니다.'}
-            />
-            <BaseAppBar
-                open={open}
-                handleDrawerOpen={handleDrawerOpen}
-                presentProjectName={presentProject.projectName}
-            />
+            <ProjectDrawer />
+            <BaseAppBar />
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                <DrawerHeader/>
+                <DrawerHeader />
                 <ButtonGroup variant="outlined" aria-label="outlined button group">
-                    <Button onClick={()=>setSelectedView(VIEW_NAME.DICOM_TABLE)}>Data</Button>
-                    <Button onClick={()=>setSelectedView(VIEW_NAME.CHART)}>Graph</Button>
+                    <Button onClick={() => setSelectedView(VIEW_NAME.DICOM_TABLE)}>Data</Button>
+                    <Button onClick={() => setSelectedView(VIEW_NAME.CHART)}>Graph</Button>
                 </ButtonGroup>
                 {
-                    selectedView===VIEW_NAME.CHART?
-                    <VisualTable metaData={metaData}/>
-                    :
-                    
-                        presentProject.projectId ?
-                        <div>
-                            <UpDownloadToolbar projects={presentProject} getMetaData={getMetaData} metaData={metaData} isInvitedProject={isInvitedProject}/>
-                            {
-                                metaData==='loading'?
-                                <Stack alignItems="center" marginTop={2}>
-                                    <CircularProgress margin={2}/>
-                                    <Typography margin={2}>
-                                        {'Loading Metadata...'}
-                                    </Typography>
-                                </Stack>
-                                :
-                                <MetaDataGrid
-                                    metaData={metaData}
-                                    project={presentProject}
-                                />
-                            }
-                        </div>
-                        :<div></div>
-                    
+                    selectedView === VIEW_NAME.CHART ?
+                        <MetadataStatisticInsightView />
+                        : project.projectId && <MetadataTableView metaData={metaData}/>
                 }
             </Box>
         </Box>
     );
+}
+function MetadataTableView({metaData}) {
+    return <div>
+        <UpDownloadToolbar />
+        {metaData === 'loading' ?
+            <LoadingMessageView message={'Loading Metadata...'} />
+            :
+            <MetaDataGrid />}
+    </div>;
+}
+function LoadingMessageView({message}) {
+    return <Stack alignItems="center" marginTop={2}>
+        <CircularProgress margin={2} />
+        <Typography margin={2}>
+            {message}
+        </Typography>
+    </Stack>;
 }

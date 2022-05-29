@@ -10,6 +10,7 @@ import SnackbarReducer from "./component/Toolbar/Upload/SnackbarReducer";
 import MLResultReducer from "./component/Table/MLResult/MLResultRedux";
 import VisualTableReducer from "./component/VisualTable/VisualTableReducer";
 import MetaDataGridReducer from "./component/Table/MetaDataGridReducer";
+import ProjectDrawerReducer from "./component/Drawer/ProjectDrawerReducer";
 
 const rootReducer=combineReducers({
     ColumnTypeDecisionDialogReducer,
@@ -21,7 +22,8 @@ const rootReducer=combineReducers({
     SnackbarReducer,
     MLResultReducer,
     VisualTableReducer,
-    MetaDataGridReducer
+    MetaDataGridReducer,
+    ProjectDrawerReducer,
 })
 
 export default rootReducer;

@@ -8,6 +8,8 @@ import {FileUploadDialogAction} from "./FileUploadDialogReducer";
 import ImageFileUploadBox from "./ImageFileUploadBox";
 import {uploadCsvFile, uploadImageFile} from "./Utils/UploadFiles";
 import {SnackbarAction} from "../SnackbarReducer";
+import {getMetaData} from '../../../../api/metadata';
+import {MetaDataGridAction} from './../../../Table/MetaDataGridReducer';
 
 /**
  * 이미지 파일을 업르드하기 위한 컴퍼넌트입니다.
@@ -23,8 +25,9 @@ export default function FileUploadDialog(){
     const [csvFile,setCsvFile]= useState(undefined)
     const [imageFiles,setImageFiles]=useState([])
     const dispatch=useDispatch()
+    const project=useSelector((state:RootState)=>state.ProjectDrawerReducer.project)
     const projectId=useSelector((state:RootState)=> state.ParticipantInfoReducer.participants.projectId)
-    const DEBUG=true
+    const DEBUG=false
     const print=(msg : any)=>{
         if(DEBUG){
             console.log("FileUploadDialog",msg)
@@ -51,6 +54,7 @@ export default function FileUploadDialog(){
                 dispatch(SnackbarAction.setMessage("Upload CSV complete!"))
                 dispatch(SnackbarAction.setProgress(false))
                 dispatch(SnackbarAction.showCloseButton())
+                getMetaData(project, (metaData)=>dispatch(MetaDataGridAction.setMetaData(metaData)))
             },
             (error)=>{
                 dispatch(SnackbarAction.setMessage(`Upload CSV error :${error}`))
