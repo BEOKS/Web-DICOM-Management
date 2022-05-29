@@ -3,6 +3,7 @@ package com.knuipalab.dsmp.controller.metadata.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.knuipalab.dsmp.http.httpResponse.success.SuccessDataResponse;
 import com.knuipalab.dsmp.metadata.*;
 import com.knuipalab.dsmp.user.auth.CustomOAuth2UserService;
 import org.bson.Document;
@@ -10,21 +11,30 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.internal.matchers.Any;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -161,8 +171,23 @@ class MetaDataApiControllerTest {
                 .andExpect(jsonPath("$.body.[1].projectId", is("54321")))
                 .andExpect(jsonPath("$.body.[1].body.age", is(54))) // body 확인
                 .andDo(print())
+        ;
+    }
+
+    @WithMockUser
+    @DisplayName("Find by ProjectId with Paging - Success")
+    @Test
+    void findByProjectIdWithPaging() throws Exception {
+
+        //when
+        mvc.perform(get("/api/MetaData/54321/pagination?page=0&size=2"))
+                .andExpect(status().isOk()) // status 200
+                .andExpect(jsonPath("$.status",is(200)))
+                .andDo(print())
                 ;
     }
+
+
 
     @WithMockUser
     @DisplayName("Insert by ProjectId - Success")
@@ -268,6 +293,13 @@ class MetaDataApiControllerTest {
                 .andExpect(jsonPath("$.status",is(200)))
                 .andDo(print())
         ;
+    }
+
+    @WithMockUser
+    @DisplayName("find Metadata with paging and filtering")
+    @Test
+    void findByProjectIdWithPagingAndFiltering() {
+//        mvc.perform(get("/api/MetaData/12345"))
     }
 
 }

@@ -23,7 +23,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = MachineLearningApiController.class)
@@ -51,7 +51,7 @@ public class MachineLearningApiControllerTest {
     }
 
     @WithMockUser
-    @DisplayName("Type Sampling Test by ProjectId - Success")
+    @DisplayName("Type Sampling Test by ProjectId")
     @Test
     void typeSamplingTest() throws Exception {
 
@@ -63,10 +63,9 @@ public class MachineLearningApiControllerTest {
     }
 
     @WithMockUser
-    @DisplayName("Set Malignancy Classification Test by ProjectId - Success")
+    @DisplayName("Set Malignancy Classification Test by ProjectId and Model Name")
     @Test
     void setMalignancyClassificationTest() throws Exception {
-
         mvc.perform(put("/api/MetaData/MalignancyClassification/54321/124214"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status",is(200)))

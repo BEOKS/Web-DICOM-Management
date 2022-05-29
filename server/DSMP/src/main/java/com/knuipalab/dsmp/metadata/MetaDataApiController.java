@@ -6,10 +6,11 @@ import com.knuipalab.dsmp.http.httpResponse.success.SuccessResponse;
 
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -20,16 +21,23 @@ public class MetaDataApiController {
 
     // projectId가 같은 metadata를 모두 반환
     @GetMapping("api/MetaData/{projectId}")
-    public ResponseEntity< ? extends BasicResponse> findByProjectId(@PathVariable String projectId, MultipartFile multipartFile){
+    public ResponseEntity< ? extends BasicResponse> findByProjectId(@PathVariable String projectId){
         List<MetaDataResponseDto> metaDataResponseDtos = metaDataService.findByProjectId(projectId);
         return ResponseEntity.ok().body(new SuccessDataResponse<List<MetaDataResponseDto>>(metaDataResponseDtos));
+    }
+
+    // projectId가 같은 metadata를 반환 with paging
+    @GetMapping("api/MetaData/{projectId}/pagination")
+    public ResponseEntity< ? extends BasicResponse> findByProjectIdWithPaging(@PathVariable String projectId, @RequestParam HashMap<String,Object> parmMap){
+        Page<MetaData> metaDataPage = metaDataService.findByProjectIdWithPaging(projectId,parmMap);
+        return ResponseEntity.ok().body(new SuccessDataResponse<Page<MetaData>>(metaDataPage));
     }
 
     // metatdata를 projectId와 함께 저장
     @PostMapping("api/MetaData/{projectId}")
     public ResponseEntity<? extends  BasicResponse> insert(@PathVariable String projectId,@RequestBody Document body){
         MetaDataCreateRequestDto metaDataCreateRequestDto = new MetaDataCreateRequestDto(projectId,body);
-        metaDataService.insert(metaDataCreateRequestDto);
+        metaDataService.save(metaDataCreateRequestDto);
         return ResponseEntity.ok().body(new SuccessResponse());
     }
 
@@ -62,5 +70,6 @@ public class MetaDataApiController {
         metaDataService.deleteById(metadataId);
         return ResponseEntity.ok().body(new SuccessResponse());
     }
+
 
 }
