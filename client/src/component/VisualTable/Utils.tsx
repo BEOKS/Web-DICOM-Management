@@ -1,5 +1,5 @@
-import { MetaData, Body } from './VisualTable';
 import _ from "lodash";
+import { Body, MetaData } from "../Table/MetaDataGridReducer";
 
 // metaData의 body 안에 있는 실제 data 추출
 // 단, metaData === 'loading'일 경우 제외
@@ -55,7 +55,7 @@ export const deduplication = (eachData: any[], keys: string[]) => {
 export const addCount = (uniqEachData:any[], freq:any, keys:string[]) => {
     for (let i = 0; i < uniqEachData.length; i++) {
         if (uniqEachData[i]) {
-            uniqEachData[i].forEach((e: Body) => {
+            uniqEachData[i].forEach((e: any) => {
                 const count: number = freq[keys[i] + e[keys[i]]];
                 e.count = count;
             })

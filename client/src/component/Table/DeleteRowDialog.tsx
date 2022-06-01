@@ -1,61 +1,21 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { Project } from './MetaDataGrid';
-import axios from 'axios';
 import { MetaDataGridAction } from './MetaDataGridReducer';
+import { getMetaData, deleteMetaData } from '../../api/metadata';
+import { deleteDicom } from '../../api/dicom';
 
-type DeleteRowDialogProps = {
-    project: Project
-}
-
-const DeleteRowDialog: React.FC<DeleteRowDialogProps> = ({ project }) => {
+const DeleteRowDialog = () => {
     const dispatch = useDispatch();
     const selectedMetaDataID = useSelector((state: RootState) => state.MetaDataGridReducer.selectedMetaDataID);
     const selectedStudyUID = useSelector((state: RootState) => state.MetaDataGridReducer.selectedStudyUID);
     const deleteRowDialogOpen = useSelector((state: RootState) => state.MetaDataGridReducer.deleteRowDialogOpen);
-
-    const deleteMetaData = () => {
-        const url = `api/MetaDataList/delete/${project.projectId}`;
-        const data = selectedMetaDataID;
-        axios.post(url, data)
-            .then(response => console.log(response))
-            .catch(error => {
-                if (error.response) {
-                    alert(error.response.data.message);
-                    console.log(error.response.data);
-                } else {
-                    alert(error.message);
-                    console.log(error);
-                }
-            });
-    };
-
-    const deleteDicom = () => {
-        console.log(selectedStudyUID.length);
-        console.log(selectedStudyUID);
-        if (selectedStudyUID.length > 0) {
-            selectedStudyUID.forEach(studyUID => {
-                const url = `api/study/${studyUID}`;
-                axios.delete(url)
-                    .then(response => console.log(response))
-                    .catch(error => {
-                        if (error.response) {
-                            alert(error.response.data.message);
-                            console.log(error.response.data);
-                        } else {
-                            alert(error.message);
-                            console.log(error);
-                        }
-                    });
-            });
-        }
-    };
+    const project = useSelector((state: RootState) => state.ProjectDrawerReducer.project);
 
     const handleSubmit = () => {
-        deleteMetaData();
-        deleteDicom();
-        //setMetaDataUpdated(!metaDataUpdated);
+        deleteMetaData(project, selectedMetaDataID);
+        deleteDicom(selectedStudyUID);
+        getMetaData(project, (metaData) => dispatch(MetaDataGridAction.setMetaData(metaData)));
         onClose();
     };
 

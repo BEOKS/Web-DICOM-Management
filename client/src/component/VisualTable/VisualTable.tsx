@@ -7,27 +7,13 @@ import VisualTableOptions from './VisualTableOptions';
 import BarChart from './Chart/BarChart';
 import DoughnutChart from './Chart/DoughnutChart';
 
-export type Body = {
-    [key: string]: string | number
-};
-
-export type MetaData = {
-    metadataId: string,
-    projectId: string,
-    body: Body
-};
-
-type VisualTableProps = {
-    metaData: MetaData[] | string // metaData가 'loading'일 경우엔 string type
-};
-
-const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
+const MetadataStatisticInsightView = () => {
+    const metaData = useSelector((state: RootState) => state.MetaDataGridReducer.metaData);
     const options = useSelector((state: RootState) => state.VisualTableReducer.options);
     const data = extractBody(metaData);
     const keys = extractKeys(data);
     const [eachData, freq] = separateData(data, keys);
     const uniqEachData = deduplication(eachData, keys);
-    
     addCount(uniqEachData, freq, keys);
 
     // return문 안에서는 반복문 사용이 불가하므로 차트 만드는 함수 따로 생성
@@ -72,4 +58,4 @@ const VisualTable: React.FC<VisualTableProps> = ({ metaData }) => {
     );
 };
 
-export default VisualTable;
+export default MetadataStatisticInsightView;
