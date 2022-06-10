@@ -45,6 +45,7 @@ export default function FileUploadDialog(){
         }
     }
     const handleOk=async()=>{
+        console.log('upload start')
         await uploadCsvFile(projectId,csvFile,
             ()=> {
                 dispatch(SnackbarAction.setMessage("Uploading CSV Files..."))
@@ -59,12 +60,16 @@ export default function FileUploadDialog(){
                 dispatch(SnackbarAction.showCloseButton())
             })
         await uploadImageFile(projectId,imageFiles,
-            (filename: string,percentage:number)=> {
-                dispatch(SnackbarAction.setMessage(`Uploading ${filename}`))
-                dispatch(SnackbarAction.setProgress(percentage))
+            ()=> {
+                dispatch(SnackbarAction.setMessage("Uploading Image Files..."))
+                dispatch(SnackbarAction.setProgress(0))
+            },
+            (filename,additionalProgress)=>{
+                dispatch(SnackbarAction.setMessage(`Uploading : ${filename}`))
+                dispatch(SnackbarAction.increaseProgress(additionalProgress))
             },
             (filename,error)=>{
-                dispatch(SnackbarAction.setMessage(`Upload Error! for ${filename} :${error}`))
+                dispatch(SnackbarAction.setMessage(`Upload CSV error :${filename} ${error}`))
                 dispatch(SnackbarAction.setProgress(false))
                 dispatch(SnackbarAction.showCloseButton())
             })

@@ -17,6 +17,7 @@ export async function uploadCsvFile(projectId : string,
                                     callback:(additionalProgress : number)=>void,
                                     callError:(error : string)=>void){
     callStart()
+    console.log('start')
     if(csvFile===undefined){
         callError("csv is undefined")
         return
@@ -24,26 +25,21 @@ export async function uploadCsvFile(projectId : string,
     const csvJson=await loadCSV(csvFile)
     if(!checkValidCsv(csvJson)){
         callError(`CSV 속성에는 ${ANONYMIZED_ID}와 ${IMAGE_NAME} 속성이 존재해야합니다.`)
-        return
+        return 
     }
     const chunkSize=1000
     const concurrency=10
+    console.log('csvJson',csvJson)
     concurrencyPOSTHandler(csvJson,
         (data : any[])=> axios.post(`api/MetaDataList/insert/${projectId}`,data),
         (completeAPICount :number,apiNumber : number)=>{
+            console.log('success!')
             callback(1/apiNumber*100)
         },
         (apiNumber : number, error : any)=>{
             callError(error)
         },
         concurrency,chunkSize)
-    // await axios.post(`api/MetaDataList/insert/${projectId}`,csvJson)
-    //     .then(response=>{
-    //         callback()
-    //     })
-    //     .catch(error=>{
-    //         callError(error)
-    //     })
 }
 function checkValidCsv(csvJson:any): boolean{
     if(csvJson.length===0){
@@ -78,12 +74,31 @@ async function loadCSV(csvFile : File){
 }
 
 export async function uploadImageFile(projectId:string,imageFiles : File[],
-    callback:(filename:string, percentage : number)=>void,
+    callbackBegin:()=>void,
+    callbackSuccess:(filename:string, additionalProgress : number)=>void,
     callError:(filename:string,error :any)=>void){
-
-    imageFiles.forEach( (file,index)=>{
-        uploadFileAPI(projectId,file,
-            (response:any)=>callback(file.name,(index+1)/imageFiles.length*100),
-            (error: any)=>callError(file.name,error))
-    })
+    console.log(projectId,imageFiles)
+    callbackBegin()
+    const chunkSize=1
+    const concurrency=10
+    concurrencyPOSTHandler(imageFiles,
+        (data : any[])=> {
+            const formdata=new FormData()
+            formdata.append("file",data[0])
+            return axios({
+                method: 'post',
+                url: `/api/Storage/${projectId}`,
+                data: formdata,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            })
+        },
+        (completeAPICount :number,apiNumber : number)=>{
+            callbackSuccess(imageFiles[completeAPICount-1].name,1/apiNumber*100)
+        },
+        (apiNumber : number, error : any)=>{
+            callError(imageFiles[apiNumber].name,error)
+        },
+        concurrency,chunkSize)
 }
