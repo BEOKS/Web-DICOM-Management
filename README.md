@@ -25,23 +25,25 @@ The data you use for a project can be very large. The data manager must check wh
 ## 6. Machine Learning Result Visualization
 DSMP is basically a platform for building databases, but we felt the need for the ability to visualize machine learning inference results in the beta test stage. You can use this feature by building a machine learning server using [Torchserve](https://pytorch.org/serve/). Users can choose which model to use to infer the currently uploaded data. When inference is started with the selected model, the backend automatically delivers the medical image of the project to the machine learning server and saves the result back to the database. Results in the form of strings and numbers are updated in metadata, and image result is added to the image database.
 
-## Usage
-### Prerequirement
-1. 최신 버전의 도커를 설치해주세요. (docker-compose는 v2 버전으로 설치되어야 합니다, 리눅스의 경우 간혹 v1으로 설치되므로 업데이트가 필요합니다.)
-2. java SDK (version. 17.0.1)을 설치합니다. (설치하지 않을 경우 spring 프로젝트 파일이 정상적으로 실행되지 않습니다.)
-3. Node.js 가 설치되어 있지 않다면 v16.6.1버전으로 설치해야 합니다.
-4. 최신 버전의 [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable)을 설치해주세요.
+# Usage
+## Prerequirement
+1. Docker >=20.10.16
+2. OpenJDK>=17.0.1 
+3. Node.js>=v16.6.1
+4. [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable)>=1.22.19
 
 ### Install Project
-설치의 경우 프로젝트를 다운로드 한 후, 한번만 실행하면 됩니다. 프로젝트 코드가 갱신될 경우, 코드를 반영하기 위해서 다시 실행해야 합니다.
 #### Common
-1. 코드 다운로드
+1. Download 
 ```sh 
 #clone all project with submodules
 git clone --recurse-submodules https://github.com/BEOKS/DicomProject.git
 cd DicomProject
 ```
-2. 현재 프로젝트는 구글 로그인을 사용하고 있으므로 구글 API clientId와 secrect id가 필요합니다. 이를 발급받아 [application-oauth.yml.example](https://github.com/BEOKS/DicomProject/blob/main/server/DSMP/src/main/resources/application-oauth.yml.example)과 같은 형식을 작성하여 같은 파일 위치에 application-oauth.yml 파일을 생성해야 합니다.
+2. Configuration
+DSMP use OAuth2 authentication with Google and Naver, For now, we use Naver as default. You can use other OAuth2 with [Spring Security
+](https://docs.spring.io/spring-security/reference/servlet/oauth2/index.html). In spring resources, You can check [oauth-sampe](https://github.com/BEOKS/DicomProject/blob/main/server/DSMP/src/main/resources/application-oauth.yml.example) file. Create application-oauth.yml in same directory that contain client-id and client-secret.
+
 #### Window
 ```sh
 .\install_project.sh
@@ -61,7 +63,7 @@ run_project.sh prod # run project for deploy
 sudo sh run_project.sh local # run project for development,localhost:3000에서 서비스 이용가능
 sudo sh run_project.sh prod # run project for deploy
 ```
-> 실행 직후, 클라이언트 서버가 먼저 실행되는 경우 localhost:3000, localhost:3001 페이지에서 에러가 발생할 수 있습니다. 도커 서버가 모두 실행완료 된 후, 새로고침을 해주세요
+Client page port is 3001 and server port is 8080
 
 # Author
 [Jaeseong Lee](https://github.com/BEOKS), lee01042000@gmail.com
