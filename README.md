@@ -11,10 +11,10 @@ DSMP automatically performs anonymization and assigns an appropriate ID each tim
 Medical AI research requires not only DICOM images but also related metadata. If metadata including patient ID is uploaded in CSV format, it can be combined with DICOM data that has already been uploaded or will be uploaded to make data management easier.
 
 ## 3. More Image Format
-Data in DICOM format is not always used to build a medical image database. So DSMP also supports uploading images in PNG/JPEG format. In this case, the image anonymization function is not executed, and the image file name must be entered instead of the patient ID in the metadata.
+DICOM format is not always used to build a medical image database. So DSMP also supports uploading images in PNG/JPEG format. In this case, the image anonymization process is not executed, and the image file name must be entered instead of the patient ID in the metadata.
 
 ## 4. Project, User Management
-The subject of medical AI research can be many, and data suitable for each subject is required. DSMP provides a function to manage data on a project-by-project basis, and each project manager can invite other researchers to use the data together. This can improve security by ensuring that only the necessary researcher can access each projects.
+The subject of medical AI research can be many, and data for each subject is required. DSMP provides a function to manage data on a project-by-project basis, and each project manager can invite other researchers to use the data together. This can improve security by ensuring that only the necessary researcher can access each projects.
 
 ## 5. Data Visualization
 Of course, DSMP can view the uploaded metadata list in table form, and in the case of medical images, you can visualize it by clicking on each table row. However, we do offer better features to increase researcher's intuition about their data.
@@ -42,7 +42,7 @@ cd DicomProject
 ```
 2. Configuration
 DSMP use OAuth2 authentication with Google and Naver, For now, we use Naver as default. You can use other OAuth2 with [Spring Security
-](https://docs.spring.io/spring-security/reference/servlet/oauth2/index.html). In spring resources, You can check [oauth-sampe](https://github.com/BEOKS/DicomProject/blob/main/server/DSMP/src/main/resources/application-oauth.yml.example) file. Create application-oauth.yml in same directory that contain client-id and client-secret.
+](https://docs.spring.io/spring-security/reference/servlet/oauth2/index.html). In spring resources, You can check [oauth-sample](https://github.com/BEOKS/DicomProject/blob/main/server/DSMP/src/main/resources/application-oauth.yml.example) file. Create application-oauth.yml in same directory that contain client-id and client-secret.
 
 #### Window
 ```sh
