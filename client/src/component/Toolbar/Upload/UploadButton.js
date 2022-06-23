@@ -11,7 +11,7 @@ import {FormatChooseAction} from "./FormatChooseDialog/FormatChooseDialogReducer
 import {SnackbarAction} from "./SnackbarReducer";
 
 let fileHandler;
-export default function  UploadButton({projects,getMetaData,metaData}){
+export default function  UploadButton({projects}){
     const snackbarOpen=useSelector((state)=>state.SnackbarReducer.open)
     const snackbarMessage=useSelector((state)=>state.SnackbarReducer.message)
     const snackbarProgress=useSelector((state)=>state.SnackbarReducer.progress)
@@ -58,8 +58,6 @@ export default function  UploadButton({projects,getMetaData,metaData}){
             {/*    setSnackBarInfo={setSnackBarInfo}*/}
             {/*    fileHandler={fileHandler}*/}
             {/*    projects={projects}*/}
-            {/*    getMetaData={getMetaData}*/}
-            {/*    metaData={metaData}*/}
             {/*/>*/}
             <FormatChooseDialog/>
             <Snackbar

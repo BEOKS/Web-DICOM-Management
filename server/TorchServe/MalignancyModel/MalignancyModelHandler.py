@@ -71,7 +71,8 @@ class MalignancyModelHandler(BaseHandler):
         output_dict = self.model(x)
         prob = output_dict["output"].item() # Malignancy 확률값
         prob = (prob - MEAN) / STD
-        prob = norm.cdf(prob)           # 최종 확률값
+        snorm = norm(loc=MEAN, scale=STD)
+        prob = snorm.cdf(prob)           # 최종 확률정 (수정)
 
         pred = 'Malignancy' if prob > T else 'Non-malignancy' # 0: Non-malignancy, 1: Malignancy
         cam = output_dict["mask"].squeeze().cpu().numpy() # cam

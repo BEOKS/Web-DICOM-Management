@@ -5,11 +5,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import com.google.common.collect.Lists;
-import com.knuipalab.dsmp.domain.metadata.MetaData;
-import com.knuipalab.dsmp.domain.metadata.MetaDataRepository;
-import com.knuipalab.dsmp.domain.project.Project;
-import com.knuipalab.dsmp.domain.user.User;
-import com.knuipalab.dsmp.dto.metadata.MetaDataCreateAllRequestDto;
+import com.knuipalab.dsmp.metadata.CustomizedMetaDataRepository;
+import com.knuipalab.dsmp.metadata.MetaData;
+import com.knuipalab.dsmp.metadata.MetaDataRepository;
+import com.knuipalab.dsmp.project.Project;
+import com.knuipalab.dsmp.user.User;
+import com.knuipalab.dsmp.metadata.MetaDataCreateAllRequestDto;
 import org.bson.Document;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,9 +21,11 @@ import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoCo
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @SpringBootTest
@@ -35,6 +38,9 @@ public class MetaDataQA {
 
     @SpyBean
     MetaDataRepository metaDataRepository;
+
+    @SpyBean
+    CustomizedMetaDataRepository customizedMetaDataRepository;
 
     Logger log = (Logger) LoggerFactory.getLogger(MetaDataQA.class);
 
@@ -75,7 +81,7 @@ public class MetaDataQA {
 
         long beforeTime = System.currentTimeMillis();
 
-        long METADATA_SIZE = 1000;
+        long METADATA_SIZE = 200;
 
         Faker faker = new Faker();
         StringBuilder strBodyList = new StringBuilder();
@@ -102,9 +108,9 @@ public class MetaDataQA {
         strBodyList.append("]");
 
         long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
-        long secDiffTime = (afterTime - beforeTime)/1000; //두 시간에 차 계산
+        long secDiffTime = (afterTime - beforeTime); //두 시간에 차 계산
 
-        log.info("createMockStrBodyList 실행 시간(m) : "+secDiffTime);
+        log.info("createMockStrBodyList 실행 시간(ms) : "+secDiffTime);
 
         return strBodyList.toString();
     }
@@ -175,7 +181,7 @@ public class MetaDataQA {
         long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
         long secDiffTime = (afterTime - beforeTime); //두 시간에 차 계산
 
-        log.info("saveAll QA 실행 시간(m) : "+secDiffTime);
+        log.info("saveAll QA 실행 시간(ms) : "+secDiffTime);
 
     }
 
@@ -188,8 +194,20 @@ public class MetaDataQA {
 
         long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
         long secDiffTime = (afterTime - beforeTime); //두 시간에 차 계산
+        log.info("findAll 개수 : "+metaDataList.size());
+        log.info("findAll QA 실행 시간(ms) : "+secDiffTime);
+    }
 
-        log.info("findAll QA 실행 시간(m) : "+secDiffTime);
+    @Profile("QA")
+    @Test
+    public void findByProjectIdWithPagingAndFiltering() {
+        long beforeTime = System.currentTimeMillis();
+        HashMap<String,Object> parmMap = new HashMap<>();
+        Page<MetaData> metaDataPage = customizedMetaDataRepository.findByProjectIdWithPagingAndFiltering("54321",11123,20,parmMap);
+        long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
+        long secDiffTime = (afterTime - beforeTime); //두 시간에 차 계산
+        log.info("findByProjectIdWithPagingAndFiltering 개수 : "+metaDataPage.getContent().size());
+        log.info("findByProjectIdWithPagingAndFiltering QA 실행 시간(ms) : "+secDiffTime);
     }
 
 

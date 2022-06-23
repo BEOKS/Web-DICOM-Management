@@ -20,6 +20,7 @@ const SnackbarActionType={
     setProgress : `${HEADER}/setProgress` as const,
     showCloseButton : `${HEADER}/showCloseButton` as const,
     hideCloseButton : `${HEADER}/hideCloseButton` as const,
+    increaseProgress : `${HEADER}/increaseProgress` as const
 }
 
 export const SnackbarAction={
@@ -28,7 +29,8 @@ export const SnackbarAction={
     setMessage : (msg : string)=>({type : SnackbarActionType.setMessage,payload : msg}),
     setProgress : (progress : number|boolean)=>({type : SnackbarActionType.setProgress,payload : progress}),
     showCloseButton : ()=>({type : SnackbarActionType.showCloseButton}),
-    hideCloseButton : ()=>({type : SnackbarActionType.hideCloseButton})
+    hideCloseButton : ()=>({type : SnackbarActionType.hideCloseButton}),
+    increaseProgress : (progress : number)=>({type : SnackbarActionType.increaseProgress,payload : progress})
 }
 
 type SnackbarActionType=
@@ -37,7 +39,8 @@ type SnackbarActionType=
     ReturnType<typeof SnackbarAction.setMessage> |
     ReturnType<typeof SnackbarAction.setProgress> |
     ReturnType<typeof SnackbarAction.showCloseButton> |
-    ReturnType<typeof SnackbarAction.hideCloseButton>
+    ReturnType<typeof SnackbarAction.hideCloseButton> |
+    ReturnType<typeof SnackbarAction.increaseProgress>
 export default function SnackbarReducer(state : SnackbarType=init_state,action : SnackbarActionType): SnackbarType{
     switch (action.type){
         case SnackbarActionType.openSnackbar:
@@ -52,6 +55,13 @@ export default function SnackbarReducer(state : SnackbarType=init_state,action :
             return {...state,closeButtonOpen : true}
         case SnackbarActionType.hideCloseButton:
             return {...state,closeButtonOpen : false}
+        case SnackbarActionType.increaseProgress:
+            if(typeof(state.progress)==='boolean'){
+                return {...state, progress : action.payload}
+            }
+            else{
+                return {...state, progress : state.progress+action.payload}
+            }
         default:
             return state
     }

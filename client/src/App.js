@@ -1,3 +1,5 @@
+import 'devextreme/dist/css/dx.common.css';
+import 'devextreme/dist/css/dx.light.css';
 import * as React from 'react'
 import {useState} from 'react';
 import Page from './Page'

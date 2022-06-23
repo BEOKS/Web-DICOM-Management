@@ -3,26 +3,24 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { SamplingAction } from "./SamplingReducer";
+import { getMetaData } from "../../../api/metadata"
+import { MetaDataGridAction } from "../../Table/MetaDataGridReducer";
 
-interface SamplingDialogProps {
-    getMetaData: () => {}
-}
-
-const SamplingDialog: React.FC<SamplingDialogProps> = ({ getMetaData }) => {
+const SamplingDialog = () => {
     const dispatch = useDispatch();
     const open = useSelector((state: RootState) => state.SamplingReducer.dialogOpen);
-    const projectId = useSelector((state: RootState) => state.ParticipantInfoReducer.participants.projectId);
+    const project = useSelector((state: RootState) => state.ProjectDrawerReducer.project);
 
     const handleClickOK = () => {
         dispatch(SamplingAction.closeDialog());
         dispatch(SamplingAction.openSnackbar());
-        
-        const url = `api/MetaData/Sampling/${projectId}`;
+
+        const url = `api/MetaData/Sampling/${project.projectId}`;
         axios.put(url)
             .then(response => {
                 console.log(response);
                 dispatch(SamplingAction.updateSnackbar());
-                getMetaData();
+                getMetaData(project, (metaData)=>dispatch(MetaDataGridAction.setMetaData(metaData)));
             }).catch(error => {
                 alert(error);
                 console.log(error);

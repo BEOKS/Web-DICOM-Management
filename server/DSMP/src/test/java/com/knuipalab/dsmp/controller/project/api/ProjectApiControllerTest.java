@@ -1,14 +1,15 @@
 package com.knuipalab.dsmp.controller.project.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.knuipalab.dsmp.configuration.auth.CustomOAuth2UserService;
-import com.knuipalab.dsmp.domain.project.Project;
-import com.knuipalab.dsmp.domain.user.User;
-import com.knuipalab.dsmp.dto.project.ProjectInviteRequestDto;
-import com.knuipalab.dsmp.dto.project.ProjectOustRequestDto;
-import com.knuipalab.dsmp.dto.project.ProjectRequestDto;
-import com.knuipalab.dsmp.dto.project.ProjectResponseDto;
-import com.knuipalab.dsmp.service.project.ProjectService;
+import com.knuipalab.dsmp.user.auth.CustomOAuth2UserService;
+import com.knuipalab.dsmp.project.ProjectApiController;
+import com.knuipalab.dsmp.project.Project;
+import com.knuipalab.dsmp.user.User;
+import com.knuipalab.dsmp.project.ProjectInviteRequestDto;
+import com.knuipalab.dsmp.project.ProjectOustRequestDto;
+import com.knuipalab.dsmp.project.ProjectRequestDto;
+import com.knuipalab.dsmp.project.ProjectResponseDto;
+import com.knuipalab.dsmp.project.ProjectService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

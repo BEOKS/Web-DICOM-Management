@@ -8,6 +8,10 @@ import FormatChooseReducer from "./component/Toolbar/Upload/FormatChooseDialog/F
 import FileUploadDialogReducer from "./component/Toolbar/Upload/FileUploadDialog/FileUploadDialogReducer";
 import SnackbarReducer from "./component/Toolbar/Upload/SnackbarReducer";
 import MLResultReducer from "./component/Table/MLResult/MLResultRedux";
+import VisualTableReducer from "./component/VisualTable/VisualTableReducer";
+import MetaDataGridReducer from "./component/Table/MetaDataGridReducer";
+import ProjectDrawerReducer from "./component/Drawer/ProjectDrawerReducer";
+
 const rootReducer=combineReducers({
     ColumnTypeDecisionDialogReducer,
     ParticipantInfoReducer,
@@ -16,7 +20,10 @@ const rootReducer=combineReducers({
     FormatChooseReducer,
     FileUploadDialogReducer,
     SnackbarReducer,
-    MLResultReducer
+    MLResultReducer,
+    VisualTableReducer,
+    MetaDataGridReducer,
+    ProjectDrawerReducer,
 })
 
 export default rootReducer;
