@@ -1,6 +1,6 @@
 [![Deployment](https://github.com/BEOKS/DicomProject/actions/workflows/deployment.dev.yml/badge.svg?branch=BEOKS-patch-1)](https://github.com/BEOKS/DicomProject/actions/workflows/deployment.dev.yml)
 # Dicom Service Management Project
-DSMP(Dicom Service Management Project) aim convinient DICOM(Digital Imaging and Communications in Medicine) database management for clinical ML project based on web.
+DSMP(Dicom Service Management Project) aim convinient DICOM(Digital Imaging and Communications in Medicine) database management for medical ML project based on web.
 # Feature
 ## 1. Anonymization 
 When researchers or developer collect DICOM data for medical research, they need to anonymize each patient's personal information in DICOM meatadata and related other data. This process is so tired, because instead of using patient's ID you need to give unique Anonymized ID for each DICOM data from multiple medical institutions. There may be same patient's ID in differenct medical institutions. Therefore, whenever data is obtained, it is necessary to manually check for multiple duplicates ID and perform the anonymization process. 
