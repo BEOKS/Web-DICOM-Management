@@ -65,5 +65,25 @@ sudo sh run_project.sh prod # run project for deploy
 ```
 Client page port is 3001 and server port is 8080
 
+# Used Framework & Language
+<img src="https://img.shields.io/badge/Docker-2496ED?&logo=Docker&logoColor=white">
+
+Docker prevent provisioning and reduce repetitive configuration each host. By using docker, We can expect same operation for local, dev and production environment. If we handle multi container in multi host we will use Kubernetes for container orchestration. For now, we use Docker-compose for handle multi container. 
+
+ <img src="https://img.shields.io/badge/React-61DAFB?&logo=React&logoColor=white"> <img src="https://img.shields.io/badge/TypeScript-3178C6?&logo=TypeScript&logoColor=white"> <img src="https://img.shields.io/badge/JavaScript-F7DF1E?&logo=JavaScript&logoColor=white"> <img src="https://img.shields.io/badge/Redux-764ABC?&logo=Redux&logoColor=white"> 
+ 
+ As React is useful for create reusable component we use React Framework and typescript for implement web based client program(We used javascript but, it becames hard to use as project grow). React props is also hard to handle as project grow, So we use React-Redux with Flux design pattern.
+
+ <img src="https://img.shields.io/badge/OpenJDK-2496ED?&logo=OpenJDK&logoColor=white"> <img src="https://img.shields.io/badge/Spring Boot-6DB33F?&logo=Spring Boot&logoColor=white"> <img src="https://img.shields.io/badge/Spring Security-6DB33F?&logo=Spring Security&logoColor=white">  <img src="https://img.shields.io/badge/JUnit5-25A162?&logo=JUnit5&logoColor=white"> <img src="https://img.shields.io/badge/MongoDB-47A248?&logo=MongoDB&logoColor=white"> 
+
+ As java running by JVM which guarantee stable software running environment like Auto Optimization and GC, We select java for server system. We use Spring Framework For effective and safe develop in Java development environment. And for testing, we use Junit5 ans Mockito.
+
+ # Architecture
+ Basically, We use Monolithic Architecture, because we now aim Fast Implement-Fast Feedback cycle. MSA(Microservice Architecture) is good for scale out, independent development and maintenance. But, it require many management like monitoring, configuration for each MSA component and Troubleshooting etc. If we make feature stable and need to handle scaling out per feature, We will migrate to MSA.
+ 
+ For that, We use SoC(Separation of Concern) design structure. Simply, all code files for same feature need to store in same project of directory. So we hope to migrate to MSA relatively easily.
+
+ In client, we will use Flux design pattern with React & Redux. Because we suffer from deep props... In server, we will use Controller-Service-Repository design pattern.
+ 
 # Author
 [Jaeseong Lee](https://github.com/BEOKS), lee01042000@gmail.com
