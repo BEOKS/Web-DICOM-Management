@@ -5,6 +5,8 @@ import { MLAction } from './MLReducer';
 import SamplingDialog from './MLDialog';
 import { RootState } from '../../../store';
 import CloseIcon from '@mui/icons-material/Close';
+import { getModelList } from '../../../api/MachineLearning/Management';
+
 
 interface MLButtonProps {
     getMetaData: () => {}
@@ -20,6 +22,7 @@ const MLButton: React.FC<MLButtonProps> = ({ getMetaData }) => {
 
     const handleMLButtonClick = () => {
         dispatch(MLAction.openDialog());
+        getModelList((modelList: string[]) => { dispatch(MLAction.setModelList(modelList)) });
     };
 
     const action = (

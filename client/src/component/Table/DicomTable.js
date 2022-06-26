@@ -176,6 +176,7 @@ export default function DicomTable(props) {
                                             handleClick={handleClick}
                                             isNonReferenced={isNonReferenced}
                                             row={row}
+                                            rowIndex={index}
                                             keys={keys}
                                             key={id}
                                         />
