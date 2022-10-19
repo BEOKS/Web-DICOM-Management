@@ -10,20 +10,31 @@ DSMP automatically performs anonymization and assigns an appropriate ID each tim
 ## 2. Metadata Relation
 Medical AI research requires not only DICOM images but also related metadata. If metadata including patient ID is uploaded in CSV format, it can be combined with DICOM data that has already been uploaded or will be uploaded to make data management easier.
 
+![image](https://user-images.githubusercontent.com/30094719/196581697-769ff686-09ac-41ee-9917-c43a0da5b590.png)
+
 ## 3. More Image Format
 DICOM format is not always used to build a medical image database. So DSMP also supports uploading images in PNG/JPEG format. In this case, the image anonymization process is not executed, and the image file name must be entered instead of the patient ID in the metadata.
 
+![image](https://user-images.githubusercontent.com/30094719/196581753-2588cdec-5d8a-45bc-8ae0-023373b13228.png)
+
 ## 4. Project, User Management
 The subject of medical AI research can be many, and data for each subject is required. DSMP provides a function to manage data on a project-by-project basis, and each project manager can invite other researchers to use the data together. This can improve security by ensuring that only the necessary researcher can access each projects.
+
+
+![image](https://user-images.githubusercontent.com/30094719/196581787-9049e1ad-bcf8-4267-bf11-5a3f66e53295.png)
 
 ## 5. Data Visualization
 Of course, DSMP can view the uploaded metadata list in table form, and in the case of medical images, you can visualize it by clicking on each table row. However, we do offer better features to increase researcher's intuition about their data.
 
 The data you use for a project can be very large. The data manager must check whether the data has been uploaded correctly or not. DSMP automatically provides data visualization based on uploaded metadata. By selecting the desired column in the metadata, you can quickly understand the distribution of each data. If the data is in the form of a category, a pie chart is provided, and if the data is in the form of a number, a histogram is provided like below
+
+
 <img width="1769" alt="image" src="https://user-images.githubusercontent.com/30094719/175278688-2c556b23-5b55-426d-80bd-7e980c88142d.png">
 
 ## 6. Machine Learning Result Visualization
 DSMP is basically a platform for building databases, but we felt the need for the ability to visualize machine learning inference results in the beta test stage. You can use this feature by building a machine learning server using [Torchserve](https://pytorch.org/serve/). Users can choose which model to use to infer the currently uploaded data. When inference is started with the selected model, the backend automatically delivers the medical image of the project to the machine learning server and saves the result back to the database. Results in the form of strings and numbers are updated in metadata, and image result is added to the image database. For Implementation, please check [here](./server/TorchServe/README.md).
+![image](https://user-images.githubusercontent.com/30094719/196581888-dd1face8-6892-4923-a72c-52e7171071b8.png)
+![image](https://user-images.githubusercontent.com/30094719/196581975-626287ca-7689-4a6f-8279-49b006ad8a11.png)
 
 # Usage
 ## Prerequirement
