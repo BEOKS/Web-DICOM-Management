@@ -1,26 +1,60 @@
-# Dicom Service Management Project
 [![Deployment](https://github.com/BEOKS/DicomProject/actions/workflows/deployment.dev.yml/badge.svg?branch=BEOKS-patch-1)](https://github.com/BEOKS/DicomProject/actions/workflows/deployment.dev.yml)
-## :dart: Objective
-Dicom 의료 영상 데이터를 저장, 관리하며 시각화 기능과 머신러닝 개발을 지원하는 SW개발
-## :bar_chart: Success metrics
-의료데이터 관리 및 시각화 지원 기능을 구현하여 v1.0 배포를 목표로 한다.(option 제외)
-## Usage
-### Prerequirement
-1. 최신 버전의 도커를 설치해주세요. (docker-compose는 v2 버전으로 설치되어야 합니다, 리눅스의 경우 간혹 v1으로 설치되므로 업데이트가 필요합니다.)
-2. java SDK (version. 17.0.1)을 설치합니다. (설치하지 않을 경우 spring 프로젝트 파일이 정상적으로 실행되지 않습니다.)
-3. Node.js 가 설치되어 있지 않다면 v16.6.1버전으로 설치해야 합니다.
-4. 최신 버전의 [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable)을 설치해주세요.
+# Dicom Service Management Project
+DSMP(Dicom Service Management Project) aim convinient DICOM(Digital Imaging and Communications in Medicine) database management for medical ML project based on web.
+# Feature
+## 1. Anonymization 
+When researchers or developer collect DICOM data for medical research, they need to anonymize each patient's personal information in DICOM meatadata and related other data. This process is so tired, because instead of using patient's ID you need to give unique Anonymized ID for each DICOM data from multiple medical institutions. There may be same patient's ID in differenct medical institutions. Therefore, whenever data is obtained, it is necessary to manually check for multiple duplicates ID and perform the anonymization process. 
+
+DSMP automatically performs anonymization and assigns an appropriate ID each time data is uploaded. Anonymization process is performed before upload to database. Therefore, it is possible to ensure the prevention of leakage of personal information and to dramatically reduce the time to collect research data.
+
+## 2. Metadata Relation
+Medical AI research requires not only DICOM images but also related metadata. If metadata including patient ID is uploaded in CSV format, it can be combined with DICOM data that has already been uploaded or will be uploaded to make data management easier.
+
+![image](https://user-images.githubusercontent.com/30094719/196581697-769ff686-09ac-41ee-9917-c43a0da5b590.png)
+
+## 3. More Image Format
+DICOM format is not always used to build a medical image database. So DSMP also supports uploading images in PNG/JPEG format. In this case, the image anonymization process is not executed, and the image file name must be entered instead of the patient ID in the metadata.
+
+![image](https://user-images.githubusercontent.com/30094719/196581753-2588cdec-5d8a-45bc-8ae0-023373b13228.png)
+
+## 4. Project, User Management
+The subject of medical AI research can be many, and data for each subject is required. DSMP provides a function to manage data on a project-by-project basis, and each project manager can invite other researchers to use the data together. This can improve security by ensuring that only the necessary researcher can access each projects.
+
+
+![image](https://user-images.githubusercontent.com/30094719/196581787-9049e1ad-bcf8-4267-bf11-5a3f66e53295.png)
+
+## 5. Data Visualization
+Of course, DSMP can view the uploaded metadata list in table form, and in the case of medical images, you can visualize it by clicking on each table row. However, we do offer better features to increase researcher's intuition about their data.
+
+The data you use for a project can be very large. The data manager must check whether the data has been uploaded correctly or not. DSMP automatically provides data visualization based on uploaded metadata. By selecting the desired column in the metadata, you can quickly understand the distribution of each data. If the data is in the form of a category, a pie chart is provided, and if the data is in the form of a number, a histogram is provided like below
+
+
+<img width="1769" alt="image" src="https://user-images.githubusercontent.com/30094719/175278688-2c556b23-5b55-426d-80bd-7e980c88142d.png">
+
+## 6. Machine Learning Result Visualization
+DSMP is basically a platform for building databases, but we felt the need for the ability to visualize machine learning inference results in the beta test stage. You can use this feature by building a machine learning server using [Torchserve](https://pytorch.org/serve/). Users can choose which model to use to infer the currently uploaded data. When inference is started with the selected model, the backend automatically delivers the medical image of the project to the machine learning server and saves the result back to the database. Results in the form of strings and numbers are updated in metadata, and image result is added to the image database. For Implementation, please check [here](./server/TorchServe/README.md).
+![image](https://user-images.githubusercontent.com/30094719/196581888-dd1face8-6892-4923-a72c-52e7171071b8.png)
+![image](https://user-images.githubusercontent.com/30094719/196581975-626287ca-7689-4a6f-8279-49b006ad8a11.png)
+
+# Usage
+## Prerequirement
+1. Docker >=20.10.16
+2. OpenJDK>=17.0.1 
+3. Node.js>=v16.6.1
+4. [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable)>=1.22.19
 
 ### Install Project
-설치의 경우 프로젝트를 다운로드 한 후, 한번만 실행하면 됩니다. 프로젝트 코드가 갱신될 경우, 코드를 반영하기 위해서 다시 실행해야 합니다.
 #### Common
-1. 코드 다운로드
+1. Download 
 ```sh 
 #clone all project with submodules
 git clone --recurse-submodules https://github.com/BEOKS/DicomProject.git
 cd DicomProject
 ```
-2. 현재 프로젝트는 구글 로그인을 사용하고 있으므로 구글 API clientId와 secrect id가 필요합니다. 이를 발급받아 [application-oauth.yml.example](https://github.com/BEOKS/DicomProject/blob/main/server/DSMP/src/main/resources/application-oauth.yml.example)과 같은 형식을 작성하여 같은 파일 위치에 application-oauth.yml 파일을 생성해야 합니다.
+2. Configuration
+DSMP use OAuth2 authentication with Google and Naver, For now, we use Naver as default. You can use other OAuth2 with [Spring Security
+](https://docs.spring.io/spring-security/reference/servlet/oauth2/index.html). In spring resources, You can check [oauth-sample](https://github.com/BEOKS/DicomProject/blob/main/server/DSMP/src/main/resources/application-oauth.yml.example) file. Create application-oauth.yml in same directory that contain client-id and client-secret.
+
 #### Window
 ```sh
 .\install_project.sh
@@ -32,46 +66,35 @@ sudo sh install_project.sh
 ### Run Project
 #### Window
 ```sh
-run_project.sh local # run project for development
-#localhost:3000에서 서비스 이용가능
+run_project.sh local # run project for development, localhost:3000에서 서비스 이용가능
 run_project.sh prod # run project for deploy
 ```
 #### Mac, Linux
 ```sh
-sudo sh run_project.sh local # run project for development
-#localhost:3000에서 서비스 이용가능
+sudo sh run_project.sh local # run project for development,localhost:3000에서 서비스 이용가능
 sudo sh run_project.sh prod # run project for deploy
 ```
-## 📓 Requirements
-### 1. 의료 데이터 관리
-Requirement | User Story | Notes | Priority
-------------- | ------------- | ------------- | -------------
-Dicom 업로드, 다운로드 클라이언트 구현 | 사용자는 웹 UI를 통해서 Dicom데이터 업로드, 다운로드를 요청 할 수 있다.| React를 이용하여 UI를 구성하고 REST API형식으로 미들웨서 서버에 요청하도록하여 구현이 가능하다| 1
-Dicom 리스트 뷰 기능 | 사용자는 저장되어 있는 Dicom 리스트를 웹 UI를 통해서 확인 할 수 있다. | React를 이용하여 UI를 구성하고 REST API형식으로 미들웨서 서버에 요청하도록하여 구현이 가능하다. | 2
-프로젝트별 데이터 관리 | 사용자는 웹 UI를 통해서 프로젝트별로 데이터를 그룹화 할 수 있으며 접근권한을 설정 할 수 있다. | MongoDB에 사용자 계정 정보와  Dicom 메타데이터를 연결함으로써 설정이 가능하다. | 3
-영상 데이터 업로드, 다운로드 클라이언트 구현 | 사용자는 웹 UI를 통해서 영상 데이터 업로드, 다운로드를 요청 할 수 있다. | 영상데이터를 입력받아 이미지 슬라이싱 후 Dicom형태로 변환하여 구현이 가능하다.(가정) | 4(>v1.0)
-### 2. 의료 데이터 시각화 지원
-Requirement | User Story | Notes | Priority
-------------- | ------------- | ------------- | -------------
-Dicom 파일 선택 기능 | 사용자는 웹 UI에 있는 Dicom 리스트 뷰에서 한 행을 클릭하여 해당 Dicom 파일을 시각화 하여 볼 수 있다. | 각 리스트에 OHIF 뷰어를 호출하는 링크를 설정함으로써 구현이 가능하다. | 1
-줌 인/아웃, 드래그 등 기분 툴 구현 | 사용자는 웹 UI를 통해서 이미지를 다루는 툴을 사용할 수 있다. | OHIF 오픈소스를 통해서 구현이 가능하다. | 2
-Segmentation 뷰어 기능 구현 | 사용자는 웹 UI를 통해서 Dicom에 Segmentation이 적용된 이미지를 확인 할 수 있다. | Dicom SEG 파일을 orthan서버에 업로드 함으로써 구현이 가능하다. | 3
-Annotation(ROI) 작성 기능 구현 | 사용자는 웹 UI를 통해서 이미지 위에 Annotation을 작성할 수 있으며 서버에 저장이 가능하다. | OHIF에는 기능이 구현되어 있지 않아 추후 기능 구현이 필요하다. 작업 난이도 또한 상당히 높다. | 4(>v1.0)
-## 🏗️Architecture
-![image](https://user-images.githubusercontent.com/30094719/143526030-73eac6ec-b4b5-41ed-8805-9d1b4ab9393c.png)
-1. Base Client : 계정관리, Dicom데이터 업로드, 다운로드 그리고 머신러닝 지원 등 전체적인 사용자 기능을 지원한다.
-2. DicomViewer : Base Client에 의해 호출되며 Dicom 파일 시각화를 지원하는  클라이언트이다.
-3. MiddleWare : 클라이언트와 데이터베이스, 서버 사이의 요청을 처리한다.
-4. Dicom Server :  Dicom 데이터를 저장하며 Dicom Web 표준 프로토콜을 통해 Dicom 데이터를 송수신한다.
-5. Database : Dicom 메타데이터 및 계정정보 등 사용자 기능을 지원하기 위한 데이터를 저장한다.
-6. TorchServer : Dicom 이미지를 통한 머신러닝 모델을 학습, 추론 기능을 지원한다.
-7. docker compose : 각 서버는 도커로 실행되며 docker compose는 이를 통합 관리한다.
-8. Jenknins : 지속 개발을 위한 CI/CD를 지원한다. 경우에 따라 다른 프레임워크로 대체될 수 있다.(ex. github actions, teamcity 등)
+Client page port is 3001 and server port is 8080
 
-## 📖 Paper
-1. [Wiki](https://alpine-freezer-d6f.notion.site/DSMP-Wiki-0777d45b69124dbbb0e897ec4e7e3279)
-2. [개발 명세서](https://alpine-freezer-d6f.notion.site/a15a1f59b5764c7da1c0e3fd655b3bde)
-3. [시스템 아키텍쳐](https://alpine-freezer-d6f.notion.site/Project-Architecture-92b2000cefc34208900ff0f2414b9127)
-## Usage
-1. DicomServer의 README.md를 참조하여 서버를 실행한다.
-2. DicomClient/dicom-clinet의 README.md 를 참조하여 클라이언트 서버를 실행한다.
+# Used Framework & Language
+<img src="https://img.shields.io/badge/Docker-2496ED?&logo=Docker&logoColor=white">
+
+Docker prevent provisioning and reduce repetitive configuration each host. By using docker, We can expect same operation for local, dev and production environment. If we handle multi container in multi host we will use Kubernetes for container orchestration. For now, we use Docker-compose for handle multi container. 
+
+ <img src="https://img.shields.io/badge/React-61DAFB?&logo=React&logoColor=white"> <img src="https://img.shields.io/badge/TypeScript-3178C6?&logo=TypeScript&logoColor=white"> <img src="https://img.shields.io/badge/JavaScript-F7DF1E?&logo=JavaScript&logoColor=white"> <img src="https://img.shields.io/badge/Redux-764ABC?&logo=Redux&logoColor=white"> 
+ 
+ As React is useful for create reusable component we use React Framework and typescript for implement web based client program(We used javascript but, it becames hard to use as project grow). React props is also hard to handle as project grow, So we use React-Redux with Flux design pattern.
+
+ <img src="https://img.shields.io/badge/OpenJDK-2496ED?&logo=OpenJDK&logoColor=white"> <img src="https://img.shields.io/badge/Spring Boot-6DB33F?&logo=Spring Boot&logoColor=white"> <img src="https://img.shields.io/badge/Spring Security-6DB33F?&logo=Spring Security&logoColor=white">  <img src="https://img.shields.io/badge/JUnit5-25A162?&logo=JUnit5&logoColor=white"> <img src="https://img.shields.io/badge/MongoDB-47A248?&logo=MongoDB&logoColor=white"> 
+
+ As java running by JVM which guarantee stable software running environment like Auto Optimization and GC, We select java for server system. We use Spring Framework For effective and safe develop in Java development environment. And for testing, we use Junit5 ans Mockito.
+
+ # Architecture
+ Basically, We use Monolithic Architecture, because we now aim Fast Implement-Fast Feedback cycle. MSA(Microservice Architecture) is good for scale out, independent development and maintenance. But, it require many management like monitoring, configuration for each MSA component and Troubleshooting etc. If we make feature stable and need to handle scaling out per feature, We will migrate to MSA.
+ 
+ For that, We use SoC(Separation of Concern) design structure. Simply, all code files for same feature need to store in same project of directory. So we hope to migrate to MSA relatively easily.
+
+ In client, we will use Flux design pattern with React & Redux. Because we suffer from deep props... In server, we will use Controller-Service-Repository design pattern.
+ 
+# Author
+[Jaeseong Lee](https://github.com/BEOKS), lee01042000@gmail.com

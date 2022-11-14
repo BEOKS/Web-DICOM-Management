@@ -40,4 +40,4 @@ out/
 src/main/resources/application-oauth.yml
 
 ### file Storage ###
-Storage
+./Storage
