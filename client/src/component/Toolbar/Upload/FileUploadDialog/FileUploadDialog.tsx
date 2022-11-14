@@ -8,6 +8,8 @@ import {FileUploadDialogAction} from "./FileUploadDialogReducer";
 import ImageFileUploadBox from "./ImageFileUploadBox";
 import {uploadCsvFile, uploadImageFile} from "./Utils/UploadFiles";
 import {SnackbarAction} from "../SnackbarReducer";
+import {getMetaData} from '../../../../api/metadata';
+import {MetaDataGridAction} from './../../../Table/MetaDataGridReducer';
 
 /**
  * 이미지 파일을 업르드하기 위한 컴퍼넌트입니다.
@@ -23,8 +25,9 @@ export default function FileUploadDialog(){
     const [csvFile,setCsvFile]= useState(undefined)
     const [imageFiles,setImageFiles]=useState([])
     const dispatch=useDispatch()
+    const project=useSelector((state:RootState)=>state.ProjectDrawerReducer.project)
     const projectId=useSelector((state:RootState)=> state.ParticipantInfoReducer.participants.projectId)
-    const DEBUG=true
+    const DEBUG=false
     const print=(msg : any)=>{
         if(DEBUG){
             console.log("FileUploadDialog",msg)
@@ -42,15 +45,14 @@ export default function FileUploadDialog(){
         }
     }
     const handleOk=async()=>{
+        console.log('upload start')
         await uploadCsvFile(projectId,csvFile,
             ()=> {
                 dispatch(SnackbarAction.setMessage("Uploading CSV Files..."))
                 dispatch(SnackbarAction.setProgress(0))
             },
-            ()=>{
-                dispatch(SnackbarAction.setMessage("Upload CSV complete!"))
-                dispatch(SnackbarAction.setProgress(false))
-                dispatch(SnackbarAction.showCloseButton())
+            (additionalProgress : number)=>{
+                dispatch(SnackbarAction.increaseProgress(additionalProgress))
             },
             (error)=>{
                 dispatch(SnackbarAction.setMessage(`Upload CSV error :${error}`))
@@ -58,12 +60,16 @@ export default function FileUploadDialog(){
                 dispatch(SnackbarAction.showCloseButton())
             })
         await uploadImageFile(projectId,imageFiles,
-            (filename: string,percentage:number)=> {
-                dispatch(SnackbarAction.setMessage(`Uploading ${filename}`))
-                dispatch(SnackbarAction.setProgress(percentage))
+            ()=> {
+                dispatch(SnackbarAction.setMessage("Uploading Image Files..."))
+                dispatch(SnackbarAction.setProgress(0))
+            },
+            (filename,additionalProgress)=>{
+                dispatch(SnackbarAction.setMessage(`Uploading : ${filename}`))
+                dispatch(SnackbarAction.increaseProgress(additionalProgress))
             },
             (filename,error)=>{
-                dispatch(SnackbarAction.setMessage(`Upload Error! for ${filename} :${error}`))
+                dispatch(SnackbarAction.setMessage(`Upload CSV error :${filename} ${error}`))
                 dispatch(SnackbarAction.setProgress(false))
                 dispatch(SnackbarAction.showCloseButton())
             })

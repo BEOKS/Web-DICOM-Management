@@ -1,13 +1,12 @@
 import { styled } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
-import { drawerWidth } from '../Drawer/ProjectDrawer';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+import { Box, Toolbar, Typography, IconButton, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Button from '@mui/material/Button';
 import logo from './logo.png'
-import { Box } from '@mui/material';
+import { drawerWidth } from "../Drawer/ProjectDrawerStyling";
+import { useDispatch, useSelector } from 'react-redux';
+import { ProjectDrawerAction } from './../Drawer/ProjectDrawerReducer';
+
 export const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
@@ -26,35 +25,43 @@ export const AppBar = styled(MuiAppBar, {
     }),
 }));
 
-export default function BaseAppBar(props) {
+export default function BaseAppBar() {
+    const dispatch = useDispatch();
+    const project = useSelector(state => state.ProjectDrawerReducer.project);
+    const openProjectDrawer = useSelector(state => state.ProjectDrawerReducer.openProjectDrawer);
+
+    const onClickMenuButton = () => {
+        dispatch(ProjectDrawerAction.openProjectDrawer());
+    };
+
     return (
-        <AppBar position="fixed" open={props.open}>
+        <AppBar position="fixed" open={openProjectDrawer}>
             <Toolbar>
                 <IconButton
                     color="inherit"
                     aria-label="open drawer"
-                    onClick={props.handleDrawerOpen}
+                    onClick={() => onClickMenuButton()}
                     edge="start"
                     sx={{
                         marginRight: '36px',
-                        ...(props.open && { display: 'none' }),
+                        ...(openProjectDrawer && { display: 'none' }),
                     }}
                 >
                     <MenuIcon />
                 </IconButton>
                 <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 2 }}>
-                    {props.presentProjectName}
+                    {project.projectName}
                 </Typography>
                 <Button
                     color="inherit"
                     href="logout"
                     width={40}
-                    marginLeft={30}
+                    ml={30}
                 >
                     Logout
                 </Button>
                 <Box width={20}></Box>
-                <img src={logo} height={40} />
+                <img src={logo} height={40} alt="logo" />
             </Toolbar>
         </AppBar>
     );

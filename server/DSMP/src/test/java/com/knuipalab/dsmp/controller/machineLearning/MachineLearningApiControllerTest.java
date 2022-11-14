@@ -1,8 +1,10 @@
 package com.knuipalab.dsmp.controller.machineLearning;
 
-import com.knuipalab.dsmp.configuration.auth.CustomOAuth2UserService;
-import com.knuipalab.dsmp.controller.machineLearning.api.MachineLearningApiController;
-import com.knuipalab.dsmp.service.machineLearning.AsyncMetaDataSampler;
+import com.knuipalab.dsmp.machineLearning.MachineLearningInference.AsyncMLInferenceService;
+import com.knuipalab.dsmp.machineLearning.MachineLearningInference.BasicMalignancyServerMessenger;
+import com.knuipalab.dsmp.user.auth.CustomOAuth2UserService;
+import com.knuipalab.dsmp.machineLearning.MachineLearningApiController;
+import com.knuipalab.dsmp.machineLearning.TrainTypeSampling.AsyncMetaDataSampler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +23,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = MachineLearningApiController.class)
@@ -29,7 +31,12 @@ public class MachineLearningApiControllerTest {
 
     @MockBean
     private CustomOAuth2UserService customOAuth2UserService;
-
+    @MockBean
+    private BasicMalignancyServerMessenger basicMalignancyServerMessenger;
+    @MockBean
+    private AsyncMLInferenceService asyncMLInferenceService;
+    @MockBean
+    private AsyncMetaDataSampler asyncMetaDataSampler;
     @Autowired
     private WebApplicationContext context;
 
@@ -43,11 +50,8 @@ public class MachineLearningApiControllerTest {
                 .build();
     }
 
-    @MockBean
-    private AsyncMetaDataSampler asyncMetaDataSampler;
-
     @WithMockUser
-    @DisplayName("Type Sampling Test by ProjectId - Success")
+    @DisplayName("Type Sampling Test by ProjectId")
     @Test
     void typeSamplingTest() throws Exception {
 
@@ -59,11 +63,11 @@ public class MachineLearningApiControllerTest {
     }
 
     @WithMockUser
-    @DisplayName("Set Malignancy Classification Test by ProjectId - Success")
+    @DisplayName("Set Malignancy Classification Test by ProjectId and Model Name")
     @Test
     void setMalignancyClassificationTest() throws Exception {
 
-        mvc.perform(put("/api/MetaData/MalignancyClassification/54321"))
+        mvc.perform(put("/api/MetaData/MalignancyClassification/54321/Basic"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status",is(200)))
                 .andDo(print())
