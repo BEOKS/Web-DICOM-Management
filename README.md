@@ -1,38 +1,36 @@
 [![Deployment](https://github.com/BEOKS/DicomProject/actions/workflows/deployment.dev.yml/badge.svg?branch=BEOKS-patch-1)](https://github.com/BEOKS/DicomProject/actions/workflows/deployment.dev.yml)
-# Dicom Service Management Project
-DSMP(Dicom Service Management Project) aim convinient DICOM(Digital Imaging and Communications in Medicine) database management for medical ML project based on web.
-# Feature
-## 1. Anonymization 
-When researchers or developer collect DICOM data for medical research, they need to anonymize each patient's personal information in DICOM meatadata and related other data. This process is so tired, because instead of using patient's ID you need to give unique Anonymized ID for each DICOM data from multiple medical institutions. There may be same patient's ID in differenct medical institutions. Therefore, whenever data is obtained, it is necessary to manually check for multiple duplicates ID and perform the anonymization process. 
 
-DSMP automatically performs anonymization and assigns an appropriate ID each time data is uploaded. Anonymization process is performed before upload to database. Therefore, it is possible to ensure the prevention of leakage of personal information and to dramatically reduce the time to collect research data.
+[English.doc](./README.EN.md)
+# Dicom Service Management Project
+DSMP(Dicom Service Management Project) 는 [DICOM](https://www.dicomstandard.org/)(Digital Imaging and Communications in Medicine) 데이터를 웹 기반 플랫폼으로 편리하게 다루기 위한 오픈소스 프로젝트입니다.
+# Feature
+## 1. 익명화
+
+연구자나 개발자가 DICOM 데이터를 연구 목적으로 다루기 위해서는 DICOM 메타데이터 중 환자의 개인정보([PHI](https://www.hhs.gov/answers/hipaa/what-is-phi/index.html)) 부분을 익명화 해야합니다. 현재 대부분의 익명화 알고리즘은 단순히 새로운 값을 생성하거나 값을 지우는 방식으로 진행되고 있습니다. 하지만 이런 방법으론 데이터의 연관성이 사라지기 때문에 연구에 어려움이 있습니다. (예를 들어, 같은 환자의 CT DICOM 파일이 익명화 후 다른 환자 ID를 가지게 될 수 있습니다.) 이 프로젝트에선 Patient, Study, Series, Image ID 등 연구를 위해 연관성이 유지되어야하는 데이터에 단방향 해싱 ([Bcrypt](https://www.npmjs.com/package/bcrypt)) 알고리즘을 사용하여 익명성을 보장하며 연관성을 유지하는 익명화 기법을 지원하고 있습니다. 또한, 익명화 과정은 데이터가 서버에 전송되기 전 브라우저에서 진행되므로 익명화되지 않은 데이터가 네트워크에 유포될 가능성을 차단합니다.
 
 ## 2. Metadata Relation
-Medical AI research requires not only DICOM images but also related metadata. If metadata including patient ID is uploaded in CSV format, it can be combined with DICOM data that has already been uploaded or will be uploaded to make data management easier.
+
+의료 연구를 진행하기 위해선 DICOM 이미지 뿐만 아니라 이와 관련된 메타 데이터(양/악성, 병변의 크기 등)가 필요합니다. CSV 형식으로 메타데이터를 업로드 할 경우, 프로젝트는 메타데이터의 ID 부분을 읽어 기존에 저장된 DICOM 데이터와 연결하여 아래와 같이 데이터를 확인 할 수 있습니다.
 
 ![image](https://user-images.githubusercontent.com/30094719/196581697-769ff686-09ac-41ee-9917-c43a0da5b590.png)
 
 ## 3. More Image Format
-DICOM format is not always used to build a medical image database. So DSMP also supports uploading images in PNG/JPEG format. In this case, the image anonymization process is not executed, and the image file name must be entered instead of the patient ID in the metadata.
+우리는 의료 연구를 계속 진행하며, DICOM 파일 형식 뿐만 아니라 JPEG, PNG 등 가공된 데이터 형식이 필요하다는 것을 알게되었습니다. 따라서, DICOM과 JPEG, PNG 파일 형식 업로드를 모두 지원하도록 업데이트 했습니다. JPEG, PNG 파일 형식으로 업로드를 진행할 경우 익명화 과정은 진행되지 않으며, 파일이름을 특정 ID로 명명해야합니다. 이 ID 는 추후 업로드할 메타데이터의 ID 부분과 연관됩니다.
 
 ![image](https://user-images.githubusercontent.com/30094719/196581753-2588cdec-5d8a-45bc-8ae0-023373b13228.png)
 
 ## 4. Project, User Management
-The subject of medical AI research can be many, and data for each subject is required. DSMP provides a function to manage data on a project-by-project basis, and each project manager can invite other researchers to use the data together. This can improve security by ensuring that only the necessary researcher can access each projects.
+DSMP는 여러 개의 프로젝트를 생성하고 각 프로젝트마다 이미지와 메타데이터를 저장할 수 있습니다. 보안을 위해 각 프로젝트는 초대받은 사람만 참여가 가능하며, 프로젝트 생성자가 참여자를 관리 할 수 있습니다.
 
 
 ![image](https://user-images.githubusercontent.com/30094719/196581787-9049e1ad-bcf8-4267-bf11-5a3f66e53295.png)
 
 ## 5. Data Visualization
-Of course, DSMP can view the uploaded metadata list in table form, and in the case of medical images, you can visualize it by clicking on each table row. However, we do offer better features to increase researcher's intuition about their data.
-
-The data you use for a project can be very large. The data manager must check whether the data has been uploaded correctly or not. DSMP automatically provides data visualization based on uploaded metadata. By selecting the desired column in the metadata, you can quickly understand the distribution of each data. If the data is in the form of a category, a pie chart is provided, and if the data is in the form of a number, a histogram is provided like below
-
-
+연구를 위해선 업로드 된 데이터가 올바른지, 분포는 어떤 지 등 데이터를 한눈에 파악하기 위해서 데이터 시각화가 필요합니다. DSMP는 메타데이터를 분석해 숫자형 데이터의 경우 히스토그램을, 카테고리형 데이터의 경우 파이차트를 시각화하는 기능을 제공합니다. 
 <img width="1769" alt="image" src="https://user-images.githubusercontent.com/30094719/175278688-2c556b23-5b55-426d-80bd-7e980c88142d.png">
 
 ## 6. Machine Learning Result Visualization
-DSMP is basically a platform for building databases, but we felt the need for the ability to visualize machine learning inference results in the beta test stage. You can use this feature by building a machine learning server using [Torchserve](https://pytorch.org/serve/). Users can choose which model to use to infer the currently uploaded data. When inference is started with the selected model, the backend automatically delivers the medical image of the project to the machine learning server and saves the result back to the database. Results in the form of strings and numbers are updated in metadata, and image result is added to the image database. For Implementation, please check [here](./server/TorchServe/README.md).
+DSMP는 의료 데이터베이스를 구축하기 위한 플랫폼이지만, 우리는 의료 데이터베이스 기반 연구가 머신러닝과 밀접하게 연관이 있다는 것을 알게 되었고 이를 지원하기 위해서 [Torchserve](https://pytorch.org/serve/) 결과를 저장할 수 있는 기능을 추가했습니다. 별도의 Torchserve 서버를 실행시키고 이를 DSMP 프로젝트와 연동하면, 아래와 같이 추론 모델을 선택해 추론을 요청하고 결과를 데이터베이스에 저장합니다. 자세한 구현을 위해선 [여기](./server/TorchServe/README.md)를 참고해주세요.
 ![image](https://user-images.githubusercontent.com/30094719/196581888-dd1face8-6892-4923-a72c-52e7171071b8.png)
 ![image](https://user-images.githubusercontent.com/30094719/196581975-626287ca-7689-4a6f-8279-49b006ad8a11.png)
 
@@ -78,12 +76,11 @@ Client page port is 3001 and server port is 8080
 
 # Used Framework & Language
 <img src="https://img.shields.io/badge/Docker-2496ED?&logo=Docker&logoColor=white">
-
-Docker prevent provisioning and reduce repetitive configuration each host. By using docker, We can expect same operation for local, dev and production environment. If we handle multi container in multi host we will use Kubernetes for container orchestration. For now, we use Docker-compose for handle multi container. 
+도커는 설치 시 반복되는 프로비저닝과 설정을 방지할 수 있습니다. 도커를 사용함으로써 Local, Dev, Prod 환경에서 동일한 동작을 보증할 수 있기 때문에 이 프로젝트는 도커를 기반으로 설치, 실행됩니다. 멀티 컨테이너를 사용하기 때문에 Docker-compose를 이용하고 있습니다.
 
  <img src="https://img.shields.io/badge/React-61DAFB?&logo=React&logoColor=white"> <img src="https://img.shields.io/badge/TypeScript-3178C6?&logo=TypeScript&logoColor=white"> <img src="https://img.shields.io/badge/JavaScript-F7DF1E?&logo=JavaScript&logoColor=white"> <img src="https://img.shields.io/badge/Redux-764ABC?&logo=Redux&logoColor=white"> 
  
- As React is useful for create reusable component we use React Framework and typescript for implement web based client program(We used javascript but, it becames hard to use as project grow). React props is also hard to handle as project grow, So we use React-Redux with Flux design pattern.
+ React 프레임워크는 재사용성이 높은 컴포넌트를 생성하기 용이하고 Typescript는 타입을 명시함으로써 데이터 구조 차이로 인한 버그 발생을 억제할 수 있기 때문에 도입했습니다. React Props는 프로젝트가 커질 수록 중복증가와 불필요할 컴포넌트 랜더링이 많아져 이를 해결하기 위해 Redux를 도입했습니다.
 
  <img src="https://img.shields.io/badge/OpenJDK-2496ED?&logo=OpenJDK&logoColor=white"> <img src="https://img.shields.io/badge/Spring Boot-6DB33F?&logo=Spring Boot&logoColor=white"> <img src="https://img.shields.io/badge/Spring Security-6DB33F?&logo=Spring Security&logoColor=white">  <img src="https://img.shields.io/badge/JUnit5-25A162?&logo=JUnit5&logoColor=white"> <img src="https://img.shields.io/badge/MongoDB-47A248?&logo=MongoDB&logoColor=white"> 
 
@@ -93,8 +90,6 @@ Docker prevent provisioning and reduce repetitive configuration each host. By us
  Basically, We use Monolithic Architecture, because we now aim Fast Implement-Fast Feedback cycle. MSA(Microservice Architecture) is good for scale out, independent development and maintenance. But, it require many management like monitoring, configuration for each MSA component and Troubleshooting etc. If we make feature stable and need to handle scaling out per feature, We will migrate to MSA.
  
  For that, We use SoC(Separation of Concern) design structure. Simply, all code files for same feature need to store in same project of directory. So we hope to migrate to MSA relatively easily.
-
- In client, we will use Flux design pattern with React & Redux. Because we suffer from deep props... In server, we will use Controller-Service-Repository design pattern.
  
 # Author
 [Jaeseong Lee](https://github.com/BEOKS), lee01042000@gmail.com
